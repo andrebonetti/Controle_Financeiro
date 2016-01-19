@@ -1,0 +1,91 @@
+.full-container{width: 100%;display: table;}
+
+.lateral-margin(@size){ 
+    width: @size;
+    margin-left:(100-@size)/2;
+    margin-right:(100-@size)/2;
+}
+
+.float-config(@position,@size){
+    float: @position;
+    width: @size;
+}
+
+.border(@radius,@color){
+    border-style:solid;
+    border-width:1px;
+    border-color:@color;
+    
+    -webkit-border-radius: @radius;  
+    -moz-border-radius: @radius;
+    -ms-border-radius: @radius;
+    -o-border-radius: @radius;
+    border-radius: @radius;	
+}
+
+.inline-content(@contents){
+    float:left;
+    width:100%/@contents; 
+}
+
+/* TESTES */
+
+.test-1{
+    border:solid 1px red;
+    background-color: rgba(255, 0, 0, 0.25)
+}
+
+.test-2{
+    border:solid 1px green;
+    background-color: rgba(0, 255, 29, 0.25)
+}
+
+.test-3{
+    border:solid 1px rgb(255, 255, 0);
+    background-color: rgba(255, 255, 0, 0.25)
+}
+
+.test-4{
+    border:solid 1px rgb(0, 0, 255);
+    background-color: rgba(0, 0, 255, 0.25)
+}
+.test-5{
+    border:solid 1px rgb(255, 135, 0);
+    background-color: rgba(255, 135, 0, 0.25)
+}
+
+.no-view{display:none;}
+.view{display:block;}
+
+/* ------------------ COLORS ------------------ */
+
+@black-0: #000;
+@black-1: hsl(0, 0, 5%);
+@black-2: hsl(0, 0, 10%);
+@black-3: hsl(0, 0, 15%);
+@black-4: hsl(0, 0, 20%);
+@black-5: hsl(0, 0, 25%);
+@black-6: hsl(0, 0, 30%);
+@black-7: hsl(0, 0, 35%);
+@black-8: hsl(0, 0, 40%);
+@black-9: hsl(0, 0, 45%);
+@black-10: hsl(0, 0, 50%);
+
+@white-1: hsl(0, 0, 55%);
+@white-2: hsl(0, 0, 60%);
+@white-3: hsl(0, 0, 65%);
+@white-4: hsl(0, 0, 70%);
+@white-5: hsl(0, 0, 75%);
+@white-6: hsl(0, 0, 80%);
+@white-7: hsl(0, 0, 85%);
+@white-8: hsl(0, 0, 90%);
+@white-9: hsl(0, 0, 95%);
+@white-10: #fff;
+
+/* -------------------- CONTAINER --------------------*/
+
+header:extend(.full-container){}
+section:extend(.full-container){}
+.content:extend(.full-container){}
+
+.myContainer{.lateral-margin(98%);}
