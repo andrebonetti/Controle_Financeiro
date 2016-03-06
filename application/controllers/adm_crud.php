@@ -203,7 +203,7 @@
 			$this->output->enable_profiler(TRUE);
 			
             /*VALIDACAO*/valida_usuario();
-            
+
 			$transacao_atual 		= $this->transacoes_model->get_where("transacoes","id",$id);
 			$salario  	  			= $this->input->post("total_salario"); 
 						
