@@ -22,7 +22,24 @@ $autoload['libraries'] = array('database', 'session','user_agent');
 | -------------------------------------------------------------------
 */
 
-$autoload['helper'] = array('url', 'form', 'text', 'date','active','filter','transform_name','adm_helper',"crud_helper","data_helper");
+$autoload['helper'] = array(
+     'url'
+    ,'form'
+    ,'text'
+    ,'date'
+    ,'active'
+    ,'filter'
+    
+    ,'transform_name'
+    ,"crud_helper"
+    ,"data_helper"
+    ,"categorias_helper"
+    ,"subCategorias_helper"
+    ,"transacoes_helper"
+    ,"cartao_helper"
+    ,"geral_helper"
+    ,"usuario_helper"
+);
 
 /*
 | -------------------------------------------------------------------
@@ -46,4 +63,11 @@ $autoload['language'] = array();
 | -------------------------------------------------------------------
 */
 
-$autoload['model'] = array('crud_model','transacoes_model','usuarios_model','cartao_model',"geral_model");
+$autoload['model'] = array(
+    'transacoes_model'
+    ,'usuarios_model'
+    ,'cartao_model'
+    ,"geral_model"
+    ,"categoria_model"
+    ,"subCategoria_model"
+);

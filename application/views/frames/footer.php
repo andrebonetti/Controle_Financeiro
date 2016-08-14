@@ -205,6 +205,8 @@
       <div class="modal-body">
             <?= form_open("Adm_crud/transacao_update",array("class"=>"link-update"))?>
 		
+                <input type="hidden" class="id-edit" name="id" value="">
+          
 				<input type="number" class="ano form-control" name="ano" value="<?=$ano?>">
 				<input type="number" class="mes form-control" name="mes" value="<?=$mes?>">
 				<input type="number" name="dia" class="dia-edit form-control" placeholder="Dia">

@@ -1,6 +1,8 @@
 $(".categorias").hide();
 
-/* --------------------- PREENCHE CATEGORIAS --------------------- */
+/*
+
+// --------------------- PREENCHE CATEGORIAS --------------------- 
 $(".categoria-resumo").each(function() {
     
     var categoria_atual = $(this).find("h2").text();
@@ -20,7 +22,7 @@ $(".categoria-resumo").each(function() {
     })
 })
 
-/* --- CALCULA SUB CATEGORIA --- */
+// --- CALCULA SUB CATEGORIA --- 
 
 $(".sub_categoria-resumo").each(function() {
     
@@ -35,7 +37,8 @@ $(".sub_categoria-resumo").each(function() {
     
 })
 
-/* --- CALCULA CATEGORIA --- */
+
+// --- CALCULA CATEGORIA --- 
 $(".categoria-resumo").each(function() {
     
     var total_categoria = 0
@@ -48,6 +51,8 @@ $(".categoria-resumo").each(function() {
     
     if(total_categoria != 0){$(this).find(".valor-total-categoria").text(total_categoria);}
 })
+
+*/
 
 /* --------------------- VIEW ------------------- */
 for(var sh=1;sh<=6;sh++){
@@ -97,7 +102,16 @@ $(".dia").each(function() {
 })
 
 saldo_dia = parseFloat(saldo_dia) + parseFloat(saldo_anterior);
-$(".saldo-dia").find("span").text(saldo_dia);
+
+    if(parseInt(saldo_dia) < 0){
+        $(".saldo-dia").find("span").addClass("negativo");
+        $(".saldo-dia").find("span").removeClass("positivo");
+    }
+    else{
+        $(".saldo-dia").find("span").addClass("positivo");
+        $(".saldo-dia").find("span").removeClass("negativo");
+    }
+    $(".saldo-dia").find("span").text(formatarReal(saldo_dia));
 
 var atualiza_saldo_dia = function(){
 	
@@ -118,11 +132,19 @@ var atualiza_saldo_dia = function(){
     })
     
     saldo_dia = parseFloat(saldo_dia) + parseFloat(saldo_anterior);
-    $(".saldo-dia").find("span").text(saldo_dia);
+    
+    if(parseInt(saldo_dia) < 0){
+        $(".saldo-dia").find("span").addClass("negativo");
+        $(".saldo-dia").find("span").removeClass("positivo");
+    }
+    else{
+        $(".saldo-dia").find("span").addClass("positivo");
+        $(".saldo-dia").find("span").removeClass("negativo");
+    }
+    
+    $(".saldo-dia").find("span").text(formatarReal(saldo_dia));
     
 }
-
-
 
 /* CRUD */
 var base_url = $(".base_url").attr("href");
@@ -153,6 +175,7 @@ var adiciona_categoria = function(){
 };
 
 var edita_transacao = function(){
+    
     var id              = $(this).find(".id").text();
     var type            = $(this).find(".type").text();
     var dia             = $(this).find(".dia-atual").text();
@@ -166,6 +189,7 @@ var edita_transacao = function(){
     var ano = $(".modal-edita").find(".ano").attr("value");
     var mes = $(".modal-edita").find(".mes").attr("value");
 
+    $(".modal-edita").find(".id-edit").attr("value",id);
     $(".modal-edita").find(".dia-edit").attr("value",dia);
     $(".modal-edita").find(".categoria-atual").attr("value",categoria_id);
     $(".modal-edita").find(".categoria-atual").text(categoria);
@@ -177,6 +201,21 @@ var edita_transacao = function(){
     $(".modal-edita").find(".link-update").attr("action",base_url+"adm_crud/transacao_update/"+ano+"/"+mes+"/"+id);
     
 };
+
+function formatarReal(mixed) {
+
+    var int = parseInt(mixed.toFixed(2).toString().replace(/[^\d]+/g, ''));
+    var tmp = int + '';
+    tmp = tmp.replace(/([0-9]{2})$/g, ",$1");
+    if (tmp.length > 6)
+        tmp = tmp.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+    
+    if(parseFloat(mixed) < 0){
+        tmp = "- "+tmp;    
+    }
+    
+    return tmp;
+}
 
 var edita_fatura = function(){
     var id              = $(this).find(".id").text();
@@ -219,3 +258,4 @@ $(".oculta-categoria").on("click",oculta_categorias);
 $("tr.data-day").on("click",adiciona_transacao);
 $(".dia_change").on("change",atualiza_saldo_dia);
 $(".content-fatura").on("click",edita_fatura);
+

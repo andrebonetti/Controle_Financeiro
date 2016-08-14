@@ -59,5 +59,10 @@
 			return $this->db->get()->result_array();
         
         }
+        
+        // -- INSERT --
+        function Incluir($pData){
+			$this->db->insert("cartao_de_credito", $pData);
+		}
        
     }

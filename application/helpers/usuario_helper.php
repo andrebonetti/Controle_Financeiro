@@ -1,6 +1,6 @@
 <?php
 
-	function login_result($result,$redirect){
+    function login_result($result,$redirect){
        $ci = get_instance();    
         
 	   if (!empty ($result)){

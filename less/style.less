@@ -63,22 +63,38 @@ section.content{
             }
             
             .saldo-dia{
-                .float-config(left,30%);
+                .float-config(left,20%);
+                position: fixed;
+                margin-left: 555px;
+                padding:8px 5px 3px 5px;
                 color:@black-2;
-                background: none;
-                
-                p{float: left;}
+                background-color: @white-10;
+                              
+                p{
+                    float: left;
+                    padding-top: 3px;
+                }
                 
                 input{
                     width: 40px;
                     float: left;
-                    margin: -1.5% 1% 0 2%;
+                    margin: 0 1% 0 2%;
                     text-align: center;
                 }
                 
                 span{
                     float: left;
-                    margin-left: 2%;
+                    margin-left: 12px;
+                    margin-top: 3px;
+                    
+                }
+                
+                span.positivo{
+                    color: #14a614;
+                }
+                
+                span.negativo{
+                    color: #cb0000;
                 }
             }
             

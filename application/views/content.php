@@ -5,7 +5,7 @@
         	
             <div class="saldo-anterior" value="<?=$saldo_anterior["saldo_final"]?>">Saldo Anterior: <span><?=numeroEmReais2($saldo_anterior["saldo_final"])?></span> </div>
             <div class="saldo-mes <?=sinal_valor($saldo_atual["saldo_mes"])?>" value="<?=$saldo_atual["saldo_mes"]?>">Saldo do Mes: <span><?=numeroEmReais2($saldo_atual["saldo_mes"])?></span> </div>
-            <div class="saldo-dia">
+            <div class="saldo-dia btn btn-default ">
                 <p>Saldo do dia</p>
                 <input type="text" class="dia_change form-control" value="<?=$hoje?>">
                 <p>:</p>
@@ -74,7 +74,7 @@
                             <span class="dia_semana-<?=$first_day?>"></span>
                             
                         </tr>
-                        
+
                         <!-- CONTEUDO DIA -->
                         <?php foreach($data_day as $content){?> 
                         
@@ -114,19 +114,6 @@
                             </tr>
                         <?php } ?>
                         
-                        <?php 
-                        if($n == $last_day)							
-                        {?>
-                            <tr class="dizimo">
-                                <td class="dizimo-descr">Dízimo</td>
-                                <td class="dizimo-valor valor" value="<?=-$saldo_atual["dizimo"]?>"><?=numeroEmReais2(-$saldo_atual["dizimo"])?></td>
-                            </tr>
-                            <tr class="poupanca content-poup" data-toggle="modal" data-target="#edit-poupanca">
-                                <td class='poupanca-descr'>Poupança</td>
-                                <td class="poupanca-valor valor" value="<?=-$saldo_atual["poupanca"]?>"><?=numeroEmReais2(-$saldo_atual["poupanca"])?></td>
-                            </tr>
-                        <?php } ?>
-                        
                     </table>
                     
                     <div class="valor-total"></div>
@@ -145,47 +132,6 @@
 
 			<?php } ?>
             
-            <!-- DIA INDEFINIDO -->
-            <div class="dia dia-und" id="dia-und" name="dia-und">
-                
-                <table>
-                    
-                    <tr class="data-day"><th colspan="2" >?</th></tr>
-
-                    <?php foreach($data_undefined as $content){?> 
-                    
-                        <?php $sub_categoria = valida_sub($content["nome_categoria"],$content["nome_sub_categoria"])?>
-                    
-                        <tr class="content-day content-und"  data-toggle="modal" data-target="#edit-transacao">
-                            
-                            <td class="no-view id"><?=$content["id"]?></td>   
-                            <td class="no-view type"><?=$content["type"]?></td>       
-                            <td class="no-view dia-atual"><?=$content["dia"]?></td>    
-                            <td class="no-view categoria" value="<?=$content["categoria"]?>"><?=$content["nome_categoria"]?></td>
-                            <td class="no-view sub_categoria" value="<?=$content["sub_categoria"]?>"><?=valida_sub($content["nome_categoria"],$content["nome_sub_categoria"])?></td>
-                            
-                            <td class="descricao" value="<?=$content["descricao"]?>">
-                                <?php if($content["descricao"] == NULL){?>
-                                    <?=$content["nome_sub_categoria"]?>
-                                <?php } else{ ?>
-                                    <?=$content["descricao"]?>
-                                    <?php if($content["type"] == "2"){?>
-                                        - <?=$content["parcela"]?>/<?= $content["p_total"] ?>	
-                                <?php }} ?>
-                            </td>
-                            <td class="valor <?=sinal_valor($content["valor"])?>" value="<?=$content["valor"]?>"><?=numeroEmReais2($content["valor"])?></td>
-                                
-                            <span class="categoria categoria-<?=$content["nome_categoria"]?>"><?=$content["nome_categoria"]?></span>
-                            <span class="sub_categoria"><?=$content["nome_sub_categoria"]?></span>
-                            
-                        </tr>
-                    
-                    <?php } ?>
-                    
-                </table>
-                
-            </div>
-    
         </div>        
     </div>
         

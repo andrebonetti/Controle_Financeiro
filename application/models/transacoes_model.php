@@ -1,68 +1,87 @@
 <?php
 	class Transacoes_model extends CI_Model {
 				
-		function pay_type($type,$year,$month,$day,$usuario){
-			
-			/* FROM */ $this->db->from("transacoes");
-			
-			/* JOIN */
-            $this->db->join("categoria", "categoria.id_categoria = transacoes.categoria");
-            $this->db->join("sub_categoria", "sub_categoria.id_sub_categoria = transacoes.sub_categoria");
+        // -- SELECT --		
+        function Listar($pData = null,$pOrderBy = null){
             
-            /* WHERE */
-            if($type == "1"){}
-            if(($type != "1")&&($type != "4")){
-				$this->db->where("ano",$year);
-            	$this->db->where("mes",$month);
-			}
-            if($type != "4"){
-				$this->db->where("dia",$day);
+            if(isset($pData["id"])){$this->db->where("id",$pData["id"]);} 
+            if(isset($pData["type"])){$this->db->where("type",$pData["type"]);}
+            if(isset($pData["usuario"])){$this->db->where("usuario",$pData["usuario"]);}           
+            
+            if(isset($pData["categoria"])){$this->db->where("categoria",$pData["categoria"]);}
+            if(isset($pData["sub_categoria"])){$this->db->where("sub_categoria",$pData["sub_categoria"]);}
+            if(isset($pData["descricao"])){$this->db->where("descricao",$pData["descricao"]);}
+            if(isset($pData["status"])){$this->db->where("status",$pData["status"]);}
+            if(isset($pData["parcela"])){$this->db->where("parcela",$pData["parcelas"]);}
+            if(isset($pData["p_total"])){$this->db->where("p_total",$pData["p_total"]);}
+            if(isset($pData["valor"])){$this->db->where("valor",$pData["valor"]);}
+            
+            if((isset($pData["isListaPorTipo"]))&&($pData["isListaPorTipo"] == true))
+            {
+                $this->db->where("valor !=","0");
+                
+                //Se for Transação Recorrente Só busca pelo Dia
+                if($pData["type"] == 1){
+                    if(isset($pData["dia"])){$this->db->where("dia",$pData["dia"]);}
+                }
+                else{
+                    if(isset($pData["ano"])){$this->db->where("ano",$pData["ano"]);}
+                    if(isset($pData["mes"])){$this->db->where("mes",$pData["mes"]);}
+                    if(isset($pData["dia"])){$this->db->where("dia",$pData["dia"]);}
+                }
             }
-			
-			$this->db->where("type",$type);	
-			$this->db->where("valor !=",0);				
-			$this->db->where("usuario",$usuario);
-			
-			return $this->db->get()->result_array();		
-			
+            else{
+                if(isset($pData["ano"])){$this->db->where("ano",$pData["ano"]);}
+                if(isset($pData["mes"])){$this->db->where("mes",$pData["mes"]);}
+                if(isset($pData["dia"])){$this->db->where("dia",$pData["dia"]);}
+            }
+               
+            if(isset($pData["PreencherEntidadesFilhas"])){
+                if($pData["PreencherEntidadesFilhas"] == true){
+                    $this->db->join("categoria", "categoria.id_categoria = transacoes.categoria");
+                    $this->db->join("sub_categoria", "sub_categoria.id_sub_categoria = transacoes.sub_categoria");
+                }
+            }
+            
+            $this->db->from("transacoes");
+            return $this->db->get()->result_array();
+        }
+        
+        function Buscar($pData){ 
+            
+            if(isset($pData["id"])){$this->db->where("id",$pData["id"]);}  
+            if(isset($pData["usuario"])){$this->db->where("usuario",$pData["usuario"]);}
+            if(isset($pData["ano"])){$this->db->where("ano",$pData["ano"]);}
+            if(isset($pData["mes"])){$this->db->where("mes",$pData["mes"]);}
+            if(isset($pData["dia"])){$this->db->where("dia",$pData["dia"]);}
+            if(isset($pData["categoria"])){$this->db->where("categoria",$pData["categoria"]);}
+            if(isset($pData["sub_categoria"])){$this->db->where("sub_categoria",$pData["sub_categoria"]);}
+            if(isset($pData["descricao"])){$this->db->where("descricao",$pData["descricao"]);}
+            if(isset($pData["status"])){$this->db->where("status",$pData["status"]);}
+            if(isset($pData["parcela"])){$this->db->where("parcela",$pData["parcelas"]);}
+            if(isset($pData["p_total"])){$this->db->where("p_total",$pData["p_total"]);}
+            if(isset($pData["valor"])){$this->db->where("valor",$pData["valor"]);}
+            
+            if(isset($pData["PreencherEntidadesFilhas"])){
+                if($pData["PreencherEntidadesFilhas"] == true){
+                    $this->db->join("categoria", "categoria.id_categoria = transacoes.categoria");
+                    $this->db->join("sub_categoria", "sub_categoria.id_sub_categoria = transacoes.sub_categoria");
+                }
+            }
+            
+            $this->db->from("transacoes");   
+            return $this->db->get()->row_array();    
+        }
+              
+        // -- INSERT --
+        function Incluir($pData){
+			$this->db->insert("transacoes", $pData);
 		}
-		
-        function lista_table($table){
-        		
-        	if($table == "sub_categoria"){
-				/*WHERE*/$this->db->where("id_sub_categoria !=","0");
-			}	
-        	     
-            /*FROM*/ $this->db->from($table);
-            return $this->db->get()->result_array();
-            
-        }
         
-        function lista_sub_table($id,$table){
-            
-            /* FROM */ $this->db->from($table);
-            
-            /* WHERE */$this->db->where("categoria",$id);
-            
-            return $this->db->get()->result_array();
-            
-        }
-        
-        function get_id_categoria($nome){         
-            /*FROM*/$this->db->from("categoria");     
-            /*WHERE*/$this->db->where("nome_categoria",$nome);        
-            return $this->db->get()->row_array();    
-        }
-        function get_id_sub_categoria($nome){         
-            /*FROM*/$this->db->from("sub_categoria");     
-            /*WHERE*/$this->db->where("nome_sub_categoria",$nome);        
-            return $this->db->get()->row_array();    
-        }
-		
-		function get_where($table,$atribute,$value){         
-            /*FROM*/$this->db->from($table);     
-            /*WHERE*/$this->db->where($atribute,$value);        
-            return $this->db->get()->row_array();    
-        }
+        // -- UPDATE --
+        function Atualizar($pData){
+			$this->db->where 	('id', $pData["id"]);
+			$this->db->update	("transacoes", $pData);
+		}
         
 	}	

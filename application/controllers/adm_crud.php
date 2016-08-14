@@ -2,142 +2,286 @@
 
 	class Adm_crud extends CI_Controller{
         
-        /*INSERT*/
+        // ----- INSERT TRANSACAO -----
         public function transacao_insert(){
         	
 			$this->output->enable_profiler(TRUE);
 			
-            /*VALIDACAO*/valida_usuario();
+            // -- VALIDACAO USUARIO --
+            valida_usuario();
 			  
-            /*NOVA CATEGORIA*/
-            	$nova_categoria = nova_categoria();     
-            /*NOVA SUB CATEGORIA*/
-            	$nova_sub_categoria = nova_sub_categoria();	
-				$id_nova_sub_categoria  = $this->transacoes_model->get_id_sub_categoria($nova_sub_categoria); 
-			           
-			$type					= $this->input->post("type");
-			
-			/*DATA*/
-			$data["p_total"]		= $this->input->post("total");
-			
-			if($type == 1){
+            // -- NOVA CATEGORIA --
+            $novaCategoria = novaCategoria();     
+            // -- NOVA SUB CATEGORIA --
+            $novaSubCategoria = novaSubCategoria();	
+
+            /* -- DATA -- */
+            $data   = transacao_getPosts();	
 				
-				$data["ano"]  		= $this->input->post("ano");	
-				$data["mes"]  		= $this->input->post("mes");
+            // -- TYPE 1 = Transação Recorrente -- 
+			if($data["type"] == 1){
 				
-				$lista_geral  	= $this->geral_model->lista_geral($data["ano"] ,$data["mes"]);	
-				$data 			= crud_transacao($type);	
-								
-				/*BD-CRUD*/$this->crud_model->insert("transacoes",$data);
-				
-				foreach($lista_geral as $lista){				
-					/*SALDO GERAL*/crud_geral($lista["ano"],$lista["mes"],$data["categoria"],$data["valor"]);
-				}
+				// -- BD INSERT -- 
+                $this->transacoes_model->Incluir($data);
+                
+                // -- SALDO GERAL --
+                geral_UpdateSaldo($data);
+                 
 			}
-			if($type == 2){							
-				$ano  				= $this->input->post("ano");	
-				$mes  				= $this->input->post("mes");
-				$p_total			= $this->input->post("total");
-				
-				for($n = 1;$n <= $p_total ; $n++){
-					
-					$data = crud_transacao($type);
-											
-					$data["ano"]			= $ano;	
-					$data["mes"]			= $mes;										
-					$data["parcela"] 		= $n;
-					$data["p_total"] 		= $p_total;
-											
-					/*BD-CRUD*/$this->crud_model->insert("transacoes",$data);
-					/*SALDO GERAL*/	crud_geral($data["ano"],$data["mes"],$data["categoria"],$data["valor"]);			
+			// -- TYPE 2 = Transação Parcelada -- 
+			if($data["type"] == 2){				
+                
+                $anoParcela = $data["ano"];
+                $mesParcela = $data["mes"];
 						
-					$mes++;
-					if($mes > 12){
-						$ano++;
-						$mes = 1;
+				for($n = 1;$n <= $data["p_total"] ; $n++){
+					
+					$dataParcela = $data;
+											
+					$dataParcela["ano"]		= $anoParcela;	
+					$dataParcela["mes"]		= $mesParcela;										
+					$dataParcela["parcela"] = $n;
+											
+					// -- BD INSERT -- 
+                    $this->transacoes_model->Incluir($dataParcela);
+                    
+                    // -- SALDO GERAL --
+                    geral_UpdateSaldo($dataParcela);
+                    
+					$mesParcela++;
+					if($mesParcela > 12){
+						$anoParcela++;
+						$mesParcela = 1;
 					}				
 				}
+                
 			}		
-			if(empty($type)){
-				$data = crud_transacao($type);	
-				
-				$data["ano"]  		= $this->input->post("ano");	
-				$data["mes"]  		= $this->input->post("mes");
-				$data["type"]  		= "3";
-				
-				/*BD-CRUD*/$this->crud_model->insert("transacoes",$data);
-				/*SALDO GERAL*/crud_geral($data["ano"],$data["mes"],$data["categoria"],$data["valor"]);
+            // -- TYPE 3 = Transação Simples -- 
+			if($data["type"] == 3){	
+		
+				// -- BD INSERT -- 
+                $this->transacoes_model->Incluir($data);
+                
+				// -- SALDO GERAL --
+                geral_UpdateSaldo($data);
+                
 			}
-				
-			$ano  		= 	$this->input->post("ano");	
-			$mes  		= 	$this->input->post("mes");
 			
-            /*MSG*/$this->session->set_flashdata('msg-success',"Transação adicionada com sucesso!");
-            /*REDIRECT*/redirect("content/month_content/".$ano."/".$mes."");
+            // -- MSG SUCESSO - REDIRECT
+            $this->session->set_flashdata('msg-success',"Transação adicionada com sucesso!");
+            redirect("content/month_content/".$data["ano"]."/".$data["mes"]."");
 		} 
- 
-		/*INSERT CARTAO*/
+ 	
+        // ----- UPDATE TRANSACAO -----
+		public function transacao_update($ano,$mes,$id){
+				
+			$this->output->enable_profiler(TRUE);
+			
+            /*VALIDACAO*/valida_usuario();
+            
+            $data            = transacao_getPosts();
+            $dataBusca["id"] = $data["id"];
+			$transacaoAtual  = $this->transacoes_model->Buscar($dataBusca);
+            $data["type"] = $transacaoAtual["type"];
+
+            $hasAlteracaoValor = false;
+            
+            // -- ALTERACAO VALOR --
+            if(($data["valor"] != $transacaoAtual["valor"])){
+                
+                $hasAlteracaoValor = true;
+                
+                $valorDiferenca = $data["valor"] - $transacaoAtual["valor"]  ;
+            }
+            
+            // -- ALTERACAO MÊS --
+			if( (int)$data["mes"] != (int)$transacaoAtual["mes"]){
+				
+                // -- TRANSACAO RECORRENTE -- 
+				if($transacaoAtual["type"] == 1){
+                    
+					$data["type"] = 3; 
+
+                    // -- BD : Atualizar --
+					$this->transacoes_model->Atualizar($data);
+                    
+                    $data["type"] = 1; 
+					$data["id"] = null;
+                    
+                    $data["mes"] += 1;
+                    if($data["mes"] == 13)
+                    {
+                        $data["mes"] = 12;
+                        $data["ano"] += 1;
+                    }
+                    
+                    // -- BD : Atualizar --
+					$this->transacoes_model->Incluir($data);
+                }
+                else{
+                    $this->transacoes_model->Atualizar($data);
+                }
+                
+                // -- SALDO GERAL --
+                $data["periodo_de"] = true;
+				$lGeral = $this->geral_model->Listar($data);
+                
+                $count = 0;
+				foreach($lGeral as $itemGeral){		                    
+                    
+                    $dataGeral["mes"]   = $itemGeral["mes"]; 
+                    $dataGeral["ano"]   = $itemGeral["ano"];
+                    
+                    if($count == 0)
+                    {
+                        $dataGeral["valor"] = -$transacaoAtual["valor"]; 
+                    }
+                    
+                    if($count == 1)
+                    {
+                        $dataGeral["valor"] = $transacaoAtual["valor"]; 
+                    }
+                     
+                    geral_UpdateSaldo($dataParcela);
+                    
+                }
+			}
+            else{
+                
+                $this->transacoes_model->Atualizar($data);
+
+                if($hasAlteracaoValor == true)
+                {
+                    $data["valor"] = $valorDiferenca; 
+                    echo $data["type"];
+  
+                    // -- SALDO GERAL --
+                    geral_UpdateSaldo($data);
+                }
+                
+            }
+	       
+            // -- MSG SUCESSO - REDIRECT
+            $this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
+            redirect("content/month_content/".$ano."/".$mes);
+		}
+        
+        // ----- DELETE TRANSACAO -----
+		public function transacao_delete($ano,$mes,$id){
+				
+			$this->output->enable_profiler(TRUE);
+            
+            /*VALIDACAO*/valida_usuario();
+			
+            $data["id"] = $id;
+            
+			$transacaoAtual = $this->transacoes_model->Buscar($data);
+            
+            // -- TRANSACAO SIMPLES / PARCELADA
+            if(($transacaoAtual["type"] == 3)or($transacaoAtual["type"] == 2))
+            {
+                $data["valor"] = 0;
+            }
+            //TRANSCAO RECORRENTE
+            if($data["type"]  = 1)
+            {
+                if(($transacaoAtual["ano"] == $ano)&&($transacaoAtual["mes"] == $mes))
+                {
+                    $data["valor"] = 0;
+                }
+                else{
+                    $data["type"] = 3;
+                }
+            
+            }
+            
+            $this->transacoes_model->Atualizar($data);
+            
+            $data["ano"]   = $ano;
+            $data["mes"]   = $mes;
+            $data["type"]  = $transacaoAtual["type"];
+            $data["valor"] = -$transacaoAtual["valor"];
+	
+			// -- SALDO GERAL --
+            geral_UpdateSaldo($data);
+            
+            // -- MSG SUCESSO - REDIRECT
+            $this->session->set_flashdata('msg-success',"Transacao deletada com sucesso!");
+            redirect("content/month_content/".$ano."/".$mes);
+			
+		}
+        
+        // ----- INSERT CARTAO -----
         public function cartao_insert(){
         	
 			$this->output->enable_profiler(TRUE);
 			
             /*VALIDACAO*/valida_usuario();
              
-            /*NOVA CATEGORIA*/
-            	$nova_categoria = nova_categoria();     
-            /*NOVA SUB CATEGORIA*/
-            	$nova_sub_categoria = nova_sub_categoria();	
-				$id_nova_sub_categoria  = $this->transacoes_model->get_id_sub_categoria($nova_sub_categoria); 
-					                   
-			$type					= $this->input->post("type");
-			
-			if($type != 2){
-				$data = crud_cartao($type);	
+            // -- NOVA CATEGORIA --
+            $nova_categoria = nova_categoria();     
+            // -- NOVA SUB CATEGORIA --
+            $nova_sub_categoria = nova_sub_categoria();
+            
+            /* -- DATA -- */
+            $data   = cartao_getPosts();	
 				
-				$data["ano"]  		= $this->input->post("ano");	
-				$data["mes"]  		= $this->input->post("mes");
+            // -- TYPE 1 = Transação Recorrente -- 
+			if($data["type"] == 1){
 				
-				/*BD-CRUD*/$this->crud_model->insert("cartao_de_credito",$data);
-				/*BD-CRUD*/crud_geral_cartao($data["ano"],$data["mes"],$data["valor"]);
-				/*SALDO GERAL*/crud_geral($data["ano"],$data["mes"],$data["categoria"],$data["valor"]);	
+				// -- BD INSERT -- 
+                $this->cartao_model->Incluir($data);
+                
+                // -- SALDO GERAL --
+                geral_UpdateSaldo($dataGeral);
+
 			}
-			
-			if($type == 2){
+            // -- TYPE 2 = Transação Parcelada --
+            if($data["type"] == 2){
 				
-				$ano  				= $this->input->post("ano");	
-				$mes  				= $this->input->post("mes");
-				$p_total			= $this->input->post("total");
-				
-				for($n = 1;$n <= $p_total ; $n++){
-					
-					$data = crud_cartao($type);
-											
-					$data["ano"]			= $ano;	
-					$data["mes"]			= $mes;										
-					$data["parcela"] 		= $n;
-					$data["p_total"] 		= $p_total;
-											
-					/*BD-CRUD*/$this->crud_model->insert("cartao_de_credito",$data);
-					/*BD-CRUD*/crud_geral_cartao($data["ano"],$data["mes"],$data["valor"]);
-					/*SALDO GERAL*/crud_geral($data["ano"],$data["mes"],$data["categoria"],$data["valor"]);			
+				$anoParcela = $data["ano"];
+                $mesParcela = $data["mes"];
 						
-					$mes++;
-					if($mes > 12){
-						$ano++;
-						$mes = 1;
-					}				
+				for($n = 1;$n <= $data["p_total"] ; $n++){
+										
+					$dataParcela = $data;
+											
+					$dataParcela["ano"]		= $anoParcela;	
+					$dataParcela["mes"]		= $mesParcela;										
+					$dataParcela["parcela"] = $n;
+											
+					// -- BD INSERT -- 
+                    $this->cartao_model->Incluir($dataParcela);
+                    
+					// -- SALDO GERAL --
+                    geral_Update($dataParcela);
+                    
+					$mesParcela++;
+					if($mesParcela > 12){
+						$anoParcela++;
+						$mesParcela = 1;
+					}						
 				}	
 		
 			}
-			
-			$ano  		= 	$this->input->post("ano");	
-			$mes  		= 	$this->input->post("mes");
-			
-            /*MSG*/$this->session->set_flashdata('msg-success',"Transação adicionada com sucesso!");
-            /*REDIRECT*/redirect("content/month_content/".$ano."/".$mes."");
+            // -- TYPE 3 = Transação Simples -- 
+			if($data["type"] == 3){
+                
+				// -- BD - INSERIR --
+                $this->cartao_model->Incluir($data);
+
+				// -- SALDO GERAL --
+                geral_UpdateSaldo($data);
+                
+			}
+            
+            // -- MSG SUCESSO - REDIRECT
+            $this->session->set_flashdata('msg-success',"Transação adicionada com sucesso!");
+            redirect("content/month_content/".$data["ano"]."/".$data["mes"]."");
+
 		} 
         
-		/*UPDATE CARTAO*/
+		// ----- UPDATE CARTAO -----
         public function cartao_update($ano,$mes,$id){
         	
             $this->output->enable_profiler(TRUE);
@@ -197,83 +341,7 @@
 			/*REDIRECT*///redirect("content/month_content/".$ano."/".$mes);
 		} 
 				
-        /*UPDATE*/
-		public function transacao_update($ano,$mes,$id){
-				
-			$this->output->enable_profiler(TRUE);
-			
-            /*VALIDACAO*/valida_usuario();
-
-			$transacao_atual 		= $this->transacoes_model->get_where("transacoes","id",$id);
-			$salario  	  			= $this->input->post("total_salario"); 
-						
-            $data["ano"]  		    = $this->input->post("ano");	
-            $data["mes"]  		    = $this->input->post("mes");
-            $data["dia"]  		    = $this->input->post("dia");
-			$data["categoria"]  	= $this->input->post("categoria");
-            $data["sub_categoria"]  = $this->input->post("sub_categoria");
-            $data["descricao"]      = $this->input->post("descricao");
-			$data["valor"]          = valor_decimal($this->input->post("valor"));	
-			
-			if(($data["dia"] != 0)&&($transacao_atual["type"]) == "4"){
-				$data["type"] = "3";
-				/*SALDO GERAL*/crud_geral($data["ano"],$data["mes"],$data["categoria"],$data["valor"]);
-			}
-			
-			if( (int)$data["mes"] != (int)$transacao_atual["mes"]){
-				
-				if($transacao_atual["type"] == 1){
-					$transacao_atual["type"] = 3; 
-					$transacao_atual["id"] = ""; 
-					var_dump($transacao_atual);
-					/*BD-CRUD*/$this->crud_model->insert("transacoes",$transacao_atual);			
-				}
-				else{		
-					/*SALDO GERAL*/crud_geral($transacao_atual["ano"],$transacao_atual["mes"],$data["categoria"],-$transacao_atual["valor"]);
-					/*SALDO GERAL*/crud_geral($data["ano"],$data["mes"],$data["categoria"],$data["valor"]);	
-				}
-			}
-	
-            if(($transacao_atual["valor"]) != $data["valor"]){
-
-				$diferenca 		= $data["valor"] - $transacao_atual["valor"]  ;
-				$lista_geral 	= $this->geral_model->lista_geral($data["ano"],$data["mes"]);
-				
-				echo "diferença : ".$diferenca."<br>";
-				
-            	if($transacao_atual["type"] == "1"){
-            		
-            		$data["mes"] = $data["mes"] + 1;
-					$data["ano"] = $ano;
-					
-					if($data["mes"] > 12){
-						$data["ano"] = $data["ano"] + 1;
-						$data["mes"] = 1;
-					}	
-										
-					$transacao_atual["id"] 		= "";	
-					$transacao_atual["type"] 	= "3";	
-					$transacao_atual["ano"] 	= $this->input->post("ano");
-					$transacao_atual["mes"] 	= $this->input->post("mes");
-					$transacao_atual["valor"] 	= $this->input->post("valor");	
-						
-					/*BD-CRUD*/$this->crud_model->insert("transacoes",$transacao_atual);
-
-					foreach($lista_geral as $lista){
-						/*SALDO GERAL*/crud_geral($lista["ano"],$lista["mes"],$data["categoria"],$diferenca);
-					}	
-				}
-				else{
-					/*SALDO GERAL*/crud_geral($data["ano"],$data["mes"],$data["categoria"],$diferenca);	
-				}
-            }
-            
-			/*BD-CRUD*/$this->crud_model->update("transacoes",$id,$data);
-            /*MSG*/$this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
-            /*REDIRECT*/redirect("content/month_content/".$ano."/".$mes);
-		}
-
-		/*UPDATE*/
+		// ----- UPDATE POUPANCA -----
 		public function poupanca_update($ano,$mes){
 				
 			$this->output->enable_profiler(TRUE);
@@ -291,22 +359,5 @@
             /*MSG*/$this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
             /*REDIRECT*/redirect("content/month_content/".$ano."/".$mes);
 		}
-        
-        /*DELETE*/
-		public function transacao_delete($ano,$mes,$id){
-				
-			$this->output->enable_profiler(TRUE);
             
-            /*VALIDACAO*/valida_usuario();
-			
-			$transacao_atual = $this->transacoes_model->get_where("transacoes","id",$id);
-			
-			/*SALDO GERAL*/crud_geral($transacao_atual["ano"],$transacao_atual["mes"],$transacao_atual["categoria"],-$transacao_atual["valor"]);
-			/*BD-CRUD*/$this->crud_model->delete("transacoes",$id);
-            /*MSG*/$this->session->set_flashdata('msg-success',"Transacao deletada com sucesso!");
-            
-			/*REDIRECT*/redirect("content/month_content/".$ano."/".$mes);
-			
-		}
-        
     }
