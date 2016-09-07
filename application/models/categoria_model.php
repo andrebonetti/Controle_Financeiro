@@ -5,8 +5,8 @@
         // -- SELECT --
         function Listar($pData = null,$pOrderBy = null){
 
-            if(isset($pData["id_categoria"])){$this->db->where("id_categoria",$pData["id_categoria"]);}  
-            if(isset($pData["nome_categoria"])){$this->db->where("nome_categoria",$pData["nome_categoria"]);}
+            if(isset($pData["Id"])){$this->db->where("Id",$pData["Id"]);}  
+            if(isset($pData["Descricao"])){$this->db->where("Descricao",$pData["Descricao"]);}
 
             $this->db->from("categoria");
             return $this->db->get()->result_array();
@@ -15,8 +15,8 @@
         
         function Buscar($pData){
 
-            if(isset($pData["id_cetegoria"])){$this->db->where("id_cetegoria",$pData["id_cetegoria"]);}  
-            if(isset($pData["nome_categoria"])){$this->db->where("nome_categoria",$pData["nome_categoria"]);}
+            if(isset($pData["Id"])){$this->db->where("Id",$pData["Id"]);}  
+            if(isset($pData["Descricao"])){$this->db->where("Descricao",$pData["Descricao"]);}
 
             $this->db->from("categoria");
             return $this->db->get()->row_array();

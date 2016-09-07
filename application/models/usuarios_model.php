@@ -1,19 +1,19 @@
 <?php
 	class Usuarios_model extends CI_Model {
 		
-		function valida_usuario($usuario,$senha){
-			$this->db->where("usuario",$usuario);
-			$this->db->where("senha",$senha);
+		function valida_usuario($usuario){
+			$this->db->where("Login",$usuario["Login"]);
+			$this->db->where("Senha",$usuario["Senha"]);
 			return $this->db->get("usuarios")->row_array();
 		}
         
         function lista_usuarios(){
-            $this->db->where("id !=","1");
+            $this->db->where("Id !=","1");
 			return $this->db->get("usuarios")->result_array();
 		}
 		
-		function busca_usuario($usuario){
-            $this->db->where("usuario",$usuario);
+		function Buscar($usuario){
+            $this->db->where("Id",$usuario["Id"]);
 			return $this->db->get("usuarios")->row_array();
 		}
 }

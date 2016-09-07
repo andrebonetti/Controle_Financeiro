@@ -1,25 +1,33 @@
 <section class="content">
 	<div class="myContainer">
+        
+        <?php $msg = $this->session->flashdata('msg-error'); if (!empty($msg)){?>
+            <p class="alert alert-danger"><?=$msg?></p>
+        <?php } ?> 
+        
+        <?php $msg = $this->session->flashdata('msg-success'); if (!empty($msg)){?>
+            <p class="alert alert-success"><?=$msg?></p>
+        <?php } ?>
 		        
    		<div class="saldos">
         	
-            <div class="saldo-anterior" value="<?=$saldo_anterior["saldo_final"]?>">Saldo Anterior: <span><?=numeroEmReais2($saldo_anterior["saldo_final"])?></span> </div>
-            <div class="saldo-mes <?=sinal_valor($saldo_atual["saldo_mes"])?>" value="<?=$saldo_atual["saldo_mes"]?>">Saldo do Mes: <span><?=numeroEmReais2($saldo_atual["saldo_mes"])?></span> </div>
+            <div class="saldo-anterior" value="<?=$saldo_anterior["SaldoFinal"]?>">Saldo Anterior: <span><?=numeroEmReais2($saldo_anterior["SaldoFinal"])?></span> </div>
+            <div class="saldo-mes <?=sinal_valor($saldo_atual["SaldoMes"])?>" value="<?=$saldo_atual["SaldoMes"]?>">Saldo do Mes: <span><?=numeroEmReais2($saldo_atual["SaldoMes"])?></span> </div>
             <div class="saldo-dia btn btn-default ">
                 <p>Saldo do dia</p>
                 <input type="text" class="dia_change form-control" value="<?=$hoje?>">
                 <p>:</p>
                 <span class="saldo-value"></span>
             </div>
-            <div class="saldo-futuro" value="<?=$saldo_atual["saldo_final"]?>">Saldo Futuro: <span><?=numeroEmReais2($saldo_atual["saldo_final"])?></span> </div>
+            <div class="saldo-futuro" value="<?=$saldo_atual["SaldoFinal"]?>">Saldo Futuro: <span><?=numeroEmReais2($saldo_atual["SaldoFinal"])?></span> </div>
             
         </div>
         
         <div class="poupanca_content">
         	
-            <div class="poup-anterior" value="<?=$saldo_anterior["poupanca_final"]?>">Poupança Anterior: <span><?=numeroEmReais2($saldo_anterior["poupanca_final"])?></span> </div>
-            <div class="poup-mes"  value="<?=$saldo_atual["poupanca"]?>">Poupança do Mes:  <span><?=numeroEmReais2($saldo_atual["poupanca"])?></span> </div>
-            <div class="poup-futuro" value="<?=$saldo_atual["poupanca_final"]?>">Poupança Final: <span><?=numeroEmReais2($saldo_atual["poupanca_final"])?></span> </div>
+            <div class="poup-anterior" value="<?=$saldo_anterior["PoupancaFinal"]?>">Poupança Anterior: <span><?=numeroEmReais2($saldo_anterior["PoupancaFinal"])?></span> </div>
+            <div class="poup-mes"  value="<?=$saldo_atual["Poupanca"]?>">Poupança do Mes:  <span><?=numeroEmReais2($saldo_atual["PoupancaFinal"])?></span> </div>
+            <div class="poup-futuro" value="<?=$saldo_atual["PoupancaFinal"]?>">Poupança Final: <span><?=numeroEmReais2($saldo_atual["PoupancaFinal"])?></span> </div>
             
         </div>
         
@@ -27,8 +35,8 @@
             
             <div class="header-calendario">
                 <h1><?=nome_mes($mes)?> - <?=$ano?></h1>
-                <p class="despesas">Despesas: <?=numeroEmReais2($saldo_atual["despesas"])?></p>
-                <p class="receita">Receita: <?=numeroEmReais2($saldo_atual["receita"])?></p>               
+                <p class="despesas">Despesas: <?=numeroEmReais2($saldo_atual["Despesas"])?></p>
+                <p class="receita">Receita: <?=numeroEmReais2($saldo_atual["Receita"])?></p>               
             </div>
             
             
@@ -47,7 +55,7 @@
                     
             <!-- DIAS -->
             <div class="dias">
-            
+                
             <?php 
                 /*-- CALCULO SEMANA --*/
                 $s = 1;
@@ -56,7 +64,7 @@
                     <div class="pre-nulo"></div>
                     <?php $s++; ?>
                 <?php } 
-                
+
                 /*-- FOREACH DIAS MES --*/
 			    foreach($data_month as $data_day) {?>
                 
@@ -75,30 +83,32 @@
                             
                         </tr>
 
+                        
                         <!-- CONTEUDO DIA -->
                         <?php foreach($data_day as $content){?> 
                         
-                            <?php $sub_categoria = valida_sub($content["nome_categoria"],$content["nome_sub_categoria"])?>
+                            <?php $sub_categoria = valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])?>
                         
                             <tr class="content-day content-<?=no_acento_code($sub_categoria)?>" data-toggle="modal" data-target="#edit-transacao">  
                                 
-	                            <td class="no-view id"><?=$content["id"]?></td>   
-	                            <td class="no-view type"><?=$content["type"]?></td>       
-	                            <td class="no-view dia-atual"><?=$content["dia"]?></td>    
-	                            <td class="no-view categoria" value="<?=$content["categoria"]?>"><?=$content["nome_categoria"]?></td>
-	                            <td class="no-view sub_categoria" value="<?=$content["sub_categoria"]?>"><?=valida_sub($content["nome_categoria"],$content["nome_sub_categoria"])?></td>
+	                            <td class="no-view id"><?=$content["Id"]?></td>   
+	                            <td class="no-view type"><?=$content["IdTipoTransacao"]?></td>       
+	                            <td class="no-view dia-atual"><?=$content["Dia"]?></td>    
+	                            <td class="no-view p_total-atual"><?=$content["TotalParcelas"]?></td>    
+	                            <td class="no-view categoria" value="<?=$content["IdCategoria"]?>"><?=$content["DescricaoCategoria"]?></td>
+	                            <td class="no-view sub_categoria" value="<?=$content["IdSubCategoria"]?>"><?=valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])?></td>
                                 
-                                <td class="descricao" value="<?=$content["descricao"]?>">
-                                    <?php if($content["descricao"] == NULL){?>
-                                        <?=$content["nome_sub_categoria"]?>
+                                <td class="descricao" value="<?=$content["Descricao"]?>">
+                                    <?php if($content["Descricao"] == NULL){?>
+                                        <?=$content["DescricaoSubCategoria"]?>
                                     <?php } else{ ?>
-                                        <?=$content["descricao"]?>
-                                        <?php if($content["type"] == "2"){?>
-                                            - <?=$content["parcela"]?>/<?= $content["p_total"] ?>	
+                                        <?=$content["Descricao"]?>
+                                        <?php if($content["IdTipoTransacao"] == "2"){?>
+                                            - <?=$content["NumeroParcela"]?>/<?= $content["TotalParcelas"] ?>	
                                     <?php }} ?>
                                 </td>
                                 
-                                <td class="valor <?=sinal_valor($content["valor"])?>" value="<?=$content["valor"]?>"><?=numeroEmReais2($content["valor"])?></td>
+                                <td class="valor <?=sinal_valor($content["Valor"])?>" value="<?=$content["Valor"]?>"><?=numeroEmReais2($content["Valor"])?></td>
                                 
                             </tr>
                         
@@ -110,7 +120,7 @@
                         <?php if($n == 9){?>
                             <tr class="cartao">
                                 <td class='cartao'>Cartão</td>
-                                <td class='valor-fatura valor' value="<?=-$saldo_atual["cartao"]?>"><?=numeroEmReais2(-$saldo_atual["cartao"])?></td>
+                                <td class='valor-fatura valor' value="<?=-$saldo_atual["Cartao"]?>"><?=numeroEmReais2(-$saldo_atual["Cartao"])?></td>
                             </tr>
                         <?php } ?>
                         
@@ -171,33 +181,33 @@
 
                         <?php foreach($fatura_cartao as $content){?>
 
-                        <?php $sub_categoria = valida_sub($content["nome_categoria"],$content["nome_sub_categoria"])?>
+                        <?php $sub_categoria = valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])?>
 
-                                <tr class="content-fatura content-<?=no_acento_code($sub_categoria)?>" data-toggle="modal" data-target="#edita-cartao"> 
+                            <tr class="content-fatura content-<?=no_acento_code($sub_categoria)?>" data-toggle="modal" data-target="#edita-cartao"> 
 								
-								<td class="no-view id"><?=$content["id"]?></td>   
-	                            <td class="no-view type"><?=$content["type"]?></td>        
-	                            <td class="no-view categoria" value="<?=$content["categoria"]?>"><?=$content["nome_categoria"]?></td>
-	                            <td class="no-view sub_categoria" value="<?=$content["sub_categoria"]?>"><?=valida_sub($content["nome_categoria"],$content["nome_sub_categoria"])?></td>
+								<td class="no-view id"><?=$content["Id"]?></td>   
+	                            <td class="no-view type"><?=$content["IdTipoTransacao"]?></td>        
+	                            <td class="no-view categoria" value="<?=$content["IdCategoria"]?>"><?=$content["DescricaoCategoria"]?></td>
+	                            <td class="no-view sub_categoria" value="<?=$content["IdSubCategoria"]?>"><?=valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])?></td>
                             
-                                <td class="compra"><?=dataMysqlParaPtBr($content["data_compra"])?></td>
-                                <td class="descricao" value="<?=$content["descricao"]?>">
-                                    <?php if($content["descricao"] == NULL){?>
-                                    <?=$content["nome_sub_categoria"]?>
+                                <td class="compra"><?=dataMysqlParaPtBr($content["DataCompra"])?></td>
+                                <td class="descricao" value="<?=$content["Descricao"]?>">
+                                    <?php if($content["Descricao"] == NULL){?>
+                                    <?=$content["DescricaoSubCategoria"]?>
                                     <?php } else{ ?>
-                                    <?=$content["descricao"]?>
-                                    <?php if($content["type"] == "2"){?>
-                                        - <?=$content["parcela"]?>/<?= $content["p_total"] ?>	
+                                    <?=$content["Descricao"]?>
+                                    <?php if($content["IdTipoTransacao"] == "2"){?>
+                                        - <?=$content["NumeroParcela"]?>/<?= $content["TotalParcelas"] ?>	
                                     <?php }} ?>
                                 </td>
-                                <td class="valor" value="<?=$content["valor"]?>"><?=numeroEmReais2($content["valor"])?></td>
+                                <td class="valor" value="<?=$content["Valor"]?>"><?=numeroEmReais2($content["Valor"])?></td>
 
                             </tr>
 
                         <?php } ?>
 
                         <tr>
-                            <td colspan="3" class="valor-total"><?=numeroEmReais2(-$saldo_atual["cartao"])?></td>
+                            <td colspan="3" class="valor-total"><?=numeroEmReais2(-$saldo_atual["Cartao"])?></td>
                         </tr>
 
                     </table> 
@@ -210,11 +220,11 @@
          
             <?php foreach($categorias as $categoria){?>
             
-                <div class="categoria-resumo resumo-<?=$categoria["nome_categoria"]?> <?=$c?> <?php if($c%3 == "0"){echo "new-line";}?>">
+                <div class="categoria-resumo resumo-<?=$categoria["DescricaoCategoria"]?> <?=$c?> <?php if($c%3 == "0"){echo "new-line";}?>">
                     
                     <div class="categoria-content">
                     
-                        <h2><?=$categoria["nome_categoria"]?></h2>
+                        <h2><?=$categoria["DescricaoCategoria"]?></h2>
 
                         <table>
                             <tr>
@@ -224,13 +234,13 @@
                         </table> 
 
                         <!-- SUB CATEGORIAS -->
-                        <?php if($sub_categorias[$categoria["nome_categoria"]] == NULL){?>
+                        <?php if($sub_categorias[$categoria["DescricaoCategoria"]] == NULL){?>
 
                             <div> 
                                 <table>
 
                                     <tr>
-                                        <th colspan="3" class="nome_sub_categoria" name="<?=$categoria["nome_categoria"]?>"><?=$categoria["nome_categoria"]?></th>
+                                        <th colspan="3" class="nome_sub_categoria" name="<?=$categoria["DescricaoCategoria"]?>"><?=$categoria["DescricaoCategoria"]?></th>
                                     </tr>
 
                                 </table> 
@@ -238,11 +248,11 @@
 
                         <?php } ?>
 
-                        <?php if($sub_categorias[$categoria["nome_categoria"]] != NULL){?>
+                        <?php if($sub_categorias[$categoria["DescricaoCategoria"]] != NULL){?>
 
-                            <?php foreach($sub_categorias[$categoria["nome_categoria"]] as $content){?>                   
+                            <?php foreach($sub_categorias[$categoria["DescricaoCategoria"]] as $content){?>                   
 
-                                    <?php $sub_categoria = valida_sub($categoria["nome_categoria"],$content["nome_sub_categoria"])?>
+                                    <?php $sub_categoria = valida_sub($categoria["DescricaoCategoria"],$content["DescricaoSubCategoria"])?>
 
                                     <div class="sub_categoria-resumo sub_resumo-<?=no_acento_code($sub_categoria)?>"> 
 

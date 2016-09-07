@@ -6,14 +6,14 @@
 			
 		$this->output->enable_profiler(TRUE);
            
-        $dataContent["mes"] = $month;
-        $dataContent["ano"] = $year;
+        $dataContent["Mes"] = $month;
+        $dataContent["Ano"] = $year;
 			
 		// -- USUARIO --
-        $user    = $this->session->userdata('usuario');  
-		$usuario = $this->usuarios_model->busca_usuario($user); 
+        $usuarioLogado["Id"]    = $this->session->userdata('usuario');
+        $usuarioLogado = $this->usuarios_model->Buscar($usuarioLogado); 
 		
-        $dataContent["usuario"]        = $usuario["id_usuario"];   
+        $dataContent["IdUsuario"]      = $usuarioLogado["Id"];   
         $dataContent["isListaPorTipo"] = true;
            
 		// -- TABELAS --
@@ -24,10 +24,10 @@
             $lCategoriasFinal    = [];  
             foreach($lCategorias as $itemCategoria)
             {
-                $pDataSubCategoria["categoria"] = $itemCategoria["id_categoria"];
+                $pDataSubCategoria["IdCategoria"] = $itemCategoria["IdCategoria"];
 		        $lSubCategorias = $this->subCategoria_model->Listar($pDataSubCategoria);
                 
-                $lCategoriasFinal[$itemCategoria["nome_categoria"]] = $lSubCategorias;
+                $lCategoriasFinal[$itemCategoria["DescricaoCategoria"]] = $lSubCategorias;
             }
            
             // -- SALDO --
@@ -35,12 +35,12 @@
 		
             // -- MENU COMPETENCIAS
             if($month == 1){
-                $competenciaAnterior["mes"] = 12;
-                $competenciaAnterior["ano"] = $year-1;
+                $competenciaAnterior["Mes"] = 12;
+                $competenciaAnterior["Ano"] = $year-1;
             }
             else{
-                $competenciaAnterior["mes"] = $month-1;;
-                $competenciaAnterior["ano"] = $year;
+                $competenciaAnterior["Mes"] = $month-1;;
+                $competenciaAnterior["Ano"] = $year;
             }	
 
             $saldoAnterior = $this->geral_model->Buscar($competenciaAnterior);
@@ -63,14 +63,17 @@
                 $lDia_transacoesRecorrentesSabado  = null;
                 $lDia_transacoesRecorrentesDomingo = null;
                 
-                $dataContent["dia"]                      = $n;
-                $diaSemana                               = date("w", mktime(0,0,0,$dataContent["mes"],$n,$dataContent["ano"]));  
+                
+                $dataContent["Dia"]                      = $n;
+                $dataContent["Mes"]                      = $month;
+                $dataContent["Ano"]                      = $year;
+                $diaSemana                               = date("w", mktime(0,0,0,$dataContent["Mes"],$n,$dataContent["Ano"]));  
                 $DiaContent                              = [];
                 $dataContent["PreencherEntidadesFilhas"] = true;
                     
                 // -- TRANSACOES SIMPLES --
                 
-                    $dataContent["type"]    = 3;
+                    $dataContent["IdTipoTransacao"]    = 3;
                     $lDia_transacoesSimples = $this->transacoes_model->Listar($dataContent);
 
                     foreach($lDia_transacoesSimples as $itemContent){
@@ -82,8 +85,11 @@
                     // -- SEGUNDA A SEXTA 
                     if(($diaSemana >= 1)&&($diaSemana <= 5))
                     {
-                        $dataContent["type"]       = 2;
-                        $lDia_transacoesParceladas = $this->transacoes_model->Listar($dataContent);
+                        $dataContent["Dia"]             = $n;   
+                        $dataContent["IdTipoTransacao"] = 2;
+                        
+                        $lDia_transacoesParceladas      = $this->transacoes_model->Listar($dataContent);
+                        
                         foreach($lDia_transacoesParceladas as $itemContent){
                             array_push($DiaContent,$itemContent);
                         }
@@ -92,19 +98,59 @@
                     // -- SEGUNDA (BUSCA PARCELAS QUE CAEM EM FDS) --
                     if($diaSemana == 1) {
                         
+                        // TRANSACOES DOMINGO
+                        if(($n - 1) == 0)
+                        {
+                            if($month == 1){
+                                $dataContent["Mes"] = 12;
+                                $dataContent["Ano"] = $year-1;
+                            }
+                            else{
+                                $dataContent["Mes"] = $month-1;;
+                                $dataContent["Ano"] = $year;
+                            }
+                            
+                            $dataContent["Dia"] = days_in_month($dataContent["Mes"]);
+                        }
+                        else{
+                            $dataContent["Dia"]     = $n - 1;   
+                        }
+                        
+                        $lDia_transacoesParceladasDomingo = $this->transacoes_model->Listar($dataContent);
+                        foreach($lDia_transacoesParceladasDomingo as $itemContent){
+                           array_push($DiaContent,$itemContent);
+                        }
+                        
                         // TRANSACOES SABADO
-                        $dataContent["dia"]               = $n - 2;
+                        if(($n - 2) <= 0)
+                        {
+                            if($month == 1){
+                                $dataContent["Mes"] = 12;
+                                $dataContent["Ano"] = $year-1;
+                            }
+                            else{
+                                $dataContent["Mes"] = $month-1;;
+                                $dataContent["Ano"] = $year;
+                            }
+                            
+                            if(($n - 2) == -1)
+                            {
+                                $dataContent["Dia"] = days_in_month($dataContent["Mes"]) - 1;
+                            }
+                            if(($n - 2) == 0)
+                            {
+                                $dataContent["Dia"] = days_in_month($dataContent["Mes"]);
+                            }
+                        }
+                        else{
+                            $dataContent["Dia"]     = $n - 2;   
+                        }
+                        
                         $lDia_transacoesParceladasSabado  = $this->transacoes_model->Listar($dataContent);
-                        foreach($lDia_transacoesParceladasSabado as $itemContent){
+                            foreach($lDia_transacoesParceladasSabado as $itemContent){
                             array_push($DiaContent,$itemContent);
                         }
                         
-                        // TRANSACOES DOMINGO
-                        $dataContent["dia"]               = $n - 1;
-                        $lDia_transacoesParceladasDomingo = $this->transacoes_model->Listar($dataContent);
-                        foreach($lDia_transacoesParceladasDomingo as $itemContent){
-                            array_push($DiaContent,$itemContent);
-                        }
                     }
                 
                 // -- TRANSACOES RECORRENTES --
@@ -112,8 +158,10 @@
                     // -- SEGUNDA A SEXTA 
                     if(($diaSemana >= 1)&&($diaSemana <= 5))
                     {
-                        $dataContent["type"]        = 1;
-                        $lDia_transacoesRecorrentes = $this->transacoes_model->Listar($dataContent);
+                        $dataContent["Dia"]             = $n; 
+                        $dataContent["IdTipoTransacao"] = 1;
+                        
+                        $lDia_transacoesRecorrentes     = $this->transacoes_model->Listar($dataContent);
                         foreach($lDia_transacoesRecorrentes as $itemContent){
                             array_push($DiaContent,$itemContent);
                         }
@@ -122,42 +170,82 @@
                     // -- SEGUNDA (BUSCA TRANSACOES QUE CAEM EM FDS) -- 
                     if($diaSemana == 1) {
                         
-                        // TRANSACOES SABADO
-                        $dataContent["dia"]                = $n - 2;
-                        $lDia_transacoesRecorrentesSabado  = $this->transacoes_model->Listar($dataContent);
-                        foreach($lDia_transacoesRecorrentesSabado as $itemContent){
-                            array_push($DiaContent,$itemContent);
+                        // TRANSACOES DOMINGO
+                        if(($n - 1) == 0)
+                        {
+                            if($month == 1){
+                                $dataContent["Mes"] = 12;
+                                $dataContent["Ano"] = $year-1;
+                            }
+                            else{
+                                $dataContent["Mes"] = $month-1;;
+                                $dataContent["Ano"] = $year;
+                            }
+                            
+                            $dataContent["Dia"] = days_in_month($dataContent["Mes"]);
+                        }
+                        else{
+                            $dataContent["Dia"]     = $n - 1;   
                         }
                         
-                        // TRANSACOES DOMINGO
-                        $dataContent["dia"]               = $n - 1;
                         $lDia_transacoesRecorrentesDomingo = $this->transacoes_model->Listar($dataContent);
                         foreach($lDia_transacoesRecorrentesDomingo as $itemContent){
+                           array_push($DiaContent,$itemContent);
+                        }
+                        
+                        // TRANSACOES SABADO
+                        if(($n - 2) <= 0)
+                        {
+                            if($month == 1){
+                                $dataContent["Mes"] = 12;
+                                $dataContent["Ano"] = $year-1;
+                            }
+                            else{
+                                $dataContent["Mes"] = $month-1;;
+                                $dataContent["Ano"] = $year;
+                            }
+                            
+                            if(($n - 2) == -1)
+                            {
+                                $dataContent["Dia"] = days_in_month($dataContent["Mes"]) - 1;
+                            }
+                            if(($n - 2) == 0)
+                            {
+                                $dataContent["Dia"] = days_in_month($dataContent["Mes"]);
+                            }
+                        }
+                        else{
+                            $dataContent["Dia"]     = $n - 2;   
+                        }
+                        
+                        $lDia_transacoesRecorrentesSabado  = $this->transacoes_model->Listar($dataContent);
+                        foreach($lDia_transacoesRecorrentesSabado as $itemContent){
                             array_push($DiaContent,$itemContent);
                         }
                     }
                 
                 $data_month["dia-".$n] = $DiaContent;
+                
             }
 					
             // -- CARTAO --
             
                 $data_cartao = array();    
             
-                $fatura_infinit 	= $this->cartao_model->fatura_infinit($usuario['id_usuario'],$year,$month);		
-                $fatura_parcela 	= $this->cartao_model->fatura_parcela($year,$month,$usuario['id_usuario']);	
-                $fatura_unique 	    = $this->cartao_model->fatura_unique($year,$month,$usuario['id_usuario']);	
+                $fatura_infinit 	= $this->cartao_model->fatura_infinit($usuarioLogado['Id'],$year,$month);		
+                $fatura_parcela 	= $this->cartao_model->fatura_parcela($year,$month,$usuarioLogado['Id']);	
+                $fatura_unique 	    = $this->cartao_model->fatura_unique($year,$month,$usuarioLogado['Id']);	
             
                 if(!empty($fatura_infinit)){
                     foreach($fatura_infinit as $content){
-                    	$ano_fim = $content["ano_fim"];
-						$mes_fim = $content["mes_fim"];
+                    	$AnoFim = $content["AnoFim"];
+						$MesFim = $content["MesFim"];
 						
-                    	if(($ano_fim == 0)&&($mes_fim == 0)){
+                    	if(($AnoFim == 0)&&($MesFim == 0)){
                     		array_push($data_cartao,$content);
                     	}
 						else{
-							if(($ano_fim >= $year)&&($mes_fim >= $month)){
+							if(($AnoFim >= $year)&&($MesFim >= $month)){
 								array_push($data_cartao,$content);
 							}
 						}
@@ -172,11 +260,11 @@
                     array_push($data_cartao,$content);
                 }}
            	                   
-		/*--------------------------CONTENT----------------------------------*/
+		// --------------------------CONTENT----------------------------------
 		$content = array( 
 		"saldo_anterior"		=> $saldoAnterior,
 		"saldo_atual"			=> $saldoAtual,       
-		"usuario"		  		=> $usuario,
+		"usuario"		  		=> $usuarioLogado,
 		"ano"			  		=> $year,
 		"mes"			  		=> $month,
         "hoje"                  => $DiaAtual,
@@ -191,7 +279,7 @@
 		
 		// -- VIEW --
         $this->load->template("content.php",$content);
-            
+           
 	   }
 
 	   public function geral(){

@@ -9,14 +9,14 @@
         public function validacao(){	
             
             /* ----- CONTENT ----- */
-			$usuario  = $this->input->post("usuario");
-			$senha	  = md5($this->input->post("senha"));  
-            $result = $this->usuarios_model->valida_usuario($usuario,$senha);
-			
+			$usuario["Login"] = $this->input->post("usuario");
+			$usuario["Senha"] = md5($this->input->post("senha"));  
+            $resultado        = $this->usuarios_model->valida_usuario($usuario);
+
 			$atual_y = mdate("%Y");
 			$atual_m = mdate("%m");
 						
-            /*REDIRECT*/login_result($result,"content/month_content/$atual_y/$atual_m");	     
+            /*REDIRECT*/login_result($resultado,"content/month_content/$atual_y/$atual_m");	     
 		}
     
     }

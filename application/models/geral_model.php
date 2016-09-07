@@ -4,32 +4,31 @@
         // -- SELECT -- 
 		function Listar($pData,$pOrderBy = null){
  			
-            if(isset($pData["id"])){$this->db->where("id",$pData["id"]);}  
-            if(isset($pData["receita"])){$this->db->where("receita",$pData["receita"]);}
-            if(isset($pData["despesas"])){$this->db->where("despesas",$pData["despesas"]);}
-            if(isset($pData["salario"])){$this->db->where("salario",$pData["salario"]);}
-            if(isset($pData["cartao"])){$this->db->where("cartao",$pData["cartao"]);}
-            if(isset($pData["poupanca"])){$this->db->where("poupanca",$pData["poupanca"]);}
-            if(isset($pData["poupanca_final"])){$this->db->where("poupanca_final",$pData["poupanca_final"]);}
-            if(isset($pData["dizimo"])){$this->db->where("dizimo",$pData["dizimo"]);}
-            if(isset($pData["saldo_mes"])){$this->db->where("saldo_mes",$pData["saldo_mes"]);}
-            if(isset($pData["saldo_final"])){$this->db->where("saldo_final",$pData["saldo_final"]);}
+            if(isset($pData["Id"])){$this->db->where("Id",$pData["Id"]);}  
+            if(isset($pData["Receita"])){$this->db->where("Receita",$pData["Receita"]);}
+            if(isset($pData["Despesas"])){$this->db->where("Despesas",$pData["Despesas"]);}
+            if(isset($pData["Salario"])){$this->db->where("Salario",$pData["Salario"]);}
+            if(isset($pData["Cartao"])){$this->db->where("Cartao",$pData["Cartao"]);}
+            if(isset($pData["Poupanca"])){$this->db->where("Poupanca",$pData["Poupanca"]);}
+            if(isset($pData["PoupancaFinal"])){$this->db->where("PoupancaFinal",$pData["PoupancaFinal"]);}
+            if(isset($pData["SaldoMes"])){$this->db->where("SaldoMes",$pData["SaldoMes"]);}
+            if(isset($pData["saldoFinal"])){$this->db->where("SaldoFinal",$pData["SaldoFinal"]);}
             
-            if(isset($pData["periodo_de"])){
-                if($pData["periodo_de"] == true){
-                    if(isset($pData["mes"])){$this->db->where("mes >=",$pData["mes"]);}
-                    if(isset($pData["ano"])){$this->db->where("ano >=",$pData["ano"]);}
+            if(isset($pData["PeriodoDe"])){
+                if($pData["PeriodoDe"] == true){
+                    if(isset($pData["Mes"])){$this->db->where("Mes >=",$pData["Mes"]);}
+                    if(isset($pData["Ano"])){$this->db->where("Ano >=",$pData["Ano"]);}
                 }
             }
-            if(isset($pData["periodo_ate"])){
-                if($pData["periodo_ate"] == true){
-                    if(isset($pData["mes"])){$this->db->where("mes <=",$pData["mes"]);}
-                    if(isset($pData["ano"])){$this->db->where("ano <=",$pData["ano"]);}
+            if(isset($pData["PeriodoAte"])){
+                if($pData["PeriodoAte"] == true){
+                    if(isset($pData["Mes"])){$this->db->where("Mes <=",$pData["Mes"]);}
+                    if(isset($pData["Ano"])){$this->db->where("Ano <=",$pData["Ano"]);}
                 }
             }
-            if((!isset($pData["periodo_de"]))&&(!isset($pData["periodo_ate"]))){
-                if(isset($pData["ano"])){$this->db->where("ano",$pData["ano"]);}
-                if(isset($pData["mes"])){$this->db->where("mes",$pData["mes"]);}
+            if((!isset($pData["PeriodoDe"]))&&(!isset($pData["PeriodoAte"]))){
+                if(isset($pData["Ano"])){$this->db->where("Ano",$pData["Ano"]);}
+                if(isset($pData["Mes"])){$this->db->where("Mes",$pData["Mes"]);}
             }
             
             if($pOrderBy != null){
@@ -41,25 +40,24 @@
         			
 		function Buscar($pData){
             
-			if(isset($pData["id"])){$this->db->where("id",$pData["id"]);}  
-            if(isset($pData["receita"])){$this->db->where("receita",$pData["receita"]);}
-            if(isset($pData["despesas"])){$this->db->where("despesas",$pData["despesas"]);}
-            if(isset($pData["salario"])){$this->db->where("salario",$pData["salario"]);}
-            if(isset($pData["cartao"])){$this->db->where("cartao",$pData["cartao"]);}
-            if(isset($pData["poupanca"])){$this->db->where("poupanca",$pData["poupanca"]);}
-            if(isset($pData["poupanca_final"])){$this->db->where("poupanca_final",$pData["poupanca_final"]);}
-            if(isset($pData["dizimo"])){$this->db->where("dizimo",$pData["dizimo"]);}
-            if(isset($pData["saldo_mes"])){$this->db->where("saldo_mes",$pData["saldo_mes"]);}
-            if(isset($pData["saldo_final"])){$this->db->where("saldo_final",$pData["saldo_final"]);}
-            if(isset($pData["ano"])){$this->db->where("ano",$pData["ano"]);}
-            if(isset($pData["mes"])){$this->db->where("mes",$pData["mes"]);}
+			if(isset($pData["Id"])){$this->db->where("Id",$pData["Id"]);}  
+            if(isset($pData["Receita"])){$this->db->where("Receita",$pData["Receita"]);}
+            if(isset($pData["Despesas"])){$this->db->where("Despesas",$pData["Despesas"]);}
+            if(isset($pData["Salario"])){$this->db->where("Salario",$pData["Salario"]);}
+            if(isset($pData["Cartao"])){$this->db->where("Cartao",$pData["Cartao"]);}
+            if(isset($pData["Poupanca"])){$this->db->where("Poupanca",$pData["Poupanca"]);}
+            if(isset($pData["PoupancaFinal"])){$this->db->where("PoupancaFinal",$pData["PoupancaFinal"]);}
+            if(isset($pData["SaldoMes"])){$this->db->where("SaldoMes",$pData["SaldoMes"]);}
+            if(isset($pData["saldoFinal"])){$this->db->where("SaldoFinal",$pData["SaldoFinal"]);}
+            if(isset($pData["Ano"])){$this->db->where("Ano",$pData["Ano"]);}
+            if(isset($pData["Mes"])){$this->db->where("Mes",$pData["Mes"]);}
             
 			return $this->db->get("geral")->row_array();		       
         }
 						
 		// -- UPDATE --	
 		function Atualizar($pData){
-            $this->db->where 	('id', $pData["id"]);
+            $this->db->where 	('Id', $pData["Id"]);
 			$this->db->update	("geral", $pData);
 		}
     }

@@ -4,30 +4,42 @@
         
 		$ci = get_instance();
 		
-			$data["dia"] 		= $ci->input->post("dia");
-			$data["descricao"] 	= $ci->input->post("descricao");	
-			$data["valor"]		= valor_decimal($ci->input->post("valor"));		
-			$data["type"]		= $ci->input->post("type");
-            $data["p_total"]    = $ci->input->post("total");
-            $data["ano"]        = $ci->input->post("ano");	
-			$data["mes"]  		= $ci->input->post("mes");
+			$data["Dia"] 		= $ci->input->post("dia");
+			$data["Descricao"] 	= $ci->input->post("descricao");	
+			$data["Valor"]		= valor_decimal($ci->input->post("valor"));		
+
+            $data["Ano"]        = $ci->input->post("ano");	
+			$data["Mes"]  		= $ci->input->post("mes");
 
 				/*CATEGORIA*/						   							       	
-				if(!empty($nova_categoria)){$data["categoria"] = $id_nova_categoria["id_categoria"];}
-            	if(empty($nova_categoria)){ $data["categoria"] = $ci->input->post("categoria");}
+				if(!empty($nova_categoria)){$data["IdCategoria"] = $id_nova_categoria["id_categoria"];}
+            	if(empty($nova_categoria)){ $data["IdCategoria"] = $ci->input->post("categoria");}
 				
 				/*SUB_CATEGORIA*/
-				if(!empty($nova_sub_categoria)){$data["sub_categoria"] = $id_nova_sub_categoria["id_sub_categoria"];}
-                if(empty($nova_sub_categoria)){ $data["sub_categoria"] = $ci->input->post("sub_categoria");}
+				if(!empty($nova_sub_categoria)){$data["IdSubCategoria"] = $id_nova_sub_categoria["id_sub_categoria"];}
+                if(empty($nova_sub_categoria)){ $data["IdSubCategoria"] = $ci->input->post("sub_categoria");}
 			
             // -- ATUALIZACAO --
-                if($ci->input->post("id") > 0)     { $data["id"] 	 = $ci->input->post("id");}
-                if($ci->input->post("usuario") > 0){$data["usuario"] = $ci->input->post("usuario");}
+            if($ci->input->post("id") > 0)     { $data["Id"] 	 = $ci->input->post("id");}
+            if($ci->input->post("usuario") > 0){$data["IdUsuario"] = $ci->input->post("usuario");}
         
-			/*TYPE*/
-			if(empty($data["type"])){$data["type"] = "3";}
-            if(empty($data["dia"]))	{$data["type"] = "4";}
-			
+			// ----- TYPE -----
+            $data["IdTipoTransacao"] = 3;
+        
+            //Recorrente
+			if($ci->input->post("isRecorrente") == 1)
+            {
+                $data["IdTipoTransacao"] = 1;
+            }
+            else{
+                //Recorrente 
+                if($ci->input->post("totalParcelas") > 0)
+                {
+                    $data["IdTipoTransacao"]    = 2;
+                    $data["TotalParcelas"] = $ci->input->post("totalParcelas");
+                }
+            }
+        
 		return $data;	
     
     }

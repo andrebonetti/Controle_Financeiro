@@ -1,10 +1,10 @@
 <?php
 
-    function login_result($result,$redirect){
+    function login_result($resultado,$redirect){
        $ci = get_instance();    
         
-	   if (!empty ($result)){
-           $ci->session->set_userdata("usuario",$result['usuario']);			
+	   if (!empty ($resultado)){
+           $ci->session->set_userdata("usuario",$resultado['Id']);	
            redirect($redirect);
         }
         else{

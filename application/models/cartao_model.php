@@ -6,17 +6,17 @@
             /* FROM */ $this->db->from("cartao_de_credito");
             
             /* JOIN */
-            $this->db->join("categoria", "categoria.id_categoria = cartao_de_credito.categoria");
-            $this->db->join("sub_categoria", "sub_categoria.id_sub_categoria = cartao_de_credito.sub_categoria");           
+            $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
+            $this->db->join("Sub_Categoria", "sub_categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");             
 			
             /* WHERE */
-			$this->db->where("type","1");
-            $this->db->where("ano <=",$year);
-            $this->db->where("mes <=",$month);
+			$this->db->where("cartao_de_credito.IdTipoTransacao","1");
+            $this->db->where("cartao_de_credito.Ano <=",$year);
+            $this->db->where("cartao_de_credito.Mes <=",$month);
 			//$this->db->where("ano_fim >=",$year);
             //$this->db->where("mes_fim >=",$month);
-			$this->db->where("valor !=",0);
-			$this->db->where("usuario",$usuario);
+			$this->db->where("cartao_de_credito.Valor !=",0);
+			$this->db->where("cartao_de_credito.IdUsuario",$usuario);
 			
 			return $this->db->get()->result_array();		
 			  
@@ -27,15 +27,15 @@
             /* FROM */ $this->db->from("cartao_de_credito");
             
             /* JOIN */
-            $this->db->join("categoria", "categoria.id_categoria = cartao_de_credito.categoria");
-            $this->db->join("sub_categoria", "sub_categoria.id_sub_categoria = cartao_de_credito.sub_categoria");           
+            $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
+            $this->db->join("Sub_Categoria", "sub_categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");            
 			
             /* WHERE */
-			$this->db->where("type","2");
-			$this->db->where("ano",$year);
-            $this->db->where("mes",$month);
-            $this->db->where("valor !=",0);
-			$this->db->where("usuario",$usuario);
+			$this->db->where("cartao_de_credito.IdTipoTransacao","2");
+			$this->db->where("cartao_de_credito.Ano",$year);
+            $this->db->where("cartao_de_credito.Mes",$month);
+            $this->db->where("cartao_de_credito.Valor !=",0);
+			$this->db->where("cartao_de_credito.IdUsuario",$usuario);
 			
 			return $this->db->get()->result_array();		
 			  
@@ -46,15 +46,15 @@
             /* FROM */ $this->db->from("cartao_de_credito");
             
             /* JOIN */
-            $this->db->join("categoria", "categoria.id_categoria = cartao_de_credito.categoria");
-            $this->db->join("sub_categoria", "sub_categoria.id_sub_categoria = cartao_de_credito.sub_categoria");   
+            $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
+            $this->db->join("Sub_Categoria", "sub_categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");           
 			
             /* WHERE */
-			$this->db->where("type","3");
-            $this->db->where("ano",$year);
-            $this->db->where("mes",$month);
-            $this->db->where("valor !=",0);
-			$this->db->where("usuario",$usuario);
+			$this->db->where("cartao_de_credito.IdTipoTransacao","3");
+            $this->db->where("cartao_de_credito.Ano",$year);
+            $this->db->where("cartao_de_credito.Mes",$month);
+            $this->db->where("cartao_de_credito.Valor !=",0);
+			$this->db->where("cartao_de_credito.IdUsuario",$usuario);
 			
 			return $this->db->get()->result_array();
         

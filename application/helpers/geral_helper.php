@@ -4,23 +4,23 @@
         
         $ci = get_instance();
         
-        $pData["periodo_de"] = true;
-        $pData["id"] = null;
+        $pData["PeriodoDe"] = true;
+        $pData["Id"] = null;
         $lGeral = $ci->geral_model->Listar($pData);
-                    
+   
         $cont = 1;
         foreach($lGeral as $itemGeral){		                    
 
-            $dataGeral["mes"]   = $itemGeral["mes"]; 
-            $dataGeral["ano"]   = $itemGeral["ano"];
-            $dataGeral["valor"] = $pData["valor"];
+            $dataGeral["Mes"]   = $itemGeral["Mes"]; 
+            $dataGeral["Ano"]   = $itemGeral["Ano"];
+            $dataGeral["Valor"] = $pData["Valor"];
 
-            if(($cont == 1)or($pData["type"] == 1)){
+            if(($cont == 1)or($pData["IdTipoTransacao"] == 1)){
                 geral_UpdateSaldoMes($dataGeral);
             }
             
-            if($pData["type"] == 1){
-                $dataGeral["valor"] = $pData["valor"] * $cont;
+            if($pData["IdTipoTransacao"] == 1){
+                $dataGeral["Valor"] = $pData["Valor"] * $cont;
             }
                         
             geral_UpdateSaldoFinal($dataGeral);
@@ -35,7 +35,7 @@
 		// ------ MES ------	
         $dataGeralMes              = $ci->geral_model->Buscar($pData);	
         
-		$dataGeralMes["saldo_mes"] += $pData["valor"];
+		$dataGeralMes["SaldoMes"] += $pData["Valor"];
         
         // -- BD UPDATE --
 		$ci->geral_model->Atualizar($dataGeralMes);
@@ -51,7 +51,7 @@
 		foreach($lGeral as $itemGeral){	
             
             $dataGeralFinal                = $itemGeral;
-			$dataGeralFinal["saldo_final"] += $pData["valor"];
+			$dataGeralFinal["SaldoFinal"] += $pData["Valor"];
             
             // -- BD UPDATE --
             $ci->geral_model->Atualizar($dataGeralFinal);	

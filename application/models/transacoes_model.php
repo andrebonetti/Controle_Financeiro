@@ -4,42 +4,40 @@
         // -- SELECT --		
         function Listar($pData = null,$pOrderBy = null){
             
-            if(isset($pData["id"])){$this->db->where("id",$pData["id"]);} 
-            if(isset($pData["type"])){$this->db->where("type",$pData["type"]);}
-            if(isset($pData["usuario"])){$this->db->where("usuario",$pData["usuario"]);}           
-            
-            if(isset($pData["categoria"])){$this->db->where("categoria",$pData["categoria"]);}
-            if(isset($pData["sub_categoria"])){$this->db->where("sub_categoria",$pData["sub_categoria"]);}
-            if(isset($pData["descricao"])){$this->db->where("descricao",$pData["descricao"]);}
-            if(isset($pData["status"])){$this->db->where("status",$pData["status"]);}
-            if(isset($pData["parcela"])){$this->db->where("parcela",$pData["parcelas"]);}
-            if(isset($pData["p_total"])){$this->db->where("p_total",$pData["p_total"]);}
-            if(isset($pData["valor"])){$this->db->where("valor",$pData["valor"]);}
+            if(isset($pData["Id"])){$this->db->where("transacoes.Id",$pData["id"]);}  
+            if(isset($pData["IdUsuario"])){$this->db->where("transacoes.IdUsuario",$pData["IdUsuario"]);}
+            if(isset($pData["IdCategoria"])){$this->db->where("transacoes.IdCategoria",$pData["IdCategoria"]);}
+            if(isset($pData["IdSubCategoria"])){$this->db->where("transacoes.IdSubCategoria",$pData["IdSubCategoria"]);}
+            if(isset($pData["Descricao"])){$this->db->where("transacoes.Descricao",$pData["Descricao"]);}
+            if(isset($pData["NumeroParcela"])){$this->db->where("transacoes.NumeroParcela",$pData["NumeroParcela"]);}
+            if(isset($pData["TotalParcelas"])){$this->db->where("transacoes.TotalParcelas",$pData["TotalParcelas"]);}
+            if(isset($pData["Valor"])){$this->db->where("transacoes.Valor",$pData["Valor"]);}
             
             if((isset($pData["isListaPorTipo"]))&&($pData["isListaPorTipo"] == true))
             {
                 $this->db->where("valor !=","0");
+                $this->db->where("IdTipoTransacao",$pData["IdTipoTransacao"]);
                 
                 //Se for Transação Recorrente Só busca pelo Dia
-                if($pData["type"] == 1){
-                    if(isset($pData["dia"])){$this->db->where("dia",$pData["dia"]);}
+                if($pData["IdTipoTransacao"] == 1){
+                    if(isset($pData["Dia"])){$this->db->where("Dia",$pData["Dia"]);}
                 }
                 else{
-                    if(isset($pData["ano"])){$this->db->where("ano",$pData["ano"]);}
-                    if(isset($pData["mes"])){$this->db->where("mes",$pData["mes"]);}
-                    if(isset($pData["dia"])){$this->db->where("dia",$pData["dia"]);}
+                    if(isset($pData["Ano"])){$this->db->where("Ano",$pData["Ano"]);}
+                    if(isset($pData["Mes"])){$this->db->where("Mes",$pData["Mes"]);}
+                    if(isset($pData["Dia"])){$this->db->where("Dia",$pData["Dia"]);}
                 }
             }
             else{
-                if(isset($pData["ano"])){$this->db->where("ano",$pData["ano"]);}
-                if(isset($pData["mes"])){$this->db->where("mes",$pData["mes"]);}
-                if(isset($pData["dia"])){$this->db->where("dia",$pData["dia"]);}
+                if(isset($pData["Ano"])){$this->db->where("Ano",$pData["Ano"]);}
+                if(isset($pData["Mes"])){$this->db->where("Mes",$pData["Mes"]);}
+                if(isset($pData["Dia"])){$this->db->where("Dia",$pData["Dia"]);}
             }
                
             if(isset($pData["PreencherEntidadesFilhas"])){
                 if($pData["PreencherEntidadesFilhas"] == true){
-                    $this->db->join("categoria", "categoria.id_categoria = transacoes.categoria");
-                    $this->db->join("sub_categoria", "sub_categoria.id_sub_categoria = transacoes.sub_categoria");
+                    $this->db->join("Categoria", "Categoria.IdCategoria = transacoes.IdCategoria");
+                    $this->db->join("Sub_Categoria", "Sub_Categoria.IdSubCategoria = transacoes.IdSubCategoria");
                 }
             }
             
@@ -49,23 +47,22 @@
         
         function Buscar($pData){ 
             
-            if(isset($pData["id"])){$this->db->where("id",$pData["id"]);}  
-            if(isset($pData["usuario"])){$this->db->where("usuario",$pData["usuario"]);}
-            if(isset($pData["ano"])){$this->db->where("ano",$pData["ano"]);}
-            if(isset($pData["mes"])){$this->db->where("mes",$pData["mes"]);}
-            if(isset($pData["dia"])){$this->db->where("dia",$pData["dia"]);}
-            if(isset($pData["categoria"])){$this->db->where("categoria",$pData["categoria"]);}
-            if(isset($pData["sub_categoria"])){$this->db->where("sub_categoria",$pData["sub_categoria"]);}
-            if(isset($pData["descricao"])){$this->db->where("descricao",$pData["descricao"]);}
-            if(isset($pData["status"])){$this->db->where("status",$pData["status"]);}
-            if(isset($pData["parcela"])){$this->db->where("parcela",$pData["parcelas"]);}
-            if(isset($pData["p_total"])){$this->db->where("p_total",$pData["p_total"]);}
-            if(isset($pData["valor"])){$this->db->where("valor",$pData["valor"]);}
+            if(isset($pData["Id"])){$this->db->where("transacoes.Id",$pData["Id"]);}  
+            if(isset($pData["IdUsuario"])){$this->db->where("transacoes.IdUsuario",$pData["IdUsuario"]);}
+            if(isset($pData["Ano"])){$this->db->where("transacoes.Ano",$pData["Ano"]);}
+            if(isset($pData["Mes"])){$this->db->where("transacoes.Mes",$pData["mes"]);}
+            if(isset($pData["Dia"])){$this->db->where("transacoes.Dia",$pData["dia"]);}
+            if(isset($pData["IdCategoria"])){$this->db->where("transacoes.IdCategoria",$pData["IdCategoria"]);}
+            if(isset($pData["IdSubCategoria"])){$this->db->where("transacoes.IdSubCategoria",$pData["IdSubCategoria"]);}
+            if(isset($pData["Descricao"])){$this->db->where("transacoes.Descricao",$pData["Descricao"]);}
+            if(isset($pData["NumeroParcela"])){$this->db->where("transacoes.NumeroParcela",$pData["NumeroParcela"]);}
+            if(isset($pData["TotalParcelas"])){$this->db->where("transacoes.TotalParcelas",$pData["TotalParcelas"]);}
+            if(isset($pData["Valor"])){$this->db->where("transacoes.Valor",$pData["Valor"]);}
             
             if(isset($pData["PreencherEntidadesFilhas"])){
                 if($pData["PreencherEntidadesFilhas"] == true){
-                    $this->db->join("categoria", "categoria.id_categoria = transacoes.categoria");
-                    $this->db->join("sub_categoria", "sub_categoria.id_sub_categoria = transacoes.sub_categoria");
+                    $this->db->join("Categoria", "Categoria.IdCategoria = transacoes.IdCategoria");
+                    $this->db->join("Sub_Categoria", "Sub_Categoria.IdSubCategoria = transacoes.IdSubCategoria");
                 }
             }
             
@@ -80,7 +77,7 @@
         
         // -- UPDATE --
         function Atualizar($pData){
-			$this->db->where 	('id', $pData["id"]);
+			$this->db->where 	('Id', $pData["Id"]);
 			$this->db->update	("transacoes", $pData);
 		}
         
