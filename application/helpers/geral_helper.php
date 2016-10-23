@@ -58,3 +58,19 @@
 		}
          
 	}
+
+    function geral_UpdateCartaoMes($pData){
+        
+        $ci = get_instance();
+        
+        $dataBusca["Ano"] = $pData["Ano"];
+        $dataBusca["Mes"] = $pData["Mes"];
+        
+		// ------ MES ------	
+        $dataGeralMes           = $ci->geral_model->Buscar($dataBusca);	
+        
+		$dataGeralMes["Cartao"] += $pData["Valor"]*(-1);
+        
+        // -- BD UPDATE --
+		$ci->geral_model->Atualizar($dataGeralMes);
+    }

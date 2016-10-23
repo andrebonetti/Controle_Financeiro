@@ -21,6 +21,14 @@
                 //Se for Transação Recorrente Só busca pelo Dia
                 if($pData["IdTipoTransacao"] == 1){
                     if(isset($pData["Dia"])){$this->db->where("Dia",$pData["Dia"]);}
+                    if(isset($pData["Mes"])){$this->db->where("Mes <=",$pData["Mes"]);}
+                    if(isset($pData["Dia"])){$this->db->where("Ano <=",$pData["Ano"]);}
+                    
+                    date_default_timezone_set('America/Sao_Paulo');
+                    
+                    $this->db->where("AnoFim >=", $pData["Ano"]); 
+                    $this->db->where("MesFim >=", $pData["Mes"]); 
+                    
                 }
                 else{
                     if(isset($pData["Ano"])){$this->db->where("Ano",$pData["Ano"]);}

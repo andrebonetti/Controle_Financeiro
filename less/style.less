@@ -397,7 +397,11 @@
                               margin: 4px 0;
                           }
                       }
-
+                       
+                      .dataCompra{
+                         .float-config(left,30%);
+                      }
+                        
                       .dia-edit{
                           .float-config(left,10%);
                       }
@@ -477,13 +481,25 @@
                           padding: 1%;
                           background-color: @white-7;
                           border-radius: 4px;
-
+                          
+                          width: 100%;
+                          display: table;
+                          
                           label{width: 100%;}
-                          select.categoria-sub{
+                          
+                          input.input_adiciona-categoria{
                             .float-config(left,40%);
                           }
-                          input.categoria-sub{
-                            .float-config(right,58%);
+                          
+                          input.input_adiciona-subcategoria{
+                             .float-config(left,39%);
+                              margin-left: 1%;
+                          }
+                          
+                          .btn{
+                            .float-config(right,18%);
+                              height: 30px;
+                              padding-top: 4px;
                           }
                       }
 
@@ -578,50 +594,6 @@
 
               }
             }
-        }
-
-        .modal-poupanca{
-
-          .modal-content:extend(.full-container){
-
-            .modal-body:extend(.full-container){
-
-               form:extend(.full-container){
-
-                  input.ano{.float-config(left,49%);}
-                  input.mes{.float-config(right,49%);}
-
-                  label{
-                    .float-config(left,49%);
-                    margin-top: 1%;  
-                  }
-
-                  input.valor{
-                    .float-config(right,49%);
-                    margin-top: 1%;
-                    text-align: left;
-                  }
-
-                   .buttons{
-                        width: 100%;
-                        display: table;
-                       padding:1% 0 1% 0; 
-
-                   }
-
-                  input.btn-primary{
-                    float: right
-                  }
-                  input.btn-danger{
-                    float: left;
-                  }        
-                  .btn-default{
-                    float: right;
-                    margin-right: 1%;
-                  }
-               }
-            }
-          }
         }
 
         section.geral{

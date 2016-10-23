@@ -165,7 +165,7 @@ var AlteraCategoria = function(){
     var categoria_selecionada = $(this).val();
     
     if(categoria_selecionada == "nova-categoria"){
-        /*$(".adiciona-categoria").slideDown();
+        $(".adiciona-categoria").slideDown();
         
         var nova_categoria = $(".adiciona-categoria").find("input").val();
     
@@ -173,9 +173,10 @@ var AlteraCategoria = function(){
             $("select.categoria-sub").append("<option value='categoria-nova'>"+nova_categoria+"</option>");
         }
 
-        if(valor == "nova-sub_categoria"){$(".adiciona-sub_categoria").slideDown();}*/
+        
     }
-    else{
+    else
+    {
         $(".option_SubCategoria").each(function() {
     
             var id_categoria = $(this).attr("name");
@@ -189,6 +190,25 @@ var AlteraCategoria = function(){
         })
     }
     
+};
+
+var CancelarNovaCategoria = function(){
+    
+    $(".adiciona-categoria").slideUp();
+    $("input_adiciona-categoria").val("");
+    
+}
+
+var AlteraSubCategoria = function(){
+
+    var subCategoria_selecionada = $(this).val();
+
+    if(subCategoria_selecionada == "nova-sub_categoria"){
+        
+        $(".adiciona-sub_categoria").slideDown();
+        
+        var nova_sub_categoria = $(".adiciona-categoria").find("input").val(); 
+    }
 };
 
 // -------------------------------- PREENCHE MODAL - EDICAO TRANSACAO -----------------------------
@@ -220,9 +240,19 @@ var edita_transacao = function(){
     
 	$('.p-total-atual').attr("disabled", true);
     $('.p-total-atual').css("background-color", "#cccccc"); 
+    
+    if(type == "1")
+    {
+        $(".modal-edita").find(".mes-edit").attr("disabled", true);
+        $(".modal-edita").find(".ano-edit").attr("disabled", true);
+    }
+    else{
+        $(".modal-edita").find(".mes-edit").attr("disabled", false);
+        $(".modal-edita").find(".ano-edit").attr("disabled", false);
+    }
 };
 
-// -------------------------------- PREENCHE MODAL - EDICAO TRANSACAO -----------------------------
+// -------------------------------- PREENCHE MODAL - EDICAO CARTAO -----------------------------
 var edita_fatura = function(){
     var id              = $(this).find(".id").text();
     var type            = $(this).find(".type").text();
@@ -232,19 +262,30 @@ var edita_fatura = function(){
     var sub_categoria_id= $(this).find(".sub_categoria").attr("value");
     var descricao       = $(this).find(".descricao").attr("value");
     var valor           = $(this).find(".valor").attr("value");
+    var totalParcelas   = $(this).find(".p_total-atual").text();
+    var dataCompra      = $(this).find(".dataCompra-atual").text();
+    var IdTipoTransacao = $(this).find(".IdTipoTransacaoCartao-atual").text();
     
     var ano = $(".modal-cartao-edit").find(".ano").attr("value");
     var mes = $(".modal-cartao-edit").find(".mes").attr("value");
-
-    $(".modal-cartao-edit").find(".categoria-atual").attr("value",categoria_id);
-    $(".modal-cartao-edit").find(".categoria-atual").text(categoria);
-    $(".modal-cartao-edit").find(".sub_categoria-atual").attr("value",sub_categoria_id);
-    $(".modal-cartao-edit").find(".sub_categoria-atual").text(sub_categoria);
-    $(".modal-cartao-edit").find(".descricao").attr("value",descricao);
-    $(".modal-cartao-edit").find(".valor").attr("value",valor);
+    
+    $(".modal-cartao-edit").find(".id-edit").attr("value",id);
+    $(".modal-cartao-edit").find(".categoria-atual").val(categoria_id).change();
+    $(".modal-cartao-edit").find(".sub_categoria-atual").val(sub_categoria_id).change();
+    $(".modal-cartao-edit").find(".descricao-atual").attr("value",descricao);
+    $(".modal-cartao-edit").find(".valor-atual").attr("value",valor);
+    $(".modal-cartao-edit").find(".p-total-atual").attr("value",totalParcelas);
+    $(".modal-cartao-edit").find(".p-total-atual-hidden").attr("value",totalParcelas);
     $(".modal-cartao-edit").find(".link-delete").attr("href",base_url+"adm_crud/cartao_delete/"+ano+"/"+mes+"/"+id);
     $(".modal-cartao-edit").find(".link-update").attr("action",base_url+"adm_crud/cartao_update/"+ano+"/"+mes+"/"+id);
+    $(".modal-cartao-edit").find(".dataCompra-edit").attr("value",dataCompra);
+  
+    if(IdTipoTransacao == 1){
+        $(".modal-cartao-edit").find(".isRecorrente-edit").attr("value","1");
+    }
     
+    $(".modal-cartao-edit").find('.p-total-atual').attr("disabled", true);
+    $(".modal-cartao-edit").find('.p-total-atual').css("background-color", "#cccccc"); 
 };
 
 // -------------- FORMATACAO REAL ----------------------
@@ -265,7 +306,11 @@ function formatarReal(mixed) {
 
 // -------------- EVENTOS ----------------------
 $(".content-day").on("click",edita_transacao);
-$(".modal-adiciona").find("select").on("change",AlteraCategoria);
+
+$(".categoria_modal").on("change",AlteraCategoria);
+$(".subcategoria_modal").on("change",AlteraSubCategoria);
+$(".cancelar_nova_categoria").on("click",CancelarNovaCategoria);
+
 $(".mostra-categoria").on("click",mostra_categorias);
 $(".oculta-categoria").on("click",oculta_categorias);
 $("tr.data-day").on("click",adiciona_transacao);

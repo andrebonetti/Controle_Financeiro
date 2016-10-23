@@ -31,7 +31,8 @@ function no_acento_code($string){
 }
 
 function valor_decimal($string){
-		$string = preg_replace("/,/", ".", $string);     
+        $string = str_replace(".", "", $string);    
+		$string = str_replace(",", ".", $string);     
 		return $string;
 }
 

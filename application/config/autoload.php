@@ -33,10 +33,8 @@ $autoload['helper'] = array(
     ,'transform_name'
     ,"crud_helper"
     ,"data_helper"
-    ,"categorias_helper"
     ,"subCategorias_helper"
     ,"transacoes_helper"
-    ,"cartao_helper"
     ,"geral_helper"
     ,"usuario_helper"
 );

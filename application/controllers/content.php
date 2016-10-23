@@ -229,37 +229,20 @@
             }
 					
             // -- CARTAO --
+            $data_cartao = [];
+           
+            $cartao_Recorrente       = $this->cartao_model->ListarFaturaRecorrente($dataContent);
+            foreach($cartao_Recorrente as $itemContent){
+                array_push($data_cartao,$itemContent);
+            }  
+           
+            $cartao_SimplesParcelado = $this->cartao_model->ListarFaturaSimplesParcelada($dataContent);
+            foreach($cartao_SimplesParcelado as $itemContent){
+                array_push($data_cartao,$itemContent);
+            }
             
-                $data_cartao = array();    
-            
-                $fatura_infinit 	= $this->cartao_model->fatura_infinit($usuarioLogado['Id'],$year,$month);		
-                $fatura_parcela 	= $this->cartao_model->fatura_parcela($year,$month,$usuarioLogado['Id']);	
-                $fatura_unique 	    = $this->cartao_model->fatura_unique($year,$month,$usuarioLogado['Id']);	
-            
-                if(!empty($fatura_infinit)){
-                    foreach($fatura_infinit as $content){
-                    	$AnoFim = $content["AnoFim"];
-						$MesFim = $content["MesFim"];
-						
-                    	if(($AnoFim == 0)&&($MesFim == 0)){
-                    		array_push($data_cartao,$content);
-                    	}
-						else{
-							if(($AnoFim >= $year)&&($MesFim >= $month)){
-								array_push($data_cartao,$content);
-							}
-						}
-                    
-                }}
-                if(!empty($fatura_parcela)){
-                    foreach($fatura_parcela as $content){
-                    array_push($data_cartao,$content);
-                }}
-                if(!empty($fatura_unique)){
-                    foreach($fatura_unique as $content){
-                    array_push($data_cartao,$content);
-                }}
-           	                   
+              
+           
 		// --------------------------CONTENT----------------------------------
 		$content = array( 
 		"saldo_anterior"		=> $saldoAnterior,

@@ -1,63 +1,102 @@
 <?php
 	class Cartao_model extends CI_Model {
 				
-		function fatura_infinit($usuario,$year,$month){
+		// -- SELECT --		
+        function ListarFaturaSimplesParcelada($pData = null,$pOrderBy = null){
+                      
+            $this->db->where("valor !=","0");
             
-            /* FROM */ $this->db->from("cartao_de_credito");
+            if(isset($pData["Ano"])){$this->db->where("Ano",$pData["Ano"]);}
+            if(isset($pData["Mes"])){$this->db->where("Mes",$pData["Mes"]);}
+
+            if(isset($pData["PreencherEntidadesFilhas"])){
+                if($pData["PreencherEntidadesFilhas"] == true){
+                    $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
+                    $this->db->join("Sub_Categoria", "Sub_Categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");
+                }
+            }
             
-            /* JOIN */
-            $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
-            $this->db->join("Sub_Categoria", "sub_categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");             
-			
-            /* WHERE */
-			$this->db->where("cartao_de_credito.IdTipoTransacao","1");
-            $this->db->where("cartao_de_credito.Ano <=",$year);
-            $this->db->where("cartao_de_credito.Mes <=",$month);
-			//$this->db->where("ano_fim >=",$year);
-            //$this->db->where("mes_fim >=",$month);
-			$this->db->where("cartao_de_credito.Valor !=",0);
-			$this->db->where("cartao_de_credito.IdUsuario",$usuario);
-			
-			return $this->db->get()->result_array();		
-			  
-        }
-		
-		function fatura_parcela($year,$month,$usuario){
-            
-            /* FROM */ $this->db->from("cartao_de_credito");
-            
-            /* JOIN */
-            $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
-            $this->db->join("Sub_Categoria", "sub_categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");            
-			
-            /* WHERE */
-			$this->db->where("cartao_de_credito.IdTipoTransacao","2");
-			$this->db->where("cartao_de_credito.Ano",$year);
-            $this->db->where("cartao_de_credito.Mes",$month);
-            $this->db->where("cartao_de_credito.Valor !=",0);
-			$this->db->where("cartao_de_credito.IdUsuario",$usuario);
-			
-			return $this->db->get()->result_array();		
-			  
+            $this->db->from("cartao_de_credito");
+            return $this->db->get()->result_array();
         }
         
-        function fatura_unique($year,$month,$usuario){
+        function ListarFaturaRecorrente($pData = null,$pOrderBy = null){
+                      
+            $this->db->where("valor !=","0");
+            $this->db->where("IdTipoTransacao",1);
+
+            if(isset($pData["PreencherEntidadesFilhas"])){
+                if($pData["PreencherEntidadesFilhas"] == true){
+                    $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
+                    $this->db->join("Sub_Categoria", "Sub_Categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");
+                }
+            }
             
-            /* FROM */ $this->db->from("cartao_de_credito");
+            $this->db->where("Ano <=", $pData["Ano"]);
+            $this->db->where("Mes <=", $pData["Mes"]);
+            $this->db->where("AnoFim >=", $pData["Ano"]);
+            $this->db->where("MesFim >=", $pData["Mes"]);
             
-            /* JOIN */
-            $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
-            $this->db->join("Sub_Categoria", "sub_categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");           
-			
-            /* WHERE */
-			$this->db->where("cartao_de_credito.IdTipoTransacao","3");
-            $this->db->where("cartao_de_credito.Ano",$year);
-            $this->db->where("cartao_de_credito.Mes",$month);
-            $this->db->where("cartao_de_credito.Valor !=",0);
-			$this->db->where("cartao_de_credito.IdUsuario",$usuario);
-			
-			return $this->db->get()->result_array();
+            $this->db->from("cartao_de_credito");
+            return $this->db->get()->result_array();
+        }
         
+        function Listar($pData){ 
+            
+            if(isset($pData["Id"])){$this->db->where("cartao_de_credito.Id",$pData["Id"]);}  
+            if(isset($pData["IdUsuario"])){$this->db->where("cartao_de_credito.IdUsuario",$pData["IdUsuario"]);}
+            if(isset($pData["Dia"])){$this->db->where("cartao_de_credito.Dia",$pData["dia"]);}
+            if(isset($pData["IdCategoria"])){$this->db->where("cartao_de_credito.IdCategoria",$pData["IdCategoria"]);}
+            if(isset($pData["IdSubCategoria"])){$this->db->where("cartao_de_credito.IdSubCategoria",$pData["IdSubCategoria"]);}
+            if(isset($pData["Descricao"])){$this->db->where("cartao_de_credito.Descricao",$pData["Descricao"]);}
+            if(isset($pData["NumeroParcela"])){$this->db->where("cartao_de_credito.NumeroParcela",$pData["NumeroParcela"]);}
+            if(isset($pData["TotalParcelas"])){$this->db->where("cartao_de_credito.TotalParcelas",$pData["TotalParcelas"]);}
+            if(isset($pData["Valor"])){$this->db->where("cartao_de_credito.Valor",$pData["Valor"]);}
+            
+            if(isset($pData["PeriodoDe"])){
+                $this->db->where("cartao_de_credito.Ano >=",$pData["Ano"]);
+                $this->db->where("cartao_de_credito.Mes >=",$pData["Mes"]);               
+            }
+            else
+            {
+                if(isset($pData["Ano"])){$this->db->where("cartao_de_credito.Ano",$pData["Ano"]);}
+                if(isset($pData["Mes"])){$this->db->where("cartao_de_credito.Mes",$pData["Mes"]);}
+            }
+            
+            if(isset($pData["PreencherEntidadesFilhas"])){
+                if($pData["PreencherEntidadesFilhas"] == true){
+                    $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
+                    $this->db->join("Sub_Categoria", "Sub_Categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");
+                }
+            }
+            
+            $this->db->from("cartao_de_credito");   
+            return $this->db->get()->result_array();    
+        }
+        
+        function Buscar($pData){ 
+            
+            if(isset($pData["Id"])){$this->db->where("cartao_de_credito.Id",$pData["Id"]);}  
+            if(isset($pData["IdUsuario"])){$this->db->where("cartao_de_credito.IdUsuario",$pData["IdUsuario"]);}
+            if(isset($pData["Ano"])){$this->db->where("cartao_de_credito.Ano",$pData["Ano"]);}
+            if(isset($pData["Mes"])){$this->db->where("cartao_de_credito.Mes",$pData["mes"]);}
+            if(isset($pData["Dia"])){$this->db->where("cartao_de_credito.Dia",$pData["dia"]);}
+            if(isset($pData["IdCategoria"])){$this->db->where("cartao_de_credito.IdCategoria",$pData["IdCategoria"]);}
+            if(isset($pData["IdSubCategoria"])){$this->db->where("cartao_de_credito.IdSubCategoria",$pData["IdSubCategoria"]);}
+            if(isset($pData["Descricao"])){$this->db->where("cartao_de_credito.Descricao",$pData["Descricao"]);}
+            if(isset($pData["NumeroParcela"])){$this->db->where("cartao_de_credito.NumeroParcela",$pData["NumeroParcela"]);}
+            if(isset($pData["TotalParcelas"])){$this->db->where("cartao_de_credito.TotalParcelas",$pData["TotalParcelas"]);}
+            if(isset($pData["Valor"])){$this->db->where("cartao_de_credito.Valor",$pData["Valor"]);}
+
+            if(isset($pData["PreencherEntidadesFilhas"])){
+                if($pData["PreencherEntidadesFilhas"] == true){
+                    $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
+                    $this->db->join("Sub_Categoria", "Sub_Categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");
+                }
+            }
+            
+            $this->db->from("cartao_de_credito");   
+            return $this->db->get()->row_array();    
         }
         
         // -- INSERT --
@@ -65,4 +104,9 @@
 			$this->db->insert("cartao_de_credito", $pData);
 		}
        
+        // -- UPDATE --
+        function Atualizar($pData){
+			$this->db->where 	('Id', $pData["Id"]);
+			$this->db->update	("cartao_de_credito", $pData);
+		}
     }

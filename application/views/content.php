@@ -189,8 +189,10 @@
 	                            <td class="no-view type"><?=$content["IdTipoTransacao"]?></td>        
 	                            <td class="no-view categoria" value="<?=$content["IdCategoria"]?>"><?=$content["DescricaoCategoria"]?></td>
 	                            <td class="no-view sub_categoria" value="<?=$content["IdSubCategoria"]?>"><?=valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])?></td>
-                            
-                                <td class="compra"><?=dataMysqlParaPtBr($content["DataCompra"])?></td>
+                                <td class="no-view p_total-atual"><?=$content["TotalParcelas"]?></td>    
+	                            <td class="no-view IdTipoTransacaoCartao-atual"><?=$content["IdTipoTransacao"]?></td>    
+	                            
+                                <td class="compra dataCompra-atual"><?=dataMysqlParaPtBr($content["DataCompra"])?></td>
                                 <td class="descricao" value="<?=$content["Descricao"]?>">
                                     <?php if($content["Descricao"] == NULL){?>
                                     <?=$content["DescricaoSubCategoria"]?>
@@ -200,7 +202,7 @@
                                         - <?=$content["NumeroParcela"]?>/<?= $content["TotalParcelas"] ?>	
                                     <?php }} ?>
                                 </td>
-                                <td class="valor" value="<?=$content["Valor"]?>"><?=numeroEmReais2($content["Valor"])?></td>
+                                <td class="valor" value="<?=numeroEmReais2($content["Valor"])?>"><?=numeroEmReais2($content["Valor"])?></td>
 
                             </tr>
 
