@@ -15,7 +15,7 @@
             <div class="saldo-mes <?=sinal_valor($saldo_atual["SaldoMes"])?>" value="<?=$saldo_atual["SaldoMes"]?>">Saldo do Mes: <span><?=numeroEmReais2($saldo_atual["SaldoMes"])?></span> </div>
             <div class="saldo-dia btn btn-default ">
                 <p>Saldo do dia</p>
-                <input type="text" class="dia_change form-control" value="<?=$hoje?>">
+                <input type="text" class="dia_change form-control" value="<?=$hoje?>" maxlength="2">
                 <p>:</p>
                 <span class="saldo-value"></span>
             </div>

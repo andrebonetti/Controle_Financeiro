@@ -80,6 +80,7 @@
               
         // -- INSERT --
         function Incluir($pData){
+            $pData["Id"] = null;
 			$this->db->insert("transacoes", $pData);
 		}
         

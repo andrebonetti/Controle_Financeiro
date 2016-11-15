@@ -118,9 +118,9 @@
                 }
 
                 // -- ALTERACAO MÊS --
-                if( (int)$data["Mes"] != (int)$transacaoAtual["Mes"]){
+                if(((int)$data["Mes"] != (int)$transacaoAtual["Mes"])&&($data["IdTipoTransacao"] != 1)){
                     
-                    echo "Alteração Mês"."<br>";
+                    echo "Alteração Mês: de ".$transacaoAtual["Mes"]." para ".$data["Mes"]."<br>";
                     
                     $this->transacoes_model->Atualizar($data);
 
@@ -142,17 +142,60 @@
 
                     echo "- Sem Alteração Mês <br>";
                     
-                    var_dump($data);
-                    
-                    $this->transacoes_model->Atualizar($data);
+                    //Transacao Recorrente
+                    if($transacaoAtual["IdTipoTransacao"] == 1)
+                    {
+                       
+                        if($mes == 1)
+                        {
+                            $transacaoAtual["AnoFim"] = $ano - 1;
+                            $transacaoAtual["MesFim"] = 12;                   
+                        }
+                        else{
+                            $transacaoAtual["AnoFim"] = $ano;
+                            $transacaoAtual["MesFim"] = $mes-1;
+                        }
 
+                        var_dump($transacaoAtual);
+
+                        $this->transacoes_model->Atualizar($transacaoAtual);
+
+                        $transacaoAtual["Dia"] = $data["Dia"];
+                        $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
+                        $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
+                        $transacaoAtual["Descricao"] = $data["Descricao"];
+                        $transacaoAtual["Valor"] = $data["Valor"];
+                        $transacaoAtual["Ano"] = $ano;
+                        $transacaoAtual["Mes"] = $mes;  
+                        $transacaoAtual["AnoFim"] = 2050;
+                        $transacaoAtual["MesFim"] = 12;  
+
+                        var_dump($transacaoAtual);
+
+                        $this->transacoes_model->Incluir($transacaoAtual);
+                    }
+                    
+                    //Transacao Parcelada / Transacao Simples
+                    else{
+                        $transacaoAtual["Id"] = $data["Dia"];
+                        $transacaoAtual["Dia"] = $data["Dia"];
+                        //$transacaoAtual["IdCategoria"] = $data["IdCategoria"];
+                        //$transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
+                        $transacaoAtual["Descricao"] = $data["Descricao"];
+                        $transacaoAtual["Valor"] = $data["Valor"];
+                        
+                        var_dump($transacaoAtual);
+                        
+                        $this->transacoes_model->Atualizar($transacaoAtual);
+                    }
+                    
                     if($hasAlteracaoValor == true)
                     {
-                        $data["Valor"] = $valorDiferenca; 
-                        echo $data["Valor"];
+                        $transacaoAtual["Valor"] = $valorDiferenca; 
+                        var_dump($transacaoAtual);
 
                         // -- SALDO GERAL --
-                        geral_UpdateSaldo($data);
+                        geral_UpdateSaldo($transacaoAtual);
                     }
 
                 }
@@ -162,8 +205,8 @@
             }
 	       
             // -- MSG SUCESSO - REDIRECT
-            /*$this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
-            redirect("content/month_content/".$ano."/".$mes);*/
+            $this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
+            redirect("content/month_content/".$ano."/".$mes);
 		}
         
         // ----- DELETE TRANSACAO -----
@@ -219,45 +262,57 @@
             // -- VALIDACAO USUARIO --
             valida_usuario();
 			  
-            // -- NOVA CATEGORIA --
-            $novaCategoria = novaCategoria();     
-            // -- NOVA SUB CATEGORIA --
-            $novaSubCategoria = novaSubCategoria();	
-            
             /* -- DATA -- */
             $data   = transacao_getPosts();	
-
-            $isTransacaoValidada = false;
-            if(
-                ($data["DataCompra"] != "")
-                &&
-                ($data["Descricao"] != "")
-                &&
-                ($data["Valor"] > 0)	
-				&&	
-                ($data["Ano"] > 1900)
-                &&
-                ($data["Ano"] > 1900)
-                &&
-                (($data["Mes"] >= 1)&&($data["Mes"] <= 12))
-                &&
-                ($data["IdCategoria"] > 0)
-                &&
-                ($data["IdSubCategoria"] > 0)
-                &&
-                ($data["IdUsuario"] > 0)
-                &&
-                ($data["IdTipoTransacao"] > 0)
-            )
-            {
-                $isTransacaoValidada = true;
-            }
+            $isTransacaoValidada    = ValidaEntidadeTransacao($data);
 				
             if($isTransacaoValidada = true)
             {
                 // DATA INCLUSAO
                 date_default_timezone_set('America/Sao_Paulo');
                 $data["DataInclusao"] = date('Y-m-d H:i:s');
+                
+                // -- TYPE 1 = Transação Recorrente -- 
+                if($data["IdTipoTransacao"] == 1){
+
+                    $data["AnoFim"] = 2050;
+                    $data["MesFim"] = 12;
+
+                    // -- BD INSERT -- 
+                    $this->cartao_model->Incluir($data);
+
+                    // -- SALDO GERAL --
+                    geral_UpdateSaldo($dataGeral);
+
+                }
+                // -- TYPE 2 = Transação Parcelada --
+                if($data["IdTipoTransacao"] == 2){
+
+                    $anoParcela = $data["ano"];
+                    $mesParcela = $data["mes"];
+
+                    for($n = 1;$n <= $data["p_total"] ; $n++){
+
+                        $dataParcela = $data;
+
+                        $dataParcela["ano"]		= $anoParcela;	
+                        $dataParcela["mes"]		= $mesParcela;										
+                        $dataParcela["parcela"] = $n;
+
+                        // -- BD INSERT -- 
+                        $this->cartao_model->Incluir($dataParcela);
+
+                        // -- SALDO GERAL --
+                        geral_Update($dataParcela);
+
+                        $mesParcela++;
+                        if($mesParcela > 12){
+                            $anoParcela++;
+                            $mesParcela = 1;
+                        }						
+                    }	
+
+                }
                 
                 // -- TYPE 3 = Transação Simples -- 
 			    if($data["IdTipoTransacao"] == 3){
@@ -278,54 +333,9 @@
                 $ci->session->set_flashdata('msg-error',"Existem campos obrigatórios não preenchidos");
             }
             
-            // -- TYPE 1 = Transação Recorrente -- 
-			if($data["type"] == 1){
-                
-                $data["AnoFim"] = 2050;
-                $data["MesFim"] = 12;
-				
-				// -- BD INSERT -- 
-                $this->cartao_model->Incluir($data);
-                
-                // -- SALDO GERAL --
-                geral_UpdateSaldo($dataGeral);
-
-			}
-            // -- TYPE 2 = Transação Parcelada --
-            if($data["type"] == 2){
-				
-				$anoParcela = $data["ano"];
-                $mesParcela = $data["mes"];
-						
-				for($n = 1;$n <= $data["p_total"] ; $n++){
-										
-					$dataParcela = $data;
-											
-					$dataParcela["ano"]		= $anoParcela;	
-					$dataParcela["mes"]		= $mesParcela;										
-					$dataParcela["parcela"] = $n;
-											
-					// -- BD INSERT -- 
-                    $this->cartao_model->Incluir($dataParcela);
-                    
-					// -- SALDO GERAL --
-                    geral_Update($dataParcela);
-                    
-					$mesParcela++;
-					if($mesParcela > 12){
-						$anoParcela++;
-						$mesParcela = 1;
-					}						
-				}	
-		
-			}
-            
-            
-            
             // -- MSG SUCESSO - REDIRECT
             $this->session->set_flashdata('msg-success',"Transação adicionada com sucesso!");
-            redirect("content/month_content/".$data["ano"]."/".$data["mes"]."");
-
+            redirect("content/month_content/".$data["Ano"]."/".$data["Mes"]."");
 		} 
         
 		// ----- UPDATE CARTAO -----
