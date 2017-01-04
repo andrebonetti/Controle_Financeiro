@@ -72,7 +72,7 @@
 
         //-- Cartao --    
         if($ci->input->post("dataCompra") != ""){
-            $data["DataCompra"]  		= $ci->input->post("dataCompra");
+            $data["DataCompra"]  		= dataPtBrParaMysql($ci->input->post("dataCompra"));
         }
         
 		return $data;	

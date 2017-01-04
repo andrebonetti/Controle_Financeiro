@@ -89,9 +89,9 @@
                         <input type="radio" name="isRecorrente" class="RecorrenteNao" value="0" checked><span class="RecorrenteNao">Não</span>
                     </div>
 
-                    <input type="submit" class="btn btn-primary" value="Adicionar"> 
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-
+                    <input type="submit" class="btn btn-primary" value="Adicionar"> 
+              
                 <?= form_close()?>
           </div>
         </div>

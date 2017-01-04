@@ -32,6 +32,12 @@
            
             // -- SALDO --
             $saldoAtual   	= $this->geral_model->Buscar($dataContent);
+           
+            if(empty($saldoAtual)){
+                geral_CriarCompetencia($dataContent);
+                $saldoAtual = $this->geral_model->Buscar($dataContent);
+            }
+           
 		
             // -- MENU COMPETENCIAS
             if($month == 1){

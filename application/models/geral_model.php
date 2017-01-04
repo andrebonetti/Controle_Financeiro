@@ -2,7 +2,7 @@
 	class Geral_model extends CI_Model {
 			
         // -- SELECT -- 
-		function Listar($pData,$pOrderBy = null){
+		function Listar($pData = null,$pOrderBy = null){
  			
             if(isset($pData["Id"])){$this->db->where("Id",$pData["Id"]);}  
             if(isset($pData["Receita"])){$this->db->where("Receita",$pData["Receita"]);}
@@ -54,6 +54,11 @@
             
 			return $this->db->get("geral")->row_array();		       
         }
+        
+        // -- INSERT --
+        function Incluir($pData){
+			$this->db->insert("geral", $pData);
+		}
 						
 		// -- UPDATE --	
 		function Atualizar($pData){
