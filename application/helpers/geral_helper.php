@@ -35,12 +35,28 @@
 		// ------ MES ------	
         $dataGeralMes              = $ci->geral_model->Buscar($pData);	
 
-		$dataGeralMes["SaldoMes"] += $pData["Valor"];
-        
+        $dataGeralMes["SaldoMes"] += $pData["Valor"];
+		
         // -- BD UPDATE --
 		$ci->geral_model->Atualizar($dataGeralMes);
          
 	}
+
+    function geral_UpdateSaldoMesCartao($pData,$pTipo){
+        
+        $ci = get_instance();
+        
+		// ------ MES ------	
+        $dataGeralMes              = $ci->geral_model->Buscar($pData);	
+        
+        if(!empty($dataGeralMes )){
+        
+            $dataGeralMes["Cartao"] += $pData["Valor"]*(-1);
+
+            // -- BD UPDATE --
+            $ci->geral_model->Atualizar($dataGeralMes);
+        }
+    }
 
     function geral_UpdateSaldoFinal($pData,$pTipo){
         
@@ -54,14 +70,12 @@
 			$dataGeralFinal["SaldoFinal"] += $pData["Valor"];
             
             echo "var_dump = geral_UpdateSaldoMes Antes";
-            var_dump($dataGeralFinal);
-            
+
             if($pTipo == 1){$dataGeralFinal["Receita"] += $pData["Valor"];}        
             if($pTipo == 2){$dataGeralFinal["Despesas"] += $pData["Valor"]*(-1);}
             
             echo "var_dump = geral_UpdateSaldoMes";
-            var_dump($dataGeralFinal);
-            
+
             // -- BD UPDATE --
             $ci->geral_model->Atualizar($dataGeralFinal);	
 		}
@@ -210,9 +224,6 @@
         }
         
         /*-- CARTAO --*/
-        
-        $data_cartao = [];
-           
         $cartao_Recorrente       = $ci->cartao_model->ListarFaturaRecorrente($dataContent);
 
         foreach($cartao_Recorrente as $itemContent){

@@ -12,8 +12,8 @@
 
             if(isset($pData["PreencherEntidadesFilhas"])){
                 if($pData["PreencherEntidadesFilhas"] == true){
-                    $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
-                    $this->db->join("Sub_Categoria", "Sub_Categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");
+                    $this->db->join("categoria", "categoria.IdCategoria = cartao_de_credito.IdCategoria");
+                    $this->db->join("sub_categoria", "sub_categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");
                 }
             }
             
@@ -28,8 +28,8 @@
 
             if(isset($pData["PreencherEntidadesFilhas"])){
                 if($pData["PreencherEntidadesFilhas"] == true){
-                    $this->db->join("Categoria", "Categoria.IdCategoria = cartao_de_credito.IdCategoria");
-                    $this->db->join("Sub_Categoria", "Sub_Categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");
+                    $this->db->join("categoria", "categoria.IdCategoria = cartao_de_credito.IdCategoria");
+                    $this->db->join("sub_categoria", "sub_categoria.IdSubCategoria = cartao_de_credito.IdSubCategoria");
                 }
             }
             
@@ -41,7 +41,7 @@
 
                 )
                 OR 
-                (`Ano` <= ".$pData["Ano"].")
+                (`Ano` < ".$pData["Ano"].")
             )";
             
             $this->db->where($WhereData);

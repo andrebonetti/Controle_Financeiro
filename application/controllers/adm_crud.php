@@ -46,9 +46,9 @@
 
                         $dataParcela = $data;
 
-                        $dataParcela["ano"]		= $anoParcela;	
-                        $dataParcela["mes"]		= $mesParcela;										
-                        $dataParcela["parcela"] = $n;
+                        $dataParcela["Ano"]		= $anoParcela;	
+                        $dataParcela["Mes"]		= $mesParcela;										
+                        $dataParcela["NumeroParcela"] = $n;
 
                         // -- BD INSERT -- 
                         $this->transacoes_model->Incluir($dataParcela);
@@ -85,15 +85,16 @@
 		} 
  	
         // ----- UPDATE TRANSACAO -----
-		public function transacao_update($ano,$mes,$id){
+		public function transacao_update($ano,$mes,$id,$pIsExclusao = null){
 				
 			$this->output->enable_profiler(TRUE);
 			
             /*VALIDACAO*/valida_usuario();
             
             $data                    = transacao_getPosts();
+            if($pIsExclusao == 1){$data["Valor"] = 0;}
             echo "Id: ".$data["Id"]."<br>";
-            
+
             $dataBusca["Id"]         = $data["Id"];
 			$transacaoAtual          = $this->transacoes_model->Buscar($dataBusca);
             
@@ -138,12 +139,6 @@
                     $dataParcela["IdTipoTransacao"] = 3;
 
                     geral_UpdateSaldo($dataParcela);
-
-                    $dataParcela["Valor"] = $data["Valor"];
-                    $dataParcela["Ano"] = $data["Ano"];
-                    $dataParcela["Mes"] = $data["Mes"];
-
-                    geral_UpdateSaldo($dataParcela);
                 }
                 // -- SEM ALTERAÇÃO MÊS
                 else{
@@ -169,19 +164,20 @@
 
                         $this->transacoes_model->Atualizar($transacaoAtual);
 
-                        $transacaoAtual["Dia"] = $data["Dia"];
-                        $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
-                        $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
-                        $transacaoAtual["Descricao"] = $data["Descricao"];
-                        $transacaoAtual["Valor"] = $data["Valor"];
-                        $transacaoAtual["Ano"] = $ano;
-                        $transacaoAtual["Mes"] = $mes;  
-                        $transacaoAtual["AnoFim"] = 2050;
-                        $transacaoAtual["MesFim"] = 12;  
-                        
-                        var_dump($transacaoAtual);
+                        if($pIsExclusao != 1)
+                        {
+                            $transacaoAtual["Dia"] = $data["Dia"];
+                            $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
+                            $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
+                            $transacaoAtual["Descricao"] = $data["Descricao"];
+                            $transacaoAtual["Valor"] = $data["Valor"];
+                            $transacaoAtual["Ano"] = $ano;
+                            $transacaoAtual["Mes"] = $mes;  
+                            $transacaoAtual["AnoFim"] = 2050;
+                            $transacaoAtual["MesFim"] = 12;  
 
-                        $this->transacoes_model->Incluir($transacaoAtual);
+                            $this->transacoes_model->Incluir($transacaoAtual);
+                        }
                     }
                     
                     //Transacao Parcelada / Transacao Simples
@@ -207,9 +203,10 @@
                         
                         if($transacaoAtual["Valor"] > 0){$tipo = 1;}
                         else{$tipo = 2;}
-                     
-                        var_dump($transacaoAtual);
-
+                        
+                        $transacaoAtual["Ano"] = $ano;
+                        $transacaoAtual["Mes"] = $mes;
+                        
                         // -- SALDO GERAL --
                         geral_UpdateSaldo($transacaoAtual,$tipo);
                     }
@@ -225,6 +222,7 @@
             // -- MSG SUCESSO - REDIRECT
             $this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
             redirect("content/month_content/".$ano."/".$mes);
+
 		}
         
         // ----- DELETE TRANSACAO -----
@@ -287,6 +285,9 @@
             $data   = transacao_getPosts();	
             $isTransacaoValidada    = ValidaEntidadeTransacao($data);
             
+            if($data["Valor"] > 0){$tipo = 1;}
+            else{$tipo = 2;}
+            
             if($isTransacaoValidada = true)
             {
                 // DATA INCLUSAO
@@ -303,28 +304,33 @@
                     $this->cartao_model->Incluir($data);
 
                     // -- SALDO GERAL --
-                    geral_UpdateSaldo($dataGeral);
+                    geral_UpdateSaldo($data);
+                    
+                    // -- SALDO GERAL CARTAO
+                    geral_UpdateSaldoMesCartao($data,$tipo);
 
                 }
                 // -- TYPE 2 = Transação Parcelada --
                 if($data["IdTipoTransacao"] == 2){
 
-                    $anoParcela = $data["ano"];
-                    $mesParcela = $data["mes"];
+                    $anoParcela = $data["Ano"];
+                    $mesParcela = $data["Mes"];
 
-                    for($n = 1;$n <= $data["p_total"] ; $n++){
+                    for($n = 1;$n <= $data["TotalParcelas"] ; $n++){
 
                         $dataParcela = $data;
 
-                        $dataParcela["ano"]		= $anoParcela;	
-                        $dataParcela["mes"]		= $mesParcela;										
-                        $dataParcela["parcela"] = $n;
+                        $dataParcela["Ano"]		= $anoParcela;	
+                        $dataParcela["Mes"]		= $mesParcela;										
+                        $dataParcela["NumeroParcela"] = $n;
 
                         // -- BD INSERT -- 
                         $this->cartao_model->Incluir($dataParcela);
 
                         // -- SALDO GERAL --
-                        geral_Update($dataParcela);
+                        geral_UpdateSaldo($dataParcela,$tipo);
+                        // -- SALDO GERAL CARTAO
+                        geral_UpdateSaldoMesCartao($dataParcela,$tipo);
 
                         $mesParcela++;
                         if($mesParcela > 12){
@@ -346,7 +352,8 @@
 
                     // -- SALDO GERAL --
                     geral_UpdateSaldo($data);
-                    
+                    // -- SALDO GERAL CARTAO
+                    geral_UpdateSaldoMesCartao($data,$tipo);
 			    }
                              
             }
@@ -441,14 +448,14 @@
                         $dataGeral["Mes"]             = $mes; 
 
                         // -- SALDO GERAL --
-                        geral_UpdateSaldo($dataGeral);
+                        geral_UpdateSaldo($dataGeral,2);
                         geral_UpdateCartaoMes($dataGeral);
                     }
 
                 }
                 else{
                     
-                    /*if($data["IdTipoTransacao"] == 2){
+                    if($data["IdTipoTransacao"] == 2){
 
                         $dataBusca["PeriodoDe"]  = true;
                         $dataBusca["Descricao"]  = $data["Descricao"];
@@ -461,7 +468,7 @@
                             // DATA INCLUSAO
                             $hasAlteracaoValor = false;
 
-                            $dataUpdate                  = [];
+                            $dataUpdate                  = array();
                             $dataUpdate                  = $itemContent;
                             $dataUpdate["Descricao"]     = $data["Descricao"];
                             $dataUpdate["Valor"]         = $data["Valor"];
@@ -485,7 +492,7 @@
                             }
                         }
 
-                    }*/
+                    }
 
                     if($data["IdTipoTransacao"] == 3){
 
@@ -498,15 +505,22 @@
 
                         var_dump($data_update);
 
-                        $this->cartao_model->Atualizar($data_update);                  
+                        $this->cartao_model->Atualizar($data_update);        
+                        
                     }
 
                     if($hasAlteracaoValor == true)
                     {
                         $data_update["Valor"] = $valorDiferenca; 
+                        
+                        if($data_update["Valor"] > 0){$tipo = 1;}
+                        else{$tipo = 2;}
 
                         // -- SALDO GERAL --
-                        geral_UpdateSaldo($data_update);
+                        geral_UpdateSaldo($data_update,$tipo);
+                        
+                        // -- SALDO GERAL CARTAO
+                        geral_UpdateSaldoMesCartao($data_update,$tipo);
                     }
                     
                 }

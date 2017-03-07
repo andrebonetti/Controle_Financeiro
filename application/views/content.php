@@ -163,7 +163,8 @@
         <div class="categorias no-view">
             
             <!-- FATURA CARTAO -->
-            <div class="fatura-cartao">
+            <div class="box">
+                <div class="fatura-cartao">
                 
                 <div class="categoria-content">
                 	
@@ -217,12 +218,14 @@
                 </div>
                 
             </div>
+            </div>
             
             <?php /*CALCULO CATEGORIA*/ $c = 1 ?>
          
             <?php foreach($categorias as $categoria){?>
-            
-                <div class="categoria-resumo resumo-<?=$categoria["DescricaoCategoria"]?> <?=$c?> <?php if($c%3 == "0"){echo "new-line";}?>">
+                
+                <div class="box">
+                    <div class="categoria-resumo resumo-<?=$categoria["DescricaoCategoria"]?> <?=$c?> <?php if($c%3 == "0"){echo "new-line";}?>">
                     
                     <div class="categoria-content">
                     
@@ -278,6 +281,7 @@
                     </div>
                     
                 </div> 
+                </div>
             
                 <?php /*CONTAGEM CATEGORIA*/ $c++; ?>
             

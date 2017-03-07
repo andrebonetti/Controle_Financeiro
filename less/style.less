@@ -245,53 +245,96 @@
                     margin-top: 2%;
                     padding: 1%;
                     background-color: @white-8;
-
-                    .categoria-resumo,.fatura-cartao{
+                    
+                    .box{
                         .float-config(left,33.33%);
-                        padding:1%;
+                        padding:2%;
+                        position: relative;
+                        
+                        .categoria-resumo,.fatura-cartao{
+                            height: 350px;
+                            overflow: scroll;
 
-                        tr.content-fatura:hover{
-                                    background-color: #bebeff;
-                                    color: @white-10;
-                                    cursor:pointer;
+                            tr.content-fatura:hover{
+                                background-color: #bebeff;
+                                color: @white-10;
+                                cursor:pointer;
 
-                                    td.valor{
-                                        border: none;
-                                    }
-                        }            
-                        .categoria-content{
-                            .border(5px,@white-5);
-                            background-color: @white-10;
-                            padding: 1%;
+                                td.valor{
+                                    border: none;
+                                }
+                            }  
 
-                            h2{
-                                margin-top:0;
-                                font-size: 1.4em;
+                            .categoria-content{
+                                
+                                .border(5px,@white-5);
+                                background-color: @white-10;
                                 padding: 1%;
-                                color:@white-10;
-                                background-color: #7474ff;
-                            }
-                            table:extend(.full-container){
 
-                                td,th{
-                                    padding:1% 0.5%;
-                                    .border(0,@white-4);
-                                    border-width:0 0 1px 0;
+                                h2{
+                                    margin-top:0;
+                                    font-size: 1.4em;
+                                    padding: 1%;
+                                    color:@white-10;
+                                    background-color: #7474ff;
+                                    position: sticky;
+                                    top: 0;
+                                    border-radius: 0;
+                                    width: 102%;
+                                    margin-left: -1%;
+                                    margin-top: -2%;
+                                }
+                                table:extend(.full-container){
+
+                                    td,th{
+                                        padding:1% 0.5%;
+                                        .border(0,@white-4);
+                                        border-width:0 0 1px 0;
+                                    }
+                                    
+                                    .valor-total-sub_categoria{
+                                        font-weight: 600;
+                                        font-size: 1.1em;
+                                        text-align: center;
+                                    }
+                                    
+                                    .valor-total,.valor-total-categoria{
+                                            position: absolute;
+                                            bottom: 0;
+                                            right: 0;
+                                            margin-right: 35px;
+                                            border: none;
+                                            border-color: transparent;
+                                            padding: 0;
+                                            font-size: 1.2em;
+                                            font-weight: 600;
+                                    }
+                                    
+                                    .negativo{color: #cb0000; }
+                                    .positivo{color: #00ad21; }
+                                    
+                                }
+                            }
+                               
+                        }
+
+                        .fatura-cartao{
+                            .categoria-content{
+                                h2{         
+                                    background-color: #f7a816;
+                                    color: #f2f2f2;
+                                    position: sticky;
+                                    top: 0;
+                                    border-radius: 0;
+                                    width: 102%;
+                                    margin-left: -1%;
+                                    margin-top: -2%;
                                 }
                             }
                         }
-                    }
-
-                    .fatura-cartao{
-                        .categoria-content{
-                            h2{         
-                                background-color: #f7a816;
-                                color:@white-9;
-                            }
-                        }
+                        
                     }
                 }
-
 
                 .calendario-geral:extend(.full-container){
 
@@ -613,3 +656,14 @@
         .valor,.valor,.valor-total,.valor-total-categoria,.valor-total-sub_categoria{text-align: right;}
         .new-line{clear: both;}
         .dia{.valor-total{display: none;}}
+
+        ::-webkit-scrollbar-track {
+        background-color: @white-7;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            background: @white-7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: @black-10;
+        }

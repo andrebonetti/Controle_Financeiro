@@ -1,7 +1,5 @@
 $(".categorias").hide();
 
-/*
-
 // --------------------- PREENCHE CATEGORIAS --------------------- 
 $(".categoria-resumo").each(function() {
     
@@ -16,43 +14,58 @@ $(".categoria-resumo").each(function() {
             var descricao   = $(this).find(".descricao").text();
             //alert("sub-categoria: " + $(this).attr("class") + " valor: " + valor + " descrição: " + descricao);
             $(".sub_resumo-"+sub_categoria_atual).find("table.content").append(
-                "<tr><td class='descricao'>" + descricao + "</td><td class='valor'>" + valor + "</td></tr>"
-            );     
+                "<tr><td class='descricao'>" + descricao + "</td><td class='valor' value="+valor+" >" + formatarReal(valor) + "</td></tr>"
+            );    
         })
     })
 })
 
 // --- CALCULA SUB CATEGORIA --- 
-
 $(".sub_categoria-resumo").each(function() {
     
     var total_sub_categoria = 0;
     
     $(this).find(".valor").each(function(){     
-        var valor = $(this).text();
-        total_sub_categoria = parseFloat(valor) + total_sub_categoria;
+        var valor = $(this).attr("value");
+        
+        total_sub_categoria = parseFloat(valor) + parseFloat(total_sub_categoria);
     })
     
-    if(total_sub_categoria != 0){$(this).find(".valor-total-sub_categoria").text(total_sub_categoria);}
-    
+    if(total_sub_categoria != 0){
+        $(this).find(".valor-total-sub_categoria").text(formatarReal(total_sub_categoria));
+        $(this).find(".valor-total-sub_categoria").attr("value",total_sub_categoria);
+    }
+    else{
+        $(this).closest(".sub_categoria-resumo").remove();
+    }
 })
 
 
 // --- CALCULA CATEGORIA --- 
+
 $(".categoria-resumo").each(function() {
     
     var total_categoria = 0
     
     $(this).find(".valor-total-sub_categoria").each(function() {    
-        var valor = $(this).text();
+        var valor = $(this).attr("value");
         
-        if(valor != 0){total_categoria = parseFloat(valor) + total_categoria;}
+        if(valor != 0){total_categoria = parseFloat(valor) + parseFloat(total_categoria);}
     })
     
-    if(total_categoria != 0){$(this).find(".valor-total-categoria").text(total_categoria);}
+    if(total_categoria != 0){
+        $(this).find(".valor-total-categoria").text(formatarReal(total_categoria));
+        if(total_categoria > 0){
+            $(this).find(".valor-total-categoria").addClass("positivo");
+        }
+        else{
+            $(this).find(".valor-total-categoria").addClass("negativo");
+        }
+    }
+    else{
+        $(this).closest(".box").remove();
+    }
 })
-
-*/
 
 // --------------------- VIEW ------------------- 
 for(var sh=1;sh<=6;sh++){
@@ -235,7 +248,6 @@ var edita_transacao = function(){
     $(".modal-edita").find(".descricao-atual").attr("value",descricao);
     $(".modal-edita").find(".valor-atual").attr("value",valor);
     $(".modal-edita").find(".p-total-atual").attr("value",totalParcelas);
-    $(".modal-edita").find(".link-delete").attr("href",base_url+"adm_crud/transacao_delete/"+ano+"/"+mes+"/"+id);
     $(".modal-edita").find(".link-update").attr("action",base_url+"adm_crud/transacao_update/"+ano+"/"+mes+"/"+id);
     
 	$('.p-total-atual').attr("disabled", true);
@@ -276,7 +288,6 @@ var edita_fatura = function(){
     $(".modal-cartao-edit").find(".valor-atual").attr("value",valor);
     $(".modal-cartao-edit").find(".p-total-atual").attr("value",totalParcelas);
     $(".modal-cartao-edit").find(".p-total-atual-hidden").attr("value",totalParcelas);
-    $(".modal-cartao-edit").find(".link-delete").attr("href",base_url+"adm_crud/cartao_delete/"+ano+"/"+mes+"/"+id);
     $(".modal-cartao-edit").find(".link-update").attr("action",base_url+"adm_crud/cartao_update/"+ano+"/"+mes+"/"+id);
     $(".modal-cartao-edit").find(".dataCompra-edit").attr("value",dataCompra);
   
@@ -288,10 +299,17 @@ var edita_fatura = function(){
     $(".modal-cartao-edit").find('.p-total-atual').css("background-color", "#cccccc"); 
 };
 
+$(".link-delete").on("click",function(){
+    
+    action = $(".modal-edita").find(".link-update").attr("action");
+    
+    $(".modal-edita").find(".link-update").attr("action",action +"/1");
+});
+
 // -------------- FORMATACAO REAL ----------------------
 function formatarReal(mixed) {
 
-    var int = parseInt(mixed.toFixed(2).toString().replace(/[^\d]+/g, ''));
+    var int = parseInt(parseFloat(mixed).toFixed(2).toString().replace(/[^\d]+/g, ''));
     var tmp = int + '';
     tmp = tmp.replace(/([0-9]{2})$/g, ",$1");
     if (tmp.length > 6)
@@ -316,3 +334,4 @@ $(".oculta-categoria").on("click",oculta_categorias);
 $("tr.data-day").on("click",adiciona_transacao);
 $(".dia_change").on("change",atualiza_saldo_dia);
 $(".content-fatura").on("click",edita_fatura);
+

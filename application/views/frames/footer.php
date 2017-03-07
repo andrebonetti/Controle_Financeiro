@@ -12,7 +12,7 @@
           </div>
           <div class="modal-body">
 
-              <?= form_open("Adm_crud/transacao_insert")?>
+              <?= form_open("adm_crud/transacao_insert")?>
 
                     <input type="hidden" name="usuario" value="<?=$usuario['Id']?>">
                     <input type="hidden" name="ano" value="<?=$ano?>">
@@ -107,7 +107,7 @@
             <h4 class="modal-title" id="myModalLabel">Editar Transação</h4>
           </div>
           <div class="modal-body">
-                <?= form_open("Adm_crud/transacao_update",array("class"=>"link-update"))?>
+                <?= form_open("adm_crud/transacao_update",array("class"=>"link-update"))?>
 
                     <input type="hidden" class="id-edit" name="id" value="">
                     
@@ -187,7 +187,7 @@
                     </div>
 
                     <div class="buttons">
-                        <?=anchor("","Excluir",array("class"=>"btn btn-danger link-delete"))?>
+                        <button class="btn btn-danger link-delete">Excluir</button>
                         <input type="submit" class="btn btn-atualizar btn-primary" value="Atualizar"> 
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                     </div>
@@ -208,7 +208,7 @@
           </div>
           <div class="modal-body">
 
-              <?= form_open("Adm_crud/cartao_insert")?>
+              <?= form_open("adm_crud/cartao_insert")?>
               
                     <input type="hidden" name="usuario" value="<?=$usuario['Id']?>">
                     <input type="hidden" name="ano" value="<?=$ano?>">
@@ -307,7 +307,7 @@
           </div>
           <div class="modal-body">
 
-              <?= form_open("Adm_crud/cartao_update",array("class"=>"link-update"))?>
+              <?= form_open("adm_crud/cartao_update",array("class"=>"link-update"))?>
 
                     <input type="hidden" name="usuario" value="<?=$usuario['Id']?>">
                     <input type="hidden" class="ano" name="ano" value="<?=$ano?>">
@@ -396,7 +396,7 @@
       </div>
     </div>
 
-    <script src="<?=base_url("js/my_script-content.js")?>"></script>
+    <script src="<?=base_url("js/my_script-content201703071422.js")?>"></script>
 
     </body>
 </html>    

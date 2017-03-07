@@ -32,7 +32,7 @@
 
                             )
                             OR 
-                            (`Ano` <= ".$pData["Ano"].")
+                            (`Ano` < ".$pData["Ano"].")
                         )";
                         
                         $this->db->where($WhereData);       
@@ -58,8 +58,8 @@
                
             if(isset($pData["PreencherEntidadesFilhas"])){
                 if($pData["PreencherEntidadesFilhas"] == true){
-                    $this->db->join("Categoria", "Categoria.IdCategoria = transacoes.IdCategoria");
-                    $this->db->join("Sub_Categoria", "Sub_Categoria.IdSubCategoria = transacoes.IdSubCategoria");
+                    $this->db->join("categoria", "categoria.IdCategoria = transacoes.IdCategoria");
+                    $this->db->join("sub_categoria", "sub_categoria.IdSubCategoria = transacoes.IdSubCategoria");
                 }
             }
             
