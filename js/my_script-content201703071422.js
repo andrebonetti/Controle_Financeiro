@@ -322,6 +322,24 @@ function formatarReal(mixed) {
     return tmp;
 }
 
+// ---------------- ALTERACAO MANUAL ----------------------- //
+var alteracao_manual = function(){
+    
+    status = $(this).attr("value");
+    tipo = $(this).attr("name");
+    
+    if(status == 0){       
+        $(this).attr("value",1);
+        $(".alteracao-"+tipo).show();       
+    }
+    
+    if(status == 1){       
+        $(this).attr("value",0);
+        $(".alteracao-"+tipo).hide();       
+    }
+     
+}
+
 // -------------- EVENTOS ----------------------
 $(".content-day").on("click",edita_transacao);
 
@@ -334,4 +352,7 @@ $(".oculta-categoria").on("click",oculta_categorias);
 $("tr.data-day").on("click",adiciona_transacao);
 $(".dia_change").on("change",atualiza_saldo_dia);
 $(".content-fatura").on("click",edita_fatura);
+
+/* -- ALTERACAO MANUAL -- */
+$(".alteracao_manual").on("click",alteracao_manual);
 

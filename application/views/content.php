@@ -1,3 +1,5 @@
+
+
 <section class="content">
 	<div class="myContainer">
         
@@ -12,14 +14,52 @@
    		<div class="saldos">
         	
             <div class="saldo-anterior" value="<?=$saldo_anterior["SaldoFinal"]?>">Saldo Anterior: <span><?=numeroEmReais2($saldo_anterior["SaldoFinal"])?></span> </div>
-            <div class="saldo-mes <?=sinal_valor($saldo_atual["SaldoMes"])?>" value="<?=$saldo_atual["SaldoMes"]?>">Saldo do Mes: <span><?=numeroEmReais2($saldo_atual["SaldoMes"])?></span> </div>
+            <div class="saldo-mes <?=sinal_valor($saldo_atual["SaldoMes"])?>" value="<?=$saldo_atual["SaldoMes"]?>">
+                
+                <span class="alteracao_manual" name="SaldoMes" title="Alterar" value="0">Saldo do Mes:</span>
+                <span class="valor_span"><?=numeroEmReais2($saldo_atual["SaldoMes"])?></span> 
+            
+                <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-SaldoMes"))?>
+                    
+                    <input type="hidden" name="tipo_alteracao" value="SaldoMes">
+                    <input type="hidden" name="ano" value="<?=$ano?>">
+                    <input type="hidden" name="mes" value="<?=$mes?>">
+                    <input type="hidden" name="SaldoAnterior" value="<?=$saldo_anterior["SaldoFinal"]?>">
+                
+                    <input type="text" class="form-control input-SaldoMes" name="valor" value="<?=numeroEmReais2($saldo_atual["SaldoMes"])?>">
+
+                    <input type="submit" class="btn btn-success" value="Ok"> 
+                    
+                <?= form_close()?>
+                
+            </div>
+            
             <div class="saldo-dia btn btn-default ">
                 <p>Saldo do dia</p>
                 <input type="text" class="dia_change form-control" value="<?=$hoje?>" maxlength="2">
                 <p>:</p>
                 <span class="saldo-value"></span>
             </div>
-            <div class="saldo-futuro" value="<?=$saldo_atual["SaldoFinal"]?>">Saldo Futuro: <span><?=numeroEmReais2($saldo_atual["SaldoFinal"])?></span> </div>
+            
+            <div class="saldo-futuro" value="<?=$saldo_atual["SaldoFinal"]?>">
+                
+                <span class="alteracao_manual" name="SaldoFinal" title="Alterar" value="0">Saldo Futuro:</span>
+                <span class="valor_span"><?=numeroEmReais2($saldo_atual["SaldoFinal"])?></span> 
+                   
+                <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-SaldoFinal"))?>
+                    
+                    <input type="hidden" name="tipo_alteracao" value="SaldoFinal">
+                    <input type="hidden" name="ano" value="<?=$ano?>">
+                    <input type="hidden" name="mes" value="<?=$mes?>">
+                    <input type="hidden" name="SaldoAnterior" value="<?=$saldo_anterior["SaldoFinal"]?>">
+                
+                    <input type="text" class="form-control input-SaldoFinal" name="valor" value="<?=numeroEmReais2($saldo_atual["SaldoFinal"])?>">
+
+                    <input type="submit" class="btn btn-success" value="Ok"> 
+                    
+                <?= form_close()?>
+                
+            </div>
             
         </div>
         
@@ -35,8 +75,42 @@
             
             <div class="header-calendario">
                 <h1><?=nome_mes($mes)?> - <?=$ano?></h1>
-                <p class="despesas">Despesas: <?=numeroEmReais2($saldo_atual["Despesas"])?></p>
-                <p class="receita">Receita: <?=numeroEmReais2($saldo_atual["Receita"])?></p>               
+                <div class="despesas">
+                    <p> 
+                        <span class="alteracao_manual" name="despesas" title="Alterar" value="0">Despesas:</span>
+                        <span class="valor_span"><?=numeroEmReais2($saldo_atual["Despesas"])?></span>
+                    </p>
+                    <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-despesas"))?>
+                    
+                        <input type="hidden" name="tipo_alteracao" value="Despesas">
+                        <input type="hidden" name="ano" value="<?=$ano?>">
+                        <input type="hidden" name="mes" value="<?=$mes?>">
+                    
+                        <input type="text" class="form-control input-despesas" name="valor" value="<?=numeroEmReais2($saldo_atual["Despesas"])?>">
+                        
+                         <input type="submit" class="btn btn-success" value="Ok"> 
+                    
+                    <?= form_close()?>
+                    
+                </div> 
+                <div class="receita">
+                    <p> 
+                        <span class="alteracao_manual" name="receita" value="0">Receita:</span>
+                        <span class="valor_span"><?=numeroEmReais2($saldo_atual["Receita"])?></span>
+                    </p>
+                    <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-receita"))?>
+                    
+                        <input type="hidden" name="tipo_alteracao" value="Receita">
+                        <input type="hidden" name="ano" value="<?=$ano?>">
+                        <input type="hidden" name="mes" value="<?=$mes?>">
+                    
+                        <input type="text" class="form-control input-receita" name="valor" value="<?=numeroEmReais2($saldo_atual["Receita"])?>">
+                        
+                         <input type="submit" class="btn btn-success" value="Ok"> 
+                    
+                    <?= form_close()?>
+                </div> 
+                
             </div>
             
             
@@ -209,11 +283,29 @@
 
                         <?php } ?>
 
-                        <tr>
-                            <td colspan="3" class="valor-total"><?=numeroEmReais2(-$saldo_atual["Cartao"])?></td>
-                        </tr>
-
                     </table> 
+                    
+                    <div class="total_cartao">
+                        
+                        <span class="alteracao_manual valor-total" name="Cartao" title="Alterar" value="0">Alterar</span>
+                        <span class="valor_span"><?=numeroEmReais2(-$saldo_atual["Cartao"])?></span> 
+
+                        <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-Cartao"))?>
+
+                            <input type="hidden" name="tipo_alteracao" value="Cartao">
+                            <input type="hidden" name="ano" value="<?=$ano?>">
+                            <input type="hidden" name="mes" value="<?=$mes?>">
+                            <input type="hidden" name="ValorAnterior" value="<?=$saldo_atual["Cartao"]?>">
+                            <input type="hidden" name="SaldoMes" value="<?=$saldo_atual["SaldoMes"]?>">
+                            <input type="hidden" name="SaldoFinal" value="<?=$saldo_atual["SaldoFinal"]?>">
+                        
+                            <input type="text" class="form-control input-Cartao" name="valor" value="<?=numeroEmReais2($saldo_atual["Cartao"])?>">
+
+                            <input type="submit" class="btn btn-success" value="Ok"> 
+
+                        <?= form_close()?>
+                        
+                    </div>
                     
                 </div>
                 

@@ -531,8 +531,70 @@
             }
             
 			// -- MSG SUCESSO - REDIRECT
-            /*$this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
-            redirect("content/month_content/".$ano."/".$mes);*/
+            $this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
+            redirect("content/month_content/".$ano."/".$mes);
 		} 
 				            
+        // ---- ALTERACAO MANUAL ----- //
+        public function alteracao_manual(){
+            
+            $this->output->enable_profiler(TRUE);
+            
+            $data["Ano"]            = $this->input->post("ano");
+            $data["Mes"]            = $this->input->post("mes");
+            $valor                  = valor_decimal($this->input->post("valor"));		
+            
+            $tipoAlteracao	        = $this->input->post("tipo_alteracao");
+
+            $data[$tipoAlteracao]   = valor_decimal($valor);
+            
+            if(($tipoAlteracao == "SaldoMes")||($tipoAlteracao == "SaldoFinal")){
+                
+                $saldoAnterior          = $this->input->post("SaldoAnterior");
+                
+                if($tipoAlteracao == "SaldoMes"){
+                    $data["SaldoFinal"] = $saldoAnterior + $valor;
+                }
+                
+                if($tipoAlteracao == "SaldoFinal"){
+                    $data["SaldoMes"] = $valor - $saldoAnterior;
+                }
+                
+                $this->geral_model->Atualizar_Manual($data);   
+                
+                $dataGeral["Mes"] = $data["Mes"];
+                $dataGeral["Ano"] = $data["Ano"];
+                geral_UpdateSaldoManual($dataGeral);
+            }
+            else{
+                
+                if($tipoAlteracao == "Cartao"){
+                    
+                    $ValorAnterior  = $this->input->post("ValorAnterior");
+                    $SaldoMes  = $this->input->post("SaldoMes");
+                    $SaldoFinal  = $this->input->post("SaldoFinal");
+
+                    $valorDiferenca = $valor - $ValorAnterior;
+                    
+                    $data["Cartao"]     = $valor;
+                    $data["SaldoMes"]   = $SaldoMes + $valorDiferenca;
+                    $data["SaldoFinal"]   = $SaldoFinal + $valorDiferenca;
+                    
+                    $this->geral_model->Atualizar_Manual($data);
+
+                    $dataGeral["Mes"] = $data["Mes"];
+                    $dataGeral["Ano"] = $data["Ano"];
+
+                    geral_UpdateSaldoManual($dataGeral);
+                    
+                }
+                else{
+                    
+                    $this->geral_model->Atualizar_Manual($data);   
+                    
+                }
+            }
+            
+            redirect("content/month_content/".$data["Ano"]."/".$data["Mes"]);
+        }
     }

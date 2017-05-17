@@ -28,6 +28,14 @@
 
         section.content{
             padding:1%;
+            
+            form.alteracao_manual{
+                display: none;
+
+                input{
+                    text-align: left
+                }
+            }
 
             .myContainer{
 
@@ -60,6 +68,48 @@
                         .float-config(left,20%);
                         color:@black-2;
                         background-color: @white-7;
+                        position: relative;
+                        
+                        span{
+                            display: block;
+                            float: left;
+                        }
+
+                        span.alteracao_manual{
+                            cursor: pointer;
+                        }
+
+                        span.valor_span{
+                            width: 100px;
+                            float: right;
+                        }
+                    
+                        form.alteracao_manual{
+
+                            input.input-SaldoMes{
+                                width: 120px;
+                                position: absolute;
+                                right: 3px;
+                                top: 10px;
+                                padding: 2px;
+                            }
+                            
+                            .btn-success{
+                                padding: 2px 3px;
+                                position: absolute;
+                                top: 14px;
+                                right: 8px;
+                            }
+                            
+                        }
+                    }
+                    
+                    .saldo-mes:hover,.saldo-futuro:hover{
+                        background-color: @white-2;
+                            
+                        span{
+                            color: #f2f200;
+                        }
                     }
 
                     .saldo-dia{
@@ -101,6 +151,40 @@
                     .saldo-futuro,.poup-futuro{
                         .float-config(right,20%);
                         background-color:yellow;
+                        position: relative;
+                        
+                        span{
+                            display: block;
+                            float: left;
+                        }
+
+                        span.alteracao_manual{
+                            cursor: pointer;
+                        }
+
+                        span.valor_span{
+                            width: 100px;
+                            float: right;
+                        }
+                    
+                        form.alteracao_manual{
+
+                            input.input-SaldoFinal{
+                                width: 120px;
+                                position: absolute;
+                                right: 3px;
+                                top: 10px;
+                                padding: 2px;
+                            }
+                            
+                            .btn-success{
+                                padding: 2px 3px;
+                                position: absolute;
+                                top: 14px;
+                                right: 8px;
+                            }
+                            
+                        }
                     }
 
                     .poup-futuro{
@@ -132,7 +216,6 @@
                     .border(5px,#4c4cbf);
                     background-color: @white-10;
 
-
                     .header-calendario:extend(.full-container){  
 
                         padding:0.5%;
@@ -145,12 +228,73 @@
                             .float-config(left,auto);
                             font-size:2em;
                         }
-                        p{
-                            .float-config(right,auto);
-                            font-size: 1.35em;
-                            margin-left: 1%;
+                        
+                        div{
+                            .float-config(right,15%);
+                            position: relative;
+                            padding: 2px;
+                            border-radius: 4px;
+                            
+                            
+                            a{
+                                .float-config(left,18px);
+                                
+                                img{
+                                    width: 100%
+                                }
+                            }
+                            
+                            p{
+                                font-size: 1.35em;
+                                margin-left: 1%;
+                                margin-bottom: 0;
+                                
+                                span{
+                                    display: block;
+                                    float: left;
+                                }
+                                
+                                span.alteracao_manual{
+                                    cursor: pointer;
+                                }
+                                
+                                span.valor_span{
+                                    width: 100px;
+                                    float: right;
+                                }
+                            }
                         }
+                        
+                        div:hover{
+                            background-color: rgba(9, 9, 129, 0.88);
+                            
+                            p{
+                                
+                                span{
+                                    color: yellow;
+                                }
+                                
+                            }
+                        }
+                        
+                        form.alteracao_manual{
 
+                            input.input-receita,input.input-despesas{
+                                width: 90px;
+                                position: absolute;
+                                right: 3px;
+                                top: 0;
+                                padding: 2px;
+                            }
+                            
+                            .btn-success{
+                                padding: 2px 3px;
+                                position: absolute;
+                                top: 4px;
+                                right: 8px;
+                            }
+                            
+                        }
 
                     }
 
@@ -255,6 +399,50 @@
                             height: 350px;
                             overflow: scroll;
 
+                            .total_cartao{
+                                width: 87%;
+                                position: absolute;
+                                bottom: 0;
+                                text-align: right;
+                                font-size: 1.2em;
+                                font-weight: 600;
+                                color: orange;
+                                
+                                span{
+                                    //display: block;
+                                }
+
+                                span.alteracao_manual{
+                                    cursor: pointer;
+                                    color: @white-2;
+                                }
+
+                                span.valor_span{
+                                    width: 100px;
+                                    float: right;
+                                }
+
+                                form.alteracao_manual{
+
+                                    input.input-Cartao{
+                                        width: 95px;
+                                        position: absolute;
+                                        right: 0;
+                                        top: 0;
+                                        padding: 2px;
+                                    }
+
+                                    .btn-success{
+                                        padding: 2px 3px;
+                                        position: absolute;
+                                        top: 4px;
+                                        right: 2px;
+                                    }
+
+                                }
+                                
+                            }
+                        
                             tr.content-fatura:hover{
                                 background-color: #bebeff;
                                 color: @white-10;

@@ -65,4 +65,10 @@
             $this->db->where 	('Id', $pData["Id"]);
 			$this->db->update	("geral", $pData);
 		}
+        
+        function Atualizar_Manual($pData){
+            $this->db->where 	('Mes', $pData["Mes"]);
+            $this->db->where 	('Ano', $pData["Ano"]);
+			$this->db->update	("geral", $pData);
+		}
     }

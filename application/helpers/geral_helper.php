@@ -28,6 +28,38 @@
         }
     }
 
+    function geral_UpdateSaldoManual($pData){
+
+        $ci = get_instance();
+
+        $pData["PeriodoDe"] = true;
+        $pData["Id"] = null;
+        
+        $lGeral = $ci->geral_model->Listar($pData);
+        
+        var_dump($lGeral);
+
+        $saldoAnterior = 0;
+        $cont = 0;
+        foreach($lGeral as $itemGeral){		                    
+
+            $dataGeral["Mes"]   = $itemGeral["Mes"]; 
+            $dataGeral["Ano"]   = $itemGeral["Ano"];
+            $dataGeral["Id"]   = $itemGeral["Id"];
+            
+            if($cont > 0){
+                
+                $dataGeral["SaldoFinal"] = $saldoAnterior + $itemGeral["SaldoMes"];
+
+                echo $dataGeral["SaldoFinal"];
+                $ci->geral_model->Atualizar($dataGeral);
+            }
+            
+            $saldoAnterior = $itemGeral["SaldoFinal"];
+            $cont++;
+        }
+    }
+
     function geral_UpdateSaldoMes($pData){
         
 		$ci = get_instance();
