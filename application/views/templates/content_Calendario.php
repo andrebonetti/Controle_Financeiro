@@ -58,32 +58,37 @@
     <div class="dias">
         
     <?php 
-        /*-- CALCULO SEMANA --*/
-        $s = 1;
-        for($pre=0;$pre < $first_day-1;$pre++){?> 
-            <?php $semana = calcula_semana($s);?>
-            <div class="pre-nulo"></div>
-            <?php $s++; ?>
-        <?php } 
+
+        // Inicial
+         $numSemana = 1; 
+         $diaSemana = 1;
+         $diaMes = 1;
+
+        /*-- INSERE DIAS MES ANTERIOR --*/
+        for($pre=1;$pre <= $primeiroDiaMes;$pre++){ 
+
+            echo "<div class='dia pre-nulo semana-mes-1'></div>";
+            $diaSemana++; 
+
+        } 
 
         /*-- FOREACH DIAS MES --*/
         foreach($data_month as $data_day) {?>
         
-        <?php $semana = calcula_semana($s);?>
-        <div class="dia dia-<?=$n?> ds-<?=$first_day?> <?php if($first_day == 1){echo "new-line";}?> semana_mes-<?=$semana?>" id="dia-<?=$n?>">
+            <div 
+                class="dia dia-calendario dia-<?=$diaMes?>  semana-mes-<?=$numSemana?>" id="dia-<?=$diaMes?> <?php if($primeiroDiaMes == 1){echo "new-line";}?>"
+                data-dia-mes="<?=$diaMes?>"
+                data-dia-semana="<?=$diaSemana?>"
+                data-semana="<?=$numSemana?>"
+            >
             
-            <table name="<?=$n?>">
+            <table>
                 
                 <!-- INFO DIA -->
-                <tr class="data-day" data-dia="<?=$n?>" data-toggle="modal" data-target="#add-transacao" >
-                    
-                    <th colspan="2" class="dia_mes"><?=$n?></th>
-                    
-                    <span class="dia_semana-<?=$first_day?>"></span>
-                    
+                <tr class="data-day" data-toggle="modal" data-target="#add-transacao" >
+                    <th colspan="2" class="dia_mes"><?=$diaMes?></th>
                 </tr>
 
-                
                 <!-- CONTEUDO DIA -->
                 <?php foreach($data_day as $content){?> 
                 
@@ -123,20 +128,20 @@
                 
                 <!-- RESUMO DIA -->
                 
-                <?php if(isset($DiaSaldo[$n]["SaldoFinal"])){ ?>
+                <?php if(isset($DiaSaldo[$diaMes]["SaldoFinal"])){ ?>
                 
                     <tr class="data-total_saldoDia">
                         <td class="titulo">Saldo Dia</td>
-                        <td class="valorSaldo"><?=numeroEmReais2($DiaSaldo[$n]["SaldoDia"])?></td>
+                        <td class="valorSaldo"><?=numeroEmReais2($DiaSaldo[$diaMes]["SaldoDia"])?></td>
                     </tr>
                         <tr class="data-total_saldoFinal">
                         <td class="titulo">Saldo Final</td>
-                        <td class="valorSaldo"><?=numeroEmReais2($DiaSaldo[$n]["SaldoFinal"])?></td>
+                        <td class="valorSaldo"><?=numeroEmReais2($DiaSaldo[$diaMes]["SaldoFinal"])?></td>
                     </tr>
 
                 <?php } ?>
                 
-                <?php if( (($n == 9)&&($first_day < 6)) || ($n == 10 && $first_day == 1) || ($n == 11 && $first_day == 1) ) {?>
+                <?php if( (($diaMes == 9)&&($primeiroDiaMes < 6)) || ($diaMes == 10 && $primeiroDiaMes == 1) || ($diaMes == 11 && $primeiroDiaMes == 1) ) {?>
                     <tr class="cartao">
                         <td class='cartao'>Cartão</td>
                         <td class='valor-fatura valor' value="<?=-$saldo_atual["Cartao"]?>"><?=numeroEmReais2(-$saldo_atual["Cartao"])?></td>
@@ -149,16 +154,13 @@
 
         </div> 
         
-        <?php 
-                                            
-            /*CONTAGEM DIA*/    $n++; 
-            /*CONTAGEM SEMANA*/ $s++; 
-            
-            /*CONTAGEM DIA DA SEMANA*/                               
-            if($first_day == 7){ $first_day = "1";}                              
-            else{$first_day++;} 
-        ?>
-
-    <?php } ?>
+    <?php
+        $diaMes++;  
+        $diaSemana ++;
+        if($diaSemana > 7){
+            $diaSemana = 1;
+            $numSemana ++;
+        }
+    } ?>
     
 </div>       

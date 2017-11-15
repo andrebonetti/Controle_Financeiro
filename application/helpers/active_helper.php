@@ -4,13 +4,8 @@
 	   if($id == $id_atual){return "active";}
 	}
 
-    function calcula_semana($s){
-        if($s <= 7){return "1";}
-        if(($s>7)&&($s<=14)){return "2";}  
-        if(($s>14)&&($s<=21)){return "3";}
-        if(($s>21)&&($s<=28)){return "4";} 
-        if(($s>28)&&($s<=35)){return "5";} 
-        if($s>35){return "5";} 
+    function calcula_semana($pDiaSemana,$pNumDiasSemana){
+        return (floor($pDiaSemana/$pNumDiasSemana));
 	}
 
     function valida_sub($categoria,$sub_categoria){

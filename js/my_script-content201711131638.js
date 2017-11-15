@@ -1,22 +1,44 @@
 var base_url = $(".base_url").attr("href");
 
 // --------------------- VIEW ------------------- 
-for(var sh=1;sh<=6;sh++){
+var ultimaSemana = $(".dia-calendario").last().data("semana");
+var semanaAltura=1;
+//setTimeout(function(){
+    
+    while(semanaAltura<=ultimaSemana){
+    
+        var altura = 0;
+        var altura_nova = 0;
 
-    var altura = 0;
-    
-    $(".semana_mes-"+sh).each(function() {
-        var altura_nova = $(this).height();
+        $(".semana-mes-"+semanaAltura).each(function() {
 
-        if(altura_nova > altura){
-            altura = altura_nova;
-        }        
-    });
-    
-    altura += 42;
-    
-    $(".semana_mes-"+sh).css("height",altura+"px");
-}
+            altura_nova = $(this).height();
+
+            //alert ("semanaAltura: "+semanaAltura+" altura: " + altura + "nova altura: "+altura_nova);  
+
+            if(altura_nova > altura){
+                altura = altura_nova;
+            }      
+
+        });
+
+        $(".semana-mes-"+semanaAltura).css("height",(altura + 60)+"px");  
+
+        semanaAltura++;  
+    }
+
+//},0);
+
+setTimeout(function(){
+
+    $(".data-total_saldoDia").css("position","absolute");
+    $(".data-total_saldoDia").css("bottom","18px");
+    $(".data-total_saldoDia").show();
+    $(".data-total_saldoFinal").css("position","absolute");
+    $(".data-total_saldoFinal").css("bottom","0");
+    $(".data-total_saldoFinal").show();
+
+},300);
 
 // ----- Exibe Categorias
 var mostra_categorias = function(){
@@ -80,9 +102,9 @@ $(".categoria-resumo").each(function() {
 
 // ------------------------- MODAL TRANSACAO -------------------
 $("tr.data-day").click(function(){
-    var dia = $(this).data("dia");
+    var diaMes = $(this).closest(".dia").data("dia-mes");
 
-    $(".modal-adiciona").find(".dia-add").attr("value",dia);
+    $(".modal-adiciona").find(".dia-add").attr("value",diaMes);
 });
 
 var AlteraCategoria = function(){

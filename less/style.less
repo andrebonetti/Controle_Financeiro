@@ -320,6 +320,8 @@
                             .border(0,@white-9);
                             background-color: @white-10;
                             position: relative;
+                            //height: 175px;
+                            //overflow: hidden;
 
                             table{
                                 width: 100%;
@@ -337,8 +339,9 @@
                                 }
                                 
                                 tr.data-total_saldoDia,tr.data-total_saldoFinal{
+                                    display: none;
                                     width: 100%;
-                                    position: absolute;
+                                    //position: absolute;
                                     bottom: 0;
                                 
                                     td.titulo{
@@ -361,8 +364,9 @@
                                 }
                                 
                                 tr.data-total_saldoDia{
-                                    position: absolute;
-                                    bottom: 18px;
+                                    display: none;
+                                    /*position: absolute;
+                                    bottom: 18px;*/
                                     
                                     td.valorSaldo{
                                         font-weight: 600;

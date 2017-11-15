@@ -56,9 +56,15 @@
 
 		// -- DATA --
 		$qtdeDiasMes 	=  days_in_month($month);
-		$primeiroDiaMes =  date("w", mktime(0,0,0,$month,1,$year));  
+		$primeiroDiaMes =  date("w", mktime(0,0,0,$month,1,$year)); 
         $DiaAtual       =  mdate("%d");  
                 
+        $modeloCalendario = 1;
+
+        if($modeloCalendario == 1){
+            $primeiroDiaMes -= 1;
+        }
+
 		// ---------- CONTEUDO ---------
             
             // -- DIAS --    
@@ -285,10 +291,9 @@
         "hoje"                  => $DiaAtual,
 		"categorias"	  		=> $lCategorias,
 		"all_sub_categorias"  	=> $lSubCategoriasTotal,
-		"n"		 	      		=> "1",
         "fatura_cartao"   		=> $data_cartao,
         "sub_categorias"  		=> $lCategoriasFinal,      
-        "first_day"       		=> $primeiroDiaMes, 
+        "primeiroDiaMes"       	=> $primeiroDiaMes, 
         "last_day"       		=> $n - 1, 
 		"data_month"      		=> $data_month,
         "DiaSaldo"      		=> $DiaSaldo);
