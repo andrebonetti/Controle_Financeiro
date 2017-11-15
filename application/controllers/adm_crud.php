@@ -542,9 +542,13 @@
             
             $data["Ano"]            = $this->input->post("ano");
             $data["Mes"]            = $this->input->post("mes");
-            $valor                  = valor_decimal($this->input->post("valor"));		
+            $valor                  = valor_decimal($this->input->post("valor"));	
+            
+            echo $valor;
             
             $tipoAlteracao	        = $this->input->post("tipo_alteracao");
+            
+            echo " - ".$tipoAlteracao;
 
             $data[$tipoAlteracao]   = valor_decimal($valor);
             
@@ -557,6 +561,7 @@
                 }
                 
                 if($tipoAlteracao == "SaldoFinal"){
+                    $data["SaldoFinal"] = $valor;
                     $data["SaldoMes"] = $valor - $saldoAnterior;
                 }
                 

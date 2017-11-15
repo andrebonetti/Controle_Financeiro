@@ -319,10 +319,11 @@
                             //.border(0,@white-4);
                             .border(0,@white-9);
                             background-color: @white-10;
+                            position: relative;
 
                             table{
                                 width: 100%;
-
+                                
                                 tr.data-day{
 
                                     th{
@@ -334,7 +335,40 @@
                                         color:#4c4cbf;
                                     }
                                 }
-
+                                
+                                tr.data-total_saldoDia,tr.data-total_saldoFinal{
+                                    width: 100%;
+                                    position: absolute;
+                                    bottom: 0;
+                                
+                                    td.titulo{
+                                        font-size: 0.8em;
+                                        color: @white-2;
+                                        text-align: left;
+                                        width: 70%;
+                                        float: left;
+                                        padding-left: 5px;
+                                    }
+                                    
+                                    td.valorSaldo{
+                                        font-size: 0.85em;
+                                        color: @white-1;
+                                        text-align: right;
+                                        float: right;
+                                        padding-right: 5px;
+                                    }
+                                    
+                                }
+                                
+                                tr.data-total_saldoDia{
+                                    position: absolute;
+                                    bottom: 18px;
+                                    
+                                    td.valorSaldo{
+                                        font-weight: 600;
+                                    }
+                                }
+                                
                                 tr.content-day,tr.cartao,tr.poupanca,tr.dizimo,{
                                     font-size:0.9em; 
                                     cursor: pointer;
@@ -389,6 +423,7 @@
                     margin-top: 2%;
                     padding: 1%;
                     background-color: @white-8;
+                    display: none;
                     
                     .box{
                         .float-config(left,33.33%);
@@ -472,6 +507,11 @@
                                     margin-left: -1%;
                                     margin-top: -2%;
                                 }
+                                
+                                .nome_sub_categoria{
+                                    text-align: center;
+                                }
+                                
                                 table:extend(.full-container){
 
                                     td,th{

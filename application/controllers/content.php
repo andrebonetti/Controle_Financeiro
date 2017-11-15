@@ -13,7 +13,10 @@
         $usuarioLogado["Id"]    = $this->session->userdata('usuario');
         $usuarioLogado = $this->usuarios_model->Buscar($usuarioLogado); 
 		
-        $dataContent["IdUsuario"]      = $usuarioLogado["Id"];   
+        if(empty($usuarioLogado)){
+            redirect("");
+        }
+        $dataContent["IdUsuario"] = $usuarioLogado["Id"];   
         $dataContent["isListaPorTipo"] = true;
            
 		// -- TABELAS --
@@ -75,6 +78,8 @@
                 $dataContent["Ano"]                      = $year;
                 $diaSemana                               = date("w", mktime(0,0,0,$dataContent["Mes"],$n,$dataContent["Ano"]));  
                 $DiaContent                              = array();
+                $DiaSaldo                                = array();
+                $Saldo                                   = $saldoAnterior["SaldoFinal"];
                 $dataContent["PreencherEntidadesFilhas"] = true;
                     
                 // -- TRANSACOES SIMPLES --
@@ -161,7 +166,7 @@
                     }
                 
                     // -- SEGUNDA A SEXTA 
-                    if(($diaSemana >= 1)&&($diaSemana <= 5))
+                    if(($diaSemana > 1)&&($diaSemana <= 5))
                     {
                         $dataContent["Dia"]             = $n; 
                          
@@ -218,7 +223,43 @@
                 $data_month["dia-".$n] = $DiaContent;
                 
             }
-					
+           
+            /* -- CALCULO SALDO -- */
+            $nDiaMes = 1;
+            $saldoFinalDia = $saldoAnterior["SaldoFinal"];
+            foreach($data_month as $data_day){
+                
+                $diaSemana         = date("w", mktime(0,0,0,$month,$nDiaMes,$year)); 
+                $nDiaMesTransacoes = 0;
+
+                if( (($nDiaMes == 9)&&( ($diaSemana != 6)&&($diaSemana != 0) )) || ($nDiaMes == 10 && $diaSemana == 1) || ($nDiaMes == 11 && $diaSemana == 1) ){
+                    
+                    
+                    $saldoFinalDia += $saldoAtual["Cartao"]*-1;
+                    
+                    $DiaSaldo[$nDiaMes]["SaldoDia"] = $saldoAtual["Cartao"]*-1;
+                    $DiaSaldo[$nDiaMes]["SaldoFinal"] = $saldoFinalDia;
+                        
+                    $nDiaMesTransacoes ++;  
+                    
+                }
+                foreach($data_day as $content){
+                    
+                    if($nDiaMesTransacoes == 0){
+                        $DiaSaldo[$nDiaMes]["SaldoDia"] = 0; 
+                    }
+                    
+                    $DiaSaldo[$nDiaMes]["SaldoDia"]   += $content["Valor"];
+                    
+                    $saldoFinalDia                    += $content["Valor"];
+                    $DiaSaldo[$nDiaMes]["SaldoFinal"] = $saldoFinalDia;
+                    
+                    $nDiaMesTransacoes++;
+                }
+                
+                $nDiaMes++;
+            }
+           
             // -- CARTAO --
             $data_cartao = array();
            
@@ -249,7 +290,8 @@
         "sub_categorias"  		=> $lCategoriasFinal,      
         "first_day"       		=> $primeiroDiaMes, 
         "last_day"       		=> $n - 1, 
-		"data_month"      		=> $data_month);
+		"data_month"      		=> $data_month,
+        "DiaSaldo"      		=> $DiaSaldo);
 		
 		// -- VIEW --
         $this->load->template("content.php",$content);
