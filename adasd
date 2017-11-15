@@ -1,0 +1,544 @@
+[33mcommit 60d435a2a7deddf85657be1cb47fac46a605ffb9[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Wed Nov 15 00:16:46 2017 -0200
+
+    Commit teste 3
+
+:000000 100644 0000000... bb5f0a0... A	Backups-SQL/controle_financeiro - 2017-05.sql
+:000000 100644 0000000... 52f73cd... A	Backups-SQL/controle_financeiro - 2017-06.sql
+:000000 100644 0000000... 68d2e32... A	Backups-SQL/controle_financeiro - 2017-08.sql
+:000000 100644 0000000... db03fad... A	Backups-SQL/controle_financeiro - 2017-10.sql
+:000000 100644 0000000... 2287370... A	Extratos/DescricaoExtrato.xlsx
+:000000 100644 0000000... 0fae42f... A	Extratos/Extrato 2017-06.pdf
+:000000 100644 0000000... ad5f76e... A	Extratos/Extrato 2017-07.pdf
+:000000 100644 0000000... 050f32f... A	Extratos/Extrato 2017-08.pdf
+:000000 100644 0000000... 99ae8e3... A	Extratos/Extrato 2017-09.pdf
+:000000 100644 0000000... 6b5d036... A	Extratos/Extrato 2017-10.pdf
+:000000 100644 0000000... df88446... A	Extratos/Extrato 2017-11.pdf
+:000000 100644 0000000... 3d879ac... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-06.pdf"
+:000000 100644 0000000... 75275f9... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-07.pdf"
+:000000 100644 0000000... b1c4d19... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-08.pdf"
+:000000 100644 0000000... bd7c50a... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-09.pdf"
+:000000 100644 0000000... 7cd9e14... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-10.pdf"
+:000000 100644 0000000... 500b284... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-11.pdf"
+:000000 100644 0000000... f0e2846... A	application/views/sniplets/msg_Session.php
+:000000 100644 0000000... fbe478e... A	application/views/templates/content_Calendario.php
+:000000 100644 0000000... 11a448d... A	application/views/templates/content_ResumoCategorias.php
+:000000 100644 0000000... b3b7a65... A	application/views/templates/content_Saldos.php
+:000000 100644 0000000... 32f79b9... A	js/content.php
+:000000 100644 0000000... 15e3380... A	js/my_script-content201711131638.js
+
+[33mcommit 40c6402438bae5ea19b49a67b96a656bbf7af38a[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Wed Nov 15 00:12:01 2017 -0200
+
+    commit teste
+
+:100644 100644 e29b43d... 612b8ce... M	Extratos/Extrato 2017-05.pdf
+:100644 100644 19719aa... 16773d0... M	application/config/database.php
+:100644 100644 ffcdc06... e73bac5... M	application/controllers/adm_crud.php
+:100644 100644 679b8c6... 83a9d79... M	application/controllers/content.php
+:100644 100644 bb9f01e... 0db9eb6... M	application/views/content.php
+:100644 100644 f6e5326... 01dd0d0... M	application/views/frames/footer.php
+:100644 000000 f27fa83... 0000000... D	js/my_script-content201703071422.js
+:100644 100644 c3f42c3... 4b7a748... M	less/base.less
+:100644 100644 f22c4b1... d0884cc... M	less/style.less
+
+[33mcommit 1fa5f8dd8f8966d1349d0816089e24f72028240e[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Wed May 17 14:54:16 2017 -0300
+
+    Update 17/05/2017 - LeanKit 1
+
+:000000 100644 0000000... ed230a0... A	Backups-SQL/controle_financeiro - 06-04-2017 (Antes Melhoria 01).sql
+:000000 100644 0000000... bb5dde5... A	"Backups-SQL/controle_financeiro - 06-04-2017 (At\303\251 dia 31-03-2017 OK).sql"
+:000000 100644 0000000... 2269ecc... A	Backups-SQL/controle_financeiro - 16-05-2017 (Antes Melhoria 01).sql
+:000000 100644 0000000... ef6e416... A	Extratos/Extrato 2017-03.pdf
+:000000 100644 0000000... 71a8888... A	Extratos/Extrato 2017-04.pdf
+:000000 100644 0000000... e29b43d... A	Extratos/Extrato 2017-05.pdf
+:100644 100644 a1b7ec5... 417b147... M	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-04.pdf"
+:000000 100644 0000000... 2a498ed... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-05.pdf"
+:000000 100644 0000000... ada148f... A	Extratos/arquivo.pdf
+:100644 100644 6951c20... 19719aa... M	application/config/database.php
+:100644 100644 d4bd56d... ffcdc06... M	application/controllers/adm_crud.php
+:100644 100644 3eb40b9... 40bf1c6... M	application/helpers/geral_helper.php
+:100644 100644 0acf79e... 966a5c3... M	application/models/geral_model.php
+:100644 100644 7ea58c1... bb9f01e... M	application/views/content.php
+:000000 100644 0000000... 52c9ebc... A	img/Edit.png
+:000000 100644 0000000... 060339e... A	img/Edit2.jpg
+:000000 100644 0000000... 79ac6c9... A	img/Edit2.png
+:100644 100644 a55d74f... f27fa83... M	js/my_script-content201703071422.js
+:100644 100644 14662f3... f22c4b1... M	less/style.less
+:100644 000000 06ac899... 0000000... D	relatorios/RH - Encaminhamento MOEMA.docx
+:100644 000000 c1ae9ab... 0000000... D	"relatorios/RH - Modelo Rela\303\247\303\243o de documenta\303\247\303\243o (2).doc"
+:100644 000000 192f798... 0000000... D	relatorios/fechamento_2015-07.sql
+:100644 000000 2cef88d... 0000000... D	relatorios/fechamento_2015-09.sql
+:100644 000000 337f251... 0000000... D	relatorios/fechamento_2015-11.sql
+
+[33mcommit e670ded4468eafbf0c47a1a7e4738bbe34e59857[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Tue Mar 7 15:00:15 2017 -0300
+
+    Update 07-03-2017
+    
+    Categorias OK
+    CRUD Cartão OK
+
+:000000 100644 0000000... 8682d22... A	"Backups-SQL/controle_financeiro - 07-02-2017 (At\303\251 dia 07-02-2017 OK).sql"
+:000000 100644 0000000... d650a75... A	"Backups-SQL/controle_financeiro - 07-03-2017 (At\303\251 dia 07-03-2017 OK).sql"
+:000000 100644 0000000... 598d3a0... A	"Backups-SQL/controle_financeiro - 09-01-2017 (Antes alterar Valores Cart\303\243o).sql"
+:000000 100644 0000000... af2fbec... A	"Backups-SQL/controle_financeiro - 27-02-2017 (At\303\251 dia 27-02-2017 OK).sql"
+:000000 100644 0000000... 6f27b87... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-02.pdf"
+:000000 100644 0000000... c90a236... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-03.pdf"
+:000000 100644 0000000... a1b7ec5... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2017-04.pdf"
+:100644 100644 52b44a8... 6951c20... M	application/config/database.php
+:100644 100644 a6f7e93... d4bd56d... M	application/controllers/adm_crud.php
+:100644 100644 33dfd9d... 679b8c6... M	application/controllers/content.php
+:100644 100644 5b3e217... 3eb40b9... M	application/helpers/geral_helper.php
+:100644 100644 09daede... efb85e5... M	application/models/cartao_model.php
+:100644 100644 f78c906... 1b9b55a... M	application/models/transacoes_model.php
+:100644 100644 18be575... 7ea58c1... M	application/views/content.php
+:100644 100644 bdbd92b... f6e5326... M	application/views/frames/footer.php
+:100644 100644 5100012... a55d74f... R088	js/my_script-content.js	js/my_script-content201703071422.js
+:100644 100644 cbc5991... 14662f3... M	less/style.less
+
+[33mcommit 6b0320eb5d52af65ab16bf88c7bf997ad51b5de8[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Wed Jan 4 12:06:21 2017 -0200
+
+    Update 04/01/2017
+    
+    Geração de Competência Automática
+
+:000000 100644 0000000... 3d164d3... A	"Backups-SQL/controle_financeiro - 03-01-2017 (At\303\251 12-2016 OK).sql"
+:000000 100644 0000000... 63f185c... A	"Backups-SQL/controle_financeiro - 04-01-2017 (Gera\303\247\303\243o Autom\303\241tica de Competencia OK OK).sql"
+:000000 100644 0000000... 4882b31... A	Backups-SQL/controle_financeiro - 04-12-2016 (Antes Alterar Salario 10-2011).sql
+:000000 100644 0000000... 9d3f08f... A	Backups-SQL/controle_financeiro - 04-12-2016 (Antes Alterar Valor Cartao).sql
+:000000 100644 0000000... cdd99ff... A	Backups-SQL/controle_financeiro - 05-12-2016 (Antes Alterar Valor Bonetti).sql
+:000000 100644 0000000... 3fcd201... A	Backups-SQL/controle_financeiro - 11-12-2016 (Antes Alterar Cartao 11-2016).sql
+:000000 100644 0000000... 837cd28... A	"Backups-SQL/controle_financeiro - 11-12-2016 (At\303\251 11-2016 OK-).sql"
+:000000 100644 0000000... 1309e5e... A	"Backups-SQL/controle_financeiro - 26-12-2016 (At\303\251 11-2016 OK).sql"
+:000000 100644 0000000... 559600b... A	"Backups-SQL/controle_financeiro - 29-12-2016 (At\303\251 26-12-2016 OK).sql"
+:000000 100644 0000000... 0b6d4b5... A	Extratos/ComprovantePagamento/ComprovantePagamento 2016-10.pdf
+:000000 100644 0000000... 260a09e... A	"Extratos/ComprovantePagamento/ComprovantePagamento 2016-11 D\303\251cimo.pdf"
+:000000 100644 0000000... 0bfb12f... A	Extratos/ComprovantePagamento/ComprovantePagamento 2016-11.pdf
+:000000 100644 0000000... 261305f... A	Extratos/ComprovantePagamento/ComprovantePagamento 2016-12.pdf
+:000000 100644 0000000... 4478122... A	Extratos/Extrato 2016-10.pdf
+:000000 100644 0000000... eb492b0... A	Extratos/Extrato 2016-11.pdf
+:000000 100644 0000000... a2c2a8d... A	"Extratos/Extrato 2016-12 (At\303\251 dia 26)pdf.PDF"
+:000000 100644 0000000... a02368b... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2016-11.pdf"
+:000000 100644 0000000... 0ce234f... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2016-12.pdf"
+:100644 100644 0f01f5a... a6f7e93... M	application/controllers/adm_crud.php
+:100644 100644 7eece4c... 33dfd9d... M	application/controllers/content.php
+:100644 100644 05e3b1a... 5b3e217... M	application/helpers/geral_helper.php
+:100644 100644 44d5c0b... 4fd2f82... M	application/helpers/transacoes_helper.php
+:100644 100644 a8e89e8... 09daede... M	application/models/cartao_model.php
+:100644 100644 432caf7... 0acf79e... M	application/models/geral_model.php
+:100644 100644 b842a3a... f78c906... M	application/models/transacoes_model.php
+:100644 100644 1a0cd60... bdbd92b... M	application/views/frames/footer.php
+:100644 100644 63ae961... cbc5991... M	less/style.less
+
+[33mcommit 2a657934415d9bf784ae36f2598be55deaa0d8ee[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Tue Nov 15 13:53:31 2016 -0200
+
+    Update 15-11-2016
+    
+    Até 30/09/2016 OK
+
+:000000 100644 0000000... 65ec055... A	"Backups-SQL/controle_financeiro - 15-11-2016 (At\303\251 09-2016 OK).sql"
+:000000 100644 0000000... ccc0ac2... A	"Backups-SQL/controle_financeiro - 23-10-2016 (At\303\251 08-2016 OK).sql"
+:000000 100644 0000000... 2bce1d1... A	Backups-SQL/controle_financeiro - 23-10-2016 (Parcela Normalizada).sql
+:000000 100644 0000000... 8207d3e... A	Backups-SQL/controle_financeiro - 29-10-2016 (Antes Adicionar Subcategoria de Categoria Existente).sql
+:000000 100644 0000000... 09b8809... A	Backups-SQL/controle_financeiro - 29-10-2016 (Antes Alteracao Recorrente).sql
+:000000 100644 0000000... 216e5f6... A	Backups-SQL/controle_financeiro - 29-10-2016 (Antes Alteracao Valor Recorrente).sql
+:000000 100644 0000000... 94459d9... A	"Backups-SQL/controle_financeiro - 29-10-2016 (Antes Alterar Cart\303\243o).sql"
+:000000 100644 0000000... d9d06bf... A	Extratos/Extrato 2016-09.pdf
+:000000 100644 0000000... ce4ce3d... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2016-09.pdf"
+:000000 100644 0000000... 02bd712... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2016-10.pdf"
+:100644 100644 2a5225d... 0f01f5a... M	application/controllers/adm_crud.php
+:100644 100644 1cbaa10... b842a3a... M	application/models/transacoes_model.php
+:100644 100644 aeeb025... 18be575... M	application/views/content.php
+
+[33mcommit da575ca5abf580af403de84e97644a41f8a3ff0f[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Sun Oct 23 00:27:03 2016 -0200
+
+    Update 23-10-2016
+
+:000000 100644 0000000... 41deb43... A	Backups-SQL/controle_financeiro - 07-09-2016 (Antes Inserir Cartao).sql
+:000000 100644 0000000... f332d54... A	Backups-SQL/controle_financeiro - 07-09-2016 (Antes Recorrente Cartao Update).sql
+:000000 100644 0000000... 5026a76... A	Backups-SQL/controle_financeiro - 09-10-2016 (Antes Adicionar Categoria).sql
+:000000 100644 0000000... c18cfb3... A	Backups-SQL/controle_financeiro - 14-08-2016 (Ate 07-2016 OK)2.sql
+:000000 100644 0000000... 9696593... A	Backups-SQL/controle_financeiro - 15-08-2016 (Antes alterar transacao1).sql
+:000000 100644 0000000... 1d272f0... A	"Backups-SQL/controle_financeiro - 22-10-2016 (Antes Altera\303\247\303\243o M\303\252s).sql"
+:000000 100644 0000000... b0e0914... A	Backups-SQL/controle_financeiro - 26-09-2016 (Antes Adicionar Categoria).sql
+:100644 100644 b6352a4... 4913062... M	application/config/autoload.php
+:100644 100644 dc76ad1... 2a5225d... M	application/controllers/adm_crud.php
+:100644 100644 76a0cd3... 7eece4c... M	application/controllers/content.php
+:100644 000000 51cf3a4... 0000000... D	application/helpers/cartao_helper.php
+:100644 000000 18b5c84... 0000000... D	application/helpers/categorias_helper.php
+:100644 100644 557452f... 05e3b1a... M	application/helpers/geral_helper.php
+:100644 100644 a9c8769... 44d5c0b... M	application/helpers/transacoes_helper.php
+:100644 100644 0f4edc8... 9a12acf... M	application/helpers/transform_name_helper.php
+:100644 100644 6d5d292... a8e89e8... M	application/models/cartao_model.php
+:100644 100644 8eacd4c... 496227a... M	application/models/categoria_model.php
+:100644 100644 429521f... 87619e3... M	application/models/subcategoria_model.php
+:100644 100644 f38c966... 1cbaa10... M	application/models/transacoes_model.php
+:100644 100644 1d09794... aeeb025... M	application/views/content.php
+:100644 100644 94c3118... 1a0cd60... M	application/views/frames/footer.php
+:100644 100644 77974d3... 5100012... M	js/my_script-content.js
+:100644 100644 901d337... 63ae961... M	less/style.less
+
+[33mcommit ad6ace78bfc73c78d0b8fb0b90c71492468efc5b[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Wed Sep 7 18:24:25 2016 -0300
+
+    Atualizaão 07/09/2016
+
+:000000 100644 0000000... fbaad56... A	Backups-SQL/controle_financeiro - 07-09-2016 (Antes Comecar Mes Agosto).sql
+:100644 100644 c2f53c3... eae24a4... R062	controle_financeiro (1).sql	Backups-SQL/controle_financeiro - 14-08-2016 (Ate 07-2016 OK).sql
+:000000 100644 0000000... 9becfb2... A	Extratos/Extrato 2016-08.pdf
+:000000 100644 0000000... 6e15adc... A	"Extratos/FaturaCartao/Fatura Cart\303\243o 2016-08.pdf"
+:100644 000000 5404b61... 0000000... D	andreteste.sql
+:100644 100644 63b98d5... dc76ad1... M	application/controllers/adm_crud.php
+:100644 100644 a25dcc3... 76a0cd3... M	application/controllers/content.php
+:100644 100644 a8f887f... a4d067c... M	application/controllers/login.php
+:100644 100644 f7f4d24... 557452f... M	application/helpers/geral_helper.php
+:100644 100644 e9d8681... a9c8769... M	application/helpers/transacoes_helper.php
+:100644 100644 8d8b71c... cdbb028... M	application/helpers/usuario_helper.php
+:100644 100644 04948fe... 6d5d292... M	application/models/cartao_model.php
+:100644 100644 527caca... 8eacd4c... M	application/models/categoria_model.php
+:100644 100644 b147339... 432caf7... M	application/models/geral_model.php
+:100644 100644 7c8874a... 429521f... M	application/models/subcategoria_model.php
+:100644 100644 bb40889... f38c966... M	application/models/transacoes_model.php
+:100644 100644 2c7f8cf... 7dcb88c... M	application/models/usuarios_model.php
+:100644 100644 7642731... 1d09794... M	application/views/content.php
+:100644 100644 b435291... 94c3118... M	application/views/frames/footer.php
+:100644 000000 bb22ea7... 0000000... D	controle_financeiro.sql
+:100644 000000 7d68ecb... 0000000... D	controle_financeiro2.sql
+:100644 100644 693609a... 77974d3... M	js/my_script-content.js
+:100644 100644 c024d76... 901d337... M	less/style.less
+
+[33mcommit 189b0f7c7fb15338f6d57575ce35e02f3f901e44[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Sun Aug 14 20:58:19 2016 -0300
+
+    Update 14/08/2016
+    
+    Primeira fase Upgrade
+    Até 07/2016 OK
+
+:000000 100644 0000000... c516f0c... A	Backups-SQL/controle_financeiro - 24-07-2016.sql
+:000000 100644 0000000... ebe0c1e... A	Extratos/Extrato 2016-01.pdf
+:000000 100644 0000000... 8503816... A	Extratos/Extrato 2016-02.pdf
+:000000 100644 0000000... e226b42... A	Extratos/Extrato 2016-03.pdf
+:000000 100644 0000000... 8765ee9... A	Extratos/Extrato 2016-04.pdf
+:000000 100644 0000000... e843831... A	Extratos/Extrato 2016-05.pdf
+:000000 100644 0000000... 6027aa0... A	Extratos/Extrato 2016-06.pdf
+:000000 100644 0000000... 1320cb7... A	Extratos/Extrato 2016-07.pdf
+:100644 100644 4825c8c... b6352a4... M	application/config/autoload.php
+:100644 100644 d45ee2e... 63b98d5... M	application/controllers/adm_crud.php
+:100644 100644 30af4b8... a25dcc3... M	application/controllers/content.php
+:000000 100644 0000000... 51cf3a4... A	application/helpers/cartao_helper.php
+:000000 100644 0000000... 18b5c84... A	application/helpers/categorias_helper.php
+:100644 100644 f045e93... 6d0abd1... M	application/helpers/crud_helper.php
+:000000 100644 0000000... f7f4d24... A	application/helpers/geral_helper.php
+:100644 000000 c942a79... 0000000... D	application/helpers/index.html
+:000000 100644 0000000... 81bd403... A	application/helpers/subCategorias_helper.php
+:000000 100644 0000000... e9d8681... A	application/helpers/transacoes_helper.php
+:100644 100644 5f3c9ac... 8d8b71c... R092	application/helpers/adm_helper.php	application/helpers/usuario_helper.php
+:100644 100644 e5c6a97... 04948fe... M	application/models/cartao_model.php
+:000000 100644 0000000... 527caca... A	application/models/categoria_model.php
+:100644 100644 43c9e77... e69de29... M	application/models/crud_model.php
+:100644 100644 b5eb230... b147339... M	application/models/geral_model.php
+:000000 100644 0000000... 7c8874a... A	application/models/subcategoria_model.php
+:100644 100644 8dd96d8... bb40889... M	application/models/transacoes_model.php
+:100644 100644 88479f1... 7642731... M	application/views/content.php
+:100644 100644 eb9fdd8... b435291... M	application/views/frames/footer.php
+:100644 100644 5d7f6c9... 693609a... M	js/my_script-content.js
+:100644 100644 980bcd6... c024d76... M	less/style.less
+
+[33mcommit f30972ace61d614777e0b8fda82f5dc72b47753d[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Sun Mar 6 16:23:32 2016 -0300
+
+    Mudança Verificação Usuario
+
+:100644 100644 a1cd907... d45ee2e... M	application/controllers/adm_crud.php
+:100644 100644 8c45fdb... 5f3c9ac... M	application/helpers/adm_helper.php
+:000000 100644 0000000... 79741e9... A	application/views/temp.php
+:000000 100644 0000000... c2f53c3... A	controle_financeiro (1).sql
+
+[33mcommit 96b311993c81684f35979c509ffadf655019a715[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Sat Jan 30 20:25:47 2016 -0200
+
+    Banco Atualizado 30/01/2016
+
+:100644 100644 e445f23... bb22ea7... M	controle_financeiro.sql
+
+[33mcommit 1644450e2cef917ac7c14a1deca42ac872761919[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Tue Jan 19 00:19:50 2016 -0200
+
+    Arquivos Adicionados
+
+:000000 100644 0000000... 85cf101... A	G-Bolso V2 (10).xlsx
+:000000 100644 0000000... 0765aaf... A	G-Bolso V2 (11).xlsx
+:000000 100644 0000000... 5404b61... A	andreteste.sql
+:000000 100644 0000000... 14249c5... A	application/.htaccess
+:000000 100644 0000000... 14249c5... A	application/cache/.htaccess
+:000000 100644 0000000... c942a79... A	application/cache/index.html
+:000000 100644 0000000... 4825c8c... A	application/config/autoload.php
+:000000 100644 0000000... 2fb617d... A	application/config/config.php
+:000000 100644 0000000... 4a879d3... A	application/config/constants.php
+:000000 100644 0000000... 52b44a8... A	application/config/database.php
+:000000 100644 0000000... f7e1d19... A	application/config/doctypes.php
+:000000 100644 0000000... 14b0d73... A	application/config/foreign_chars.php
+:000000 100644 0000000... a4ad2be... A	application/config/hooks.php
+:000000 100644 0000000... c942a79... A	application/config/index.html
+:000000 100644 0000000... d73192f... A	application/config/migration.php
+:000000 100644 0000000... 100f7d4... A	application/config/mimes.php
+:000000 100644 0000000... f8a5b1a... A	application/config/profiler.php
+:000000 100644 0000000... 9d98339... A	application/config/routes.php
+:000000 100644 0000000... 25d28b2... A	application/config/smileys.php
+:000000 100644 0000000... e2d3c3a... A	application/config/user_agents.php
+:000000 100644 0000000... 1add2ad... A	application/controllers/adm.php
+:000000 100644 0000000... a1cd907... A	application/controllers/adm_crud.php
+:000000 100644 0000000... 30af4b8... A	application/controllers/content.php
+:000000 100644 0000000... a8f887f... A	application/controllers/login.php
+:000000 100644 0000000... 283823b... A	application/core/MY_Loader.php
+:000000 100644 0000000... c942a79... A	application/core/index.html
+:000000 100644 0000000... 792726a... A	application/errors/error_404.php
+:000000 100644 0000000... b396cda... A	application/errors/error_db.php
+:000000 100644 0000000... fd63ce2... A	application/errors/error_general.php
+:000000 100644 0000000... f085c20... A	application/errors/error_php.php
+:000000 100644 0000000... c942a79... A	application/errors/index.html
+:000000 100644 0000000... 1cb9603... A	application/helpers/active_helper.php
+:000000 100644 0000000... 8c45fdb... A	application/helpers/adm_helper.php
+:000000 100644 0000000... f045e93... A	application/helpers/crud_helper.php
+:000000 100644 0000000... d30bebe... A	application/helpers/data_helper.php
+:000000 100644 0000000... 77d858b... A	application/helpers/filter_helper.php
+:000000 100644 0000000... c942a79... A	application/helpers/index.html
+:000000 100644 0000000... 0f4edc8... A	application/helpers/transform_name_helper.php
+:000000 100644 0000000... c942a79... A	application/hooks/index.html
+:000000 100644 0000000... c942a79... A	application/index.html
+:000000 100644 0000000... c942a79... A	application/language/english/index.html
+:000000 100644 0000000... c942a79... A	application/language/index.html
+:000000 100644 0000000... b91ce00... A	application/language/portuguese-br/calendar_lang.php
+:000000 100644 0000000... 271af7a... A	application/language/portuguese-br/date_lang.php
+:000000 100644 0000000... 0b452a4... A	application/language/portuguese-br/db_lang.php
+:000000 100644 0000000... 9ac05ae... A	application/language/portuguese-br/email_lang.php
+:000000 100644 0000000... 933f834... A	application/language/portuguese-br/form_validation_lang.php
+:000000 100644 0000000... 77a0eac... A	application/language/portuguese-br/ftp_lang.php
+:000000 100644 0000000... 118e866... A	application/language/portuguese-br/imglib_lang.php
+:000000 100644 0000000... c942a79... A	application/language/portuguese-br/index.html
+:000000 100644 0000000... 4db5074... A	application/language/portuguese-br/migration_lang.php
+:000000 100644 0000000... 56def94... A	application/language/portuguese-br/number_lang.php
+:000000 100644 0000000... 692fd85... A	application/language/portuguese-br/profiler_lang.php
+:000000 100644 0000000... aca0a5e... A	application/language/portuguese-br/unit_test_lang.php
+:000000 100644 0000000... 783b0be... A	application/language/portuguese-br/upload_lang.php
+:000000 100644 0000000... c942a79... A	application/libraries/index.html
+:000000 100644 0000000... c942a79... A	application/logs/index.html
+:000000 100644 0000000... e5c6a97... A	application/models/cartao_model.php
+:000000 100644 0000000... 43c9e77... A	application/models/crud_model.php
+:000000 100644 0000000... b5eb230... A	application/models/geral_model.php
+:000000 100644 0000000... c942a79... A	application/models/index.html
+:000000 100644 0000000... 8dd96d8... A	application/models/transacoes_model.php
+:000000 100644 0000000... 2c7f8cf... A	application/models/usuarios_model.php
+:000000 100644 0000000... c942a79... A	application/third_party/index.html
+:000000 100644 0000000... 88479f1... A	application/views/content.php
+:000000 100644 0000000... eb9fdd8... A	application/views/frames/footer.php
+:000000 100644 0000000... 08f76b1... A	application/views/frames/header.php
+:000000 100644 0000000... 748b805... A	application/views/geral.php
+:000000 100644 0000000... ad6de89... A	application/views/signin.php
+:000000 100644 0000000... e445f23... A	controle_financeiro.sql
+:000000 100644 0000000... 7d68ecb... A	controle_financeiro2.sql
+:000000 100644 0000000... c6f3d21... A	css/bootstrap.css
+:000000 100644 0000000... 4a4ca86... A	fonts/glyphicons-halflings-regular.eot
+:000000 100644 0000000... e3e2dc7... A	fonts/glyphicons-halflings-regular.svg
+:000000 100644 0000000... 67fa00b... A	fonts/glyphicons-halflings-regular.ttf
+:000000 100644 0000000... 8c54182... A	fonts/glyphicons-halflings-regular.woff
+:000000 100644 0000000... cd9bc4d... A	img/Calendario.png
+:000000 100644 0000000... 1093221... A	img/Calendario_anterior.png
+:000000 100644 0000000... d65c383... A	img/Calendario_futuro.png
+:000000 100644 0000000... c70c667... A	img/Calendario_geral.png
+:000000 100644 0000000... 3efa5af... A	img/cadeado_icon.png
+:000000 100644 0000000... 4145c04... A	img/seta_baixo.png
+:000000 100644 0000000... 2ec1671... A	img/seta_cima.png
+:000000 100644 0000000... f4ac11a... A	index.php
+:000000 100644 0000000... 3032dcb... A	js/bootstrap.js
+:000000 100644 0000000... 25714ed... A	js/jquery-2.1.3.min.js
+:000000 100644 0000000... 47f7e6a... A	js/less.js
+:000000 100644 0000000... f7052e1... A	js/my_script-adm.js
+:000000 100644 0000000... 5d7f6c9... A	js/my_script-content.js
+:000000 100644 0000000... c3f42c3... A	less/base.less
+:000000 100644 0000000... 980bcd6... A	less/style.less
+:000000 100644 0000000... 0973fd3... A	license.txt
+:000000 100644 0000000... 06ac899... A	relatorios/RH - Encaminhamento MOEMA.docx
+:000000 100644 0000000... c1ae9ab... A	"relatorios/RH - Modelo Rela\303\247\303\243o de documenta\303\247\303\243o (2).doc"
+:000000 100644 0000000... 192f798... A	relatorios/fechamento_2015-07.sql
+:000000 100644 0000000... 2cef88d... A	relatorios/fechamento_2015-09.sql
+:000000 100644 0000000... 337f251... A	relatorios/fechamento_2015-11.sql
+:000000 100644 0000000... 77edea4... A	sh.exe.stackdump
+:000000 100644 0000000... 14249c5... A	system/.htaccess
+:000000 100644 0000000... a5c3e99... A	system/core/Benchmark.php
+:000000 100644 0000000... 3407817... A	system/core/CodeIgniter.php
+:000000 100644 0000000... 713b21d... A	system/core/Common.php
+:000000 100644 0000000... 46ed936... A	system/core/Config.php
+:000000 100644 0000000... 6ccaf97... A	system/core/Controller.php
+:000000 100644 0000000... 4512096... A	system/core/Exceptions.php
+:000000 100644 0000000... ee5c230... A	system/core/Hooks.php
+:000000 100644 0000000... 88afa8c... A	system/core/Input.php
+:000000 100644 0000000... ef5d108... A	system/core/Lang.php
+:000000 100644 0000000... b5b0634... A	system/core/Loader.php
+:000000 100644 0000000... 1f14250... A	system/core/Model.php
+:000000 100644 0000000... 7959bef... A	system/core/Output.php
+:000000 100644 0000000... b48a345... A	system/core/Router.php
+:000000 100644 0000000... efa2df9... A	system/core/Security.php
+:000000 100644 0000000... a2f3b23... A	system/core/URI.php
+:000000 100644 0000000... 1a5bee1... A	system/core/Utf8.php
+:000000 100644 0000000... c942a79... A	system/core/index.html
+:000000 100644 0000000... d74738a... A	system/database/DB.php
+:000000 100644 0000000... 85faa55... A	system/database/DB_active_rec.php
+:000000 100644 0000000... e694595... A	system/database/DB_cache.php
+:000000 100644 0000000... c342aac... A	system/database/DB_driver.php
+:000000 100644 0000000... b92069b... A	system/database/DB_forge.php
+:000000 100644 0000000... 5b4f60e... A	system/database/DB_result.php
+:000000 100644 0000000... 6a9d8cc... A	system/database/DB_utility.php
+:000000 100644 0000000... 13bafa3... A	system/database/drivers/cubrid/cubrid_driver.php
+:000000 100644 0000000... 0c0b08a... A	system/database/drivers/cubrid/cubrid_forge.php
+:000000 100644 0000000... 3f4dca9... A	system/database/drivers/cubrid/cubrid_result.php
+:000000 100644 0000000... 3336a49... A	system/database/drivers/cubrid/cubrid_utility.php
+:000000 100644 0000000... c942a79... A	system/database/drivers/cubrid/index.html
+:000000 100644 0000000... c942a79... A	system/database/drivers/index.html
+:000000 100644 0000000... c942a79... A	system/database/drivers/mssql/index.html
+:000000 100644 0000000... 1823edc... A	system/database/drivers/mssql/mssql_driver.php
+:000000 100644 0000000... acb4dc5... A	system/database/drivers/mssql/mssql_forge.php
+:000000 100644 0000000... af4b3c5... A	system/database/drivers/mssql/mssql_result.php
+:000000 100644 0000000... 0e4e7be... A	system/database/drivers/mssql/mssql_utility.php
+:000000 100644 0000000... c942a79... A	system/database/drivers/mysql/index.html
+:000000 100644 0000000... 832b9d8... A	system/database/drivers/mysql/mysql_driver.php
+:000000 100644 0000000... bc419d1... A	system/database/drivers/mysql/mysql_forge.php
+:000000 100644 0000000... 27a0132... A	system/database/drivers/mysql/mysql_result.php
+:000000 100644 0000000... f22c3d0... A	system/database/drivers/mysql/mysql_utility.php
+:000000 100644 0000000... c942a79... A	system/database/drivers/mysqli/index.html
+:000000 100644 0000000... a0896d8... A	system/database/drivers/mysqli/mysqli_driver.php
+:000000 100644 0000000... f11cd7f... A	system/database/drivers/mysqli/mysqli_forge.php
+:000000 100644 0000000... 4be381a... A	system/database/drivers/mysqli/mysqli_result.php
+:000000 100644 0000000... bc613a5... A	system/database/drivers/mysqli/mysqli_utility.php
+:000000 100644 0000000... c942a79... A	system/database/drivers/oci8/index.html
+:000000 100644 0000000... 6255b33... A	system/database/drivers/oci8/oci8_driver.php
+:000000 100644 0000000... ab45220... A	system/database/drivers/oci8/oci8_forge.php
+:000000 100644 0000000... cdbee68... A	system/database/drivers/oci8/oci8_result.php
+:000000 100644 0000000... bdad025... A	system/database/drivers/oci8/oci8_utility.php
+:000000 100644 0000000... c942a79... A	system/database/drivers/odbc/index.html
+:000000 100644 0000000... 0e82d57... A	system/database/drivers/odbc/odbc_driver.php
+:000000 100644 0000000... 46ba5c5... A	system/database/drivers/odbc/odbc_forge.php
+:000000 100644 0000000... 0963e97... A	system/database/drivers/odbc/odbc_result.php
+:000000 100644 0000000... 293e21b... A	system/database/drivers/odbc/odbc_utility.php
+:000000 100644 0000000... c942a79... A	system/database/drivers/pdo/index.html
+:000000 100644 0000000... e0e7dab... A	system/database/drivers/pdo/pdo_driver.php
+:000000 100644 0000000... f7beb0a... A	system/database/drivers/pdo/pdo_forge.php
+:000000 100644 0000000... 4843df4... A	system/database/drivers/pdo/pdo_result.php
+:000000 100644 0000000... 042ccef... A	system/database/drivers/pdo/pdo_utility.php
+:000000 100644 0000000... c942a79... A	system/database/drivers/postgre/index.html
+:000000 100644 0000000... 2b1d539... A	system/database/drivers/postgre/postgre_driver.php
+:000000 100644 0000000... d9997a4... A	system/database/drivers/postgre/postgre_forge.php
+:000000 100644 0000000... 8655f7a... A	system/database/drivers/postgre/postgre_result.php
+:000000 100644 0000000... d7af1a7... A	system/database/drivers/postgre/postgre_utility.php
+:000000 100644 0000000... c942a79... A	system/database/drivers/sqlite/index.html
+:000000 100644 0000000... 05ea6dd... A	system/database/drivers/sqlite/sqlite_driver.php
+:000000 100644 0000000... a15e94d... A	system/database/drivers/sqlite/sqlite_forge.php
+:000000 100644 0000000... 9e519df... A	system/database/drivers/sqlite/sqlite_result.php
+:000000 100644 0000000... 481b735... A	system/database/drivers/sqlite/sqlite_utility.php
+:000000 100644 0000000... c942a79... A	system/database/drivers/sqlsrv/index.html
+:000000 100644 0000000... 328c8fe... A	system/database/drivers/sqlsrv/sqlsrv_driver.php
+:000000 100644 0000000... 8f879d2... A	system/database/drivers/sqlsrv/sqlsrv_forge.php
+:000000 100644 0000000... a5c9726... A	system/database/drivers/sqlsrv/sqlsrv_result.php
+:000000 100644 0000000... 0004bfd... A	system/database/drivers/sqlsrv/sqlsrv_utility.php
+:000000 100644 0000000... c942a79... A	system/database/index.html
+:000000 100644 0000000... c942a79... A	system/fonts/index.html
+:000000 100644 0000000... 383c88b... A	system/fonts/texb.ttf
+:000000 100644 0000000... 2e620db... A	system/helpers/array_helper.php
+:000000 100644 0000000... bcc7dbc... A	system/helpers/captcha_helper.php
+:000000 100644 0000000... 98670c1... A	system/helpers/cookie_helper.php
+:000000 100644 0000000... 27aa482... A	system/helpers/date_helper.php
+:000000 100644 0000000... 0c0c39c... A	system/helpers/directory_helper.php
+:000000 100644 0000000... 34e2944... A	system/helpers/download_helper.php
+:000000 100644 0000000... 8c2e222... A	system/helpers/email_helper.php
+:000000 100644 0000000... 791a462... A	system/helpers/file_helper.php
+:000000 100644 0000000... 7e2c3a0... A	system/helpers/form_helper.php
+:000000 100644 0000000... 8e6d393... A	system/helpers/html_helper.php
+:000000 100644 0000000... c942a79... A	system/helpers/index.html
+:000000 100644 0000000... e93ada0... A	system/helpers/inflector_helper.php
+:000000 100644 0000000... e8a2885... A	system/helpers/language_helper.php
+:000000 100644 0000000... f18fee8... A	system/helpers/number_helper.php
+:000000 100644 0000000... 0ecb7ed... A	system/helpers/path_helper.php
+:000000 100644 0000000... cfb1e9d... A	system/helpers/security_helper.php
+:000000 100644 0000000... eb325c5... A	system/helpers/smiley_helper.php
+:000000 100644 0000000... 9a2f2be... A	system/helpers/string_helper.php
+:000000 100644 0000000... 8be50d0... A	system/helpers/text_helper.php
+:000000 100644 0000000... 21364fb... A	system/helpers/typography_helper.php
+:000000 100644 0000000... 0e410d8... A	system/helpers/url_helper.php
+:000000 100644 0000000... 6c36e1c... A	system/helpers/xml_helper.php
+:000000 100644 0000000... c942a79... A	system/index.html
+:000000 100644 0000000... 3e63123... A	system/language/english/calendar_lang.php
+:000000 100644 0000000... c0ace16... A	system/language/english/date_lang.php
+:000000 100644 0000000... 79b82c7... A	system/language/english/db_lang.php
+:000000 100644 0000000... e3bd113... A	system/language/english/email_lang.php
+:000000 100644 0000000... 3418f29... A	system/language/english/form_validation_lang.php
+:000000 100644 0000000... 1e5168c... A	system/language/english/ftp_lang.php
+:000000 100644 0000000... 66505da... A	system/language/english/imglib_lang.php
+:000000 100644 0000000... c942a79... A	system/language/english/index.html
+:000000 100644 0000000... f17530f... A	system/language/english/migration_lang.php
+:000000 100644 0000000... 9085809... A	system/language/english/number_lang.php
+:000000 100644 0000000... 1111158... A	system/language/english/profiler_lang.php
+:000000 100644 0000000... 070bcd1... A	system/language/english/unit_test_lang.php
+:000000 100644 0000000... 4de9e9e... A	system/language/english/upload_lang.php
+:000000 100644 0000000... c942a79... A	system/language/index.html
+:000000 100644 0000000... 673e63d... A	system/libraries/Cache/Cache.php
+:000000 100644 0000000... fdc7401... A	system/libraries/Cache/drivers/Cache_apc.php
+:000000 100644 0000000... 6c38e91... A	system/libraries/Cache/drivers/Cache_dummy.php
+:000000 100644 0000000... 50602b4... A	system/libraries/Cache/drivers/Cache_file.php
+:000000 100644 0000000... f9d578b... A	system/libraries/Cache/drivers/Cache_memcached.php
+:000000 100644 0000000... c942a79... A	system/libraries/Cache/drivers/index.html
+:000000 100644 0000000... c942a79... A	system/libraries/Cache/index.html
+:000000 100644 0000000... 626097a... A	system/libraries/Calendar.php
+:000000 100644 0000000... 86a01f7... A	system/libraries/Cart.php
+:000000 100644 0000000... 9ae7b0c... A	system/libraries/Driver.php
+:000000 100644 0000000... 10cbc34... A	system/libraries/Email.php
+:000000 100644 0000000... 8e5c1fe... A	system/libraries/Encrypt.php
+:000000 100644 0000000... 3839fe4... A	system/libraries/Form_validation.php
+:000000 100644 0000000... 1656dfb... A	system/libraries/Ftp.php
+:000000 100644 0000000... eccfe41... A	system/libraries/Image_lib.php
+:000000 100644 0000000... a26bb84... A	system/libraries/Javascript.php
+:000000 100644 0000000... 6d3f909... A	system/libraries/Log.php
+:000000 100644 0000000... 241ce1e... A	system/libraries/Migration.php
+:000000 100644 0000000... 8b3aa87... A	system/libraries/Pagination.php
+:000000 100644 0000000... 4d31f81... A	system/libraries/Parser.php
+:000000 100644 0000000... 2fe21db... A	system/libraries/Profiler.php
+:000000 100644 0000000... 5f4f605... A	system/libraries/Session.php
+:000000 100644 0000000... 33778f9... A	system/libraries/Sha1.php
+:000000 100644 0000000... a2353d1... A	system/libraries/Table.php
+:000000 100644 0000000... 898553c... A	system/libraries/Trackback.php
+:000000 100644 0000000... b30582d... A	system/libraries/Typography.php
+:000000 100644 0000000... b8919e1... A	system/libraries/Unit_test.php
+:000000 100644 0000000... c188c39... A	system/libraries/Upload.php
+:000000 100644 0000000... 9b0d871... A	system/libraries/User_agent.php
+:000000 100644 0000000... f0f53ce... A	system/libraries/Xmlrpc.php
+:000000 100644 0000000... d9d53c8... A	system/libraries/Xmlrpcs.php
+:000000 100644 0000000... ffff3f3... A	system/libraries/Zip.php
+:000000 100644 0000000... c942a79... A	system/libraries/index.html
+:000000 100644 0000000... 48d8b3e... A	system/libraries/javascript/Jquery.php
+:000000 100644 0000000... c942a79... A	system/libraries/javascript/index.html
+
+[33mcommit 0f7b20086550bcd50dc4585255997e3b5430e3e9[m
+Author: andrebonetti <andrebonetti2@gmail.com>
+Date:   Mon Jan 18 23:37:32 2016 -0200
+
+    :neckbeard: Added .gitattributes & .gitignore files
+
+:000000 100644 0000000... bdb0cab... A	.gitattributes
+:000000 100644 0000000... cd2946a... A	.gitignore
