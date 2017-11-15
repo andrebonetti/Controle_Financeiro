@@ -51,7 +51,7 @@
                     </div>    
 
                     <!-- ADD CATEGORIA -->
-                    <div class="adiciona-categoria">
+                    <div class="adiciona-categoria hidden">
                         <label>Adiconar Categoria</label>
                         <input type="text" name="adiciona-categoria" class="input_adiciona-categoria form-control" Placeholder="Nome da Nova Categoria:">
                         <input type="text" name="adiciona-subcategoria" class="input_adiciona-subcategoria form-control" Placeholder="Nome da Nova Sub Categoria:">
@@ -59,7 +59,7 @@
                     </div>
                     
                     <!-- ADD SUB_CATEGORIA -->
-                    <div class="adiciona-sub_categoria">
+                    <div class="adiciona-sub_categoria hidden">
                         <label>Adiconar Sub Categoria</label>
                         <input type="text" name="adiciona-sub_categoria" class="form-control">
                     </div>    
@@ -150,13 +150,13 @@
                     </div>    
 
                     <!-- ADD CATEGORIA -->
-                    <div class="adiciona-categoria">
+                    <div class="adiciona-categoria hidden">
                         <label>Adiconar Categoria</label>
                         <input type="text" name="adiciona-categoria" class="form-control" Placeholder="Nome da Nova Categoria:">
                     </div>
                     
                     <!-- ADD SUB_CATEGORIA -->
-                    <div class="adiciona-sub_categoria">
+                    <div class="adiciona-sub_categoria hidden">
                         <label>Adiconar Sub Categoria</label>
                         <select name="categoria-sub" class="categoria-sub form-control">
                             <option>Categoria Relacionada</option>

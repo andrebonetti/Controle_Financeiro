@@ -70,12 +70,12 @@
         foreach($data_month as $data_day) {?>
         
         <?php $semana = calcula_semana($s);?>
-        <div class="dia dia-<?=$n?> ds-<?=$first_day?> <?php if($first_day == 1){echo "new-line";}?> semana_mes-<?=$semana?>" id="dia-<?=$n?>" name="<?=$first_day?>" >
+        <div class="dia dia-<?=$n?> ds-<?=$first_day?> <?php if($first_day == 1){echo "new-line";}?> semana_mes-<?=$semana?>" id="dia-<?=$n?>">
             
             <table name="<?=$n?>">
                 
                 <!-- INFO DIA -->
-                <tr class="data-day" data-toggle="modal" data-target="#add-transacao" >
+                <tr class="data-day" data-dia="<?=$n?>" data-toggle="modal" data-target="#add-transacao" >
                     
                     <th colspan="2" class="dia_mes"><?=$n?></th>
                     
@@ -92,18 +92,18 @@
                     <tr class="content-day IdSubCategoria-<?=$content["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao">  
                         
                         <td class="info-content no-view"
+                                data-id="<?=$content["Id"]?>"
                                 data-dia="<?=$content["Dia"]?>"
                                 data-valor="<?=$content["Valor"]?>"
+                                data-type="<?=$content["IdTipoTransacao"]?>"
+                                data-p-total-atual="<?=$content["TotalParcelas"]?>"
+                                data-categoria-id="<?=$content["IdCategoria"]?>"
+                                data-categoria-descricao="<?=trim($content["DescricaoCategoria"])?>"
+                                data-subcategoria-id="<?=trim($content["IdSubCategoria"])?>"
+                                data-subcategoria-descricao="<?=trim(valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"]))?>"
                                 data-descricao="<?=trim($content["Descricao"])?>"
                                 >
                         </td>
-                        
-                        <td class="no-view id"><?=$content["Id"]?></td>   
-                        <td class="no-view type"><?=$content["IdTipoTransacao"]?></td>       
-                        <td class="no-view dia-atual"><?=$content["Dia"]?></td>    
-                        <td class="no-view p_total-atual"><?=$content["TotalParcelas"]?></td>    
-                        <td class="no-view categoria" value="<?=$content["IdCategoria"]?>"><?=$content["DescricaoCategoria"]?></td>
-                        <td class="no-view sub_categoria" value="<?=$content["IdSubCategoria"]?>"><?=valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])?></td>
                         
                         <td class="descricao">
                             <?php if($content["Descricao"] == NULL){?>

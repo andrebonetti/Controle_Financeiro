@@ -1,3 +1,5 @@
+var base_url = $(".base_url").attr("href");
+
 // --------------------- VIEW ------------------- 
 for(var sh=1;sh<=6;sh++){
 
@@ -75,65 +77,13 @@ $(".categoria-resumo").each(function() {
     });
     
 });
-// --- CALCULA SUB CATEGORIA --- 
-/*$(".sub_categoria-resumo").each(function() {
-    
-    var total_sub_categoria = 0;
-    
-    $(this).find(".valor").each(function(){     
-        var valor = $(this).attr("value");
-        
-        total_sub_categoria = parseFloat(valor) + parseFloat(total_sub_categoria);
-    })
-    
-    if(total_sub_categoria != 0){
-        $(this).find(".valor-total-sub_categoria").text(formatarReal(total_sub_categoria));
-        $(this).find(".valor-total-sub_categoria").attr("value",total_sub_categoria);
-    }
-    else{
-        $(this).closest(".sub_categoria-resumo").remove();
-    }
-})
-
-
-// --- CALCULA CATEGORIA --- 
-
-$(".categoria-resumo").each(function() {
-    
-    var total_categoria = 0
-    
-    $(this).find(".valor-total-sub_categoria").each(function() {    
-        var valor = $(this).attr("value");
-        
-        if(valor != 0){total_categoria = parseFloat(valor) + parseFloat(total_categoria);}
-    })
-    
-    if(total_categoria != 0){
-        $(this).find(".valor-total-categoria").text(formatarReal(total_categoria));
-        if(total_categoria > 0){
-            $(this).find(".valor-total-categoria").addClass("positivo");
-        }
-        else{
-            $(this).find(".valor-total-categoria").addClass("negativo");
-        }
-    }
-    else{
-        $(this).closest(".box").remove();
-    }
-})
 
 // ------------------------- MODAL TRANSACAO -------------------
-var base_url = $(".base_url").attr("href");
-$(".adiciona-categoria").hide();
-$(".adiciona-sub_categoria").hide();
+$("tr.data-day").click(function(){
+    var dia = $(this).data("dia");
 
-var adiciona_transacao = function(){
-    var dia = $(this).closest("table").attr("name");
-    var total_salario  = $(".resumo-Salário").find(".valor-total-categoria").text();
-    
     $(".modal-adiciona").find(".dia-add").attr("value",dia);
-    $(".modal-adiciona").find(".total_salario").attr("value",total_salario);
-};
+});
 
 var AlteraCategoria = function(){
     
@@ -187,44 +137,52 @@ var AlteraSubCategoria = function(){
 };
 
 // -------------------------------- PREENCHE MODAL - EDICAO TRANSACAO -----------------------------
-var edita_transacao = function(){
+$(".content-day").click(function(){
+
+    //Busca Dados
+    var info_content = $(this).find(".info-content");
+
+    var id                      = info_content.data("id");
+    var type                    = info_content.data("type");
+    var dia                     = info_content.data("dia");
+    var categoria_descricao     = info_content.data("categoria-descricao");
+    var categoria_id            = info_content.data("categoria-id");
+    var sub_categoria_descricao = info_content.data("subcategoria-descricao");
+    var sub_categoria_id        = info_content.data("subcategoria-id");
+    var descricao               = info_content.data("descricao");
+    var valor                   = info_content.data("valor");
+    var totalParcelas           = info_content.data("p-total-atual");
+
+    //Preenche Inputs
+
+    var_DomModalEdita = $(".modal-edita");
+
+    var ano = var_DomModalEdita.find(".ano-edit").attr("value");
+    var mes = var_DomModalEdita.find(".mes-edit").attr("value");
     
-    var id              = $(this).find(".id").text();
-    var type            = $(this).find(".type").text();
-    var dia             = $(this).find(".dia-atual").text();
-    var categoria       = $(this).find(".categoria").text();
-    var categoria_id    = $(this).find(".categoria").attr("value");
-    var sub_categoria   = $(this).find(".sub_categoria").text();
-    var sub_categoria_id= $(this).find(".sub_categoria").attr("value");
-    var descricao       = $(this).find(".descricao").attr("value");
-    var valor           = $(this).find(".valor").text();
-    var totalParcelas   = $(this).find(".p_total-atual").text();
-    
-    var ano = $(".modal-edita").find(".ano-edit").attr("value");
-    var mes = $(".modal-edita").find(".mes-edit").attr("value");
-    
-    $(".modal-edita").find(".id-edit").attr("value",id);
-    $(".modal-edita").find(".dia-edit").attr("value",dia);
-    $(".modal-edita").find(".categoria-atual").val(categoria_id).change();
-    $(".modal-edita").find(".sub_categoria-atual").val(sub_categoria_id).change();
-    $(".modal-edita").find(".descricao-atual").attr("value",descricao);
-    $(".modal-edita").find(".valor-atual").attr("value",valor);
-    $(".modal-edita").find(".p-total-atual").attr("value",totalParcelas);
-    $(".modal-edita").find(".link-update").attr("action",base_url+"adm_crud/transacao_update/"+ano+"/"+mes+"/"+id);
+    var_DomModalEdita.find(".id-edit").attr("value",id);
+    var_DomModalEdita.find(".dia-edit").attr("value",dia);
+    var_DomModalEdita.find(".categoria-atual").val(categoria_id).change();
+    var_DomModalEdita.find(".sub_categoria-atual").val(sub_categoria_id).change();
+    var_DomModalEdita.find(".descricao-atual").attr("value",descricao);
+    var_DomModalEdita.find(".valor-atual").attr("value",valor);
+    var_DomModalEdita.find(".p-total-atual").attr("value",totalParcelas);
+    var_DomModalEdita.find(".link-update").attr("action",base_url+"adm_crud/transacao_update/"+ano+"/"+mes+"/"+id);
     
 	$('.p-total-atual').attr("disabled", true);
     $('.p-total-atual').css("background-color", "#cccccc"); 
     
     if(type == "1")
     {
-        $(".modal-edita").find(".mes-edit").attr("disabled", true);
-        $(".modal-edita").find(".ano-edit").attr("disabled", true);
+        var_DomModalEdita.find(".mes-edit").attr("disabled", true);
+        var_DomModalEdita.find(".ano-edit").attr("disabled", true);
     }
     else{
-        $(".modal-edita").find(".mes-edit").attr("disabled", false);
-        $(".modal-edita").find(".ano-edit").attr("disabled", false);
+        var_DomModalEdita.find(".mes-edit").attr("disabled", false);
+        var_DomModalEdita.find(".ano-edit").attr("disabled", false);
     }
-};
+    
+});
 
 // -------------------------------- PREENCHE MODAL - EDICAO CARTAO -----------------------------
 var edita_fatura = function(){
@@ -287,7 +245,7 @@ var alteracao_manual = function(){
 }
 
 // -------------- EVENTOS ----------------------
-$(".content-day").on("click",edita_transacao);
+
 
 $(".categoria_modal").on("change",AlteraCategoria);
 $(".subcategoria_modal").on("change",AlteraSubCategoria);
@@ -295,11 +253,10 @@ $(".cancelar_nova_categoria").on("click",CancelarNovaCategoria);
 
 $(".mostra-categoria").on("click",mostra_categorias);
 $(".oculta-categoria").on("click",oculta_categorias);
-$("tr.data-day").on("click",adiciona_transacao);
 $(".content-fatura").on("click",edita_fatura);
 
 // -- ALTERACAO MANUAL -- 
-$(".alteracao_manual").on("click",alteracao_manual);*/
+$(".alteracao_manual").on("click",alteracao_manual);
 
 // -------------- FORMATACAO REAL ----------------------
 function formatarReal(mixed) {
