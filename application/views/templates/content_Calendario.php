@@ -7,6 +7,8 @@
                 <span class="alteracao_manual" name="despesas" title="Alterar" value="0">Despesas:</span>
                 <span class="valor_span"><?=numeroEmReais2($saldo_atual["Despesas"])?></span>
             </p>
+
+            
             <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-despesas"))?>
             
                 <input type="hidden" name="tipo_alteracao" value="Despesas">

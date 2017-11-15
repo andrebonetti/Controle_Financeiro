@@ -3,31 +3,26 @@ var base_url = $(".base_url").attr("href");
 // --------------------- VIEW ------------------- 
 var ultimaSemana = $(".dia-calendario").last().data("semana");
 var semanaAltura=1;
-//setTimeout(function(){
-    
-    while(semanaAltura<=ultimaSemana){
-    
-        var altura = 0;
-        var altura_nova = 0;
+   
+while(semanaAltura<=ultimaSemana){
 
-        $(".semana-mes-"+semanaAltura).each(function() {
+    var altura = 0;
+    var altura_nova = 0;
 
-            altura_nova = $(this).height();
+    $(".semana-mes-"+semanaAltura).each(function() {
 
-            //alert ("semanaAltura: "+semanaAltura+" altura: " + altura + "nova altura: "+altura_nova);  
+        altura_nova = $(this).height();
 
-            if(altura_nova > altura){
-                altura = altura_nova;
-            }      
+        if(altura_nova > altura){
+            altura = altura_nova;
+        }      
 
-        });
+    });
 
-        $(".semana-mes-"+semanaAltura).css("height",(altura + 60)+"px");  
+    $(".semana-mes-"+semanaAltura).css("height",(altura + 60)+"px");  
 
-        semanaAltura++;  
-    }
-
-//},0);
+    semanaAltura++;  
+}
 
 setTimeout(function(){
 
@@ -112,6 +107,7 @@ var AlteraCategoria = function(){
     var categoria_selecionada = $(this).val();
     
     if(categoria_selecionada == "nova-categoria"){
+
         $(".adiciona-categoria").slideDown();
         
         var nova_categoria = $(".adiciona-categoria").find("input").val();
@@ -120,7 +116,6 @@ var AlteraCategoria = function(){
             $("select.categoria-sub").append("<option value='categoria-nova'>"+nova_categoria+"</option>");
         }
 
-        
     }
     else
     {
@@ -267,8 +262,6 @@ var alteracao_manual = function(){
 }
 
 // -------------- EVENTOS ----------------------
-
-
 $(".categoria_modal").on("change",AlteraCategoria);
 $(".subcategoria_modal").on("change",AlteraSubCategoria);
 $(".cancelar_nova_categoria").on("click",CancelarNovaCategoria);
