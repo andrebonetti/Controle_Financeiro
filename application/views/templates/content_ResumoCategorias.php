@@ -126,30 +126,13 @@
                                 
 
                             <?php $sub_categoria_n++; } ?>
+
+                            <tr><td class="valor-total-categoria" colspan="3"></td></tr>
                             
                         </tbody>
                         
                     </table>    
                                 
-                            
-                            <?php /*if($sub_categorias[$categoria["DescricaoCategoria"]] != NULL){?>
-
-                            <?php foreach($sub_categorias[$categoria["DescricaoCategoria"]] as $content){?>  
-                    
-                                <?php $sub_categoria = valida_sub($categoria["DescricaoCategoria"],$content["DescricaoSubCategoria"])?>
-
-                                    <!-- TOTAL -->
-                                    <table>
-                                        <tr><td class="valor-total-sub_categoria"></td></tr>
-                                    </table>
-
-                                </div>
-
-                    <?php }}
-
-                        <table class="total">
-                            <tr><td class="valor-total-categoria"></td></tr>
-                        </table>*/ ?>
                 </div>
             
             </div> 
