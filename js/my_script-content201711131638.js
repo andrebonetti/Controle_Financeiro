@@ -38,7 +38,8 @@ setTimeout(function(){
 // --------------------- PREENCHE E CALCULA CATEGORIAS E SUB-CATEGORIAS --------------------- 
 $(".categoria-resumo").each(function() {
 
-    var dom_BoxCategoria = $(this).closest(".box");
+    var dom_categoria = $(this);
+    var dom_BoxCategoria = dom_categoria.closest(".box");
     var count_categoria = 0;
     var total_categoria = 0;
 
@@ -48,6 +49,7 @@ $(".categoria-resumo").each(function() {
         var id_subcategoria  = $(this).data("id-subcategoria");
         var count_subcategoria = 0;
         var total_sub_categoria = 0;
+        var conteudo = "";
 
         $(".IdSubCategoria-"+id_subcategoria).each(function(){ 
 
@@ -56,22 +58,26 @@ $(".categoria-resumo").each(function() {
             var dia          = info_content.data("dia");
             var valor        = info_content.data("valor");
             var descricao    = info_content.data("descricao");
-            
-            var conteudo     = 
+        
+            conteudo         = conteudo +    
                 "<tr>"
-                +   "<td class='dia'>" + dia + " - </td>"
+                +   "<td class='dia'>" + ("00" + dia).slice(-2)  + " - </td>"
                 +   "<td class='descricao'>" + descricao + "</td>"
                 +   "<td class='valor' value="+valor+" >" + formatarReal(valor) + "</td>"
                 +"</tr>";
-            
-            $(conteudo).insertAfter(dom_subcategoria);
-            
+
             count_subcategoria++;
             count_categoria++;
             total_sub_categoria += valor;
         });
 
         if(count_subcategoria > 0){
+
+            conteudo = conteudo +
+            "<tr><td class='valor-total-sub_categoria' colspan='3'>"+formatarReal(total_sub_categoria)+"</td></tr>";
+
+            $(conteudo).insertAfter(dom_subcategoria);
+
             total_categoria += total_sub_categoria;
         }
         else{
@@ -80,7 +86,10 @@ $(".categoria-resumo").each(function() {
         
     });
 
-    if(count_categoria < 1){
+    if(count_categoria > 0){
+        dom_categoria.find(".valor-total-categoria").text(formatarReal(total_categoria))
+    }
+    else{
         dom_BoxCategoria.remove();
     }
     
@@ -256,9 +265,6 @@ var alteracao_manual = function(){
 $(".categoria_modal").on("change",AlteraCategoria);
 $(".subcategoria_modal").on("change",AlteraSubCategoria);
 $(".cancelar_nova_categoria").on("click",CancelarNovaCategoria);
-
-$(".mostra-categoria").on("click",mostra_categorias);
-$(".oculta-categoria").on("click",oculta_categorias);
 $(".content-fatura").on("click",edita_fatura);
 
 // -- ALTERACAO MANUAL -- 
