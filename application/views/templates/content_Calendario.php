@@ -76,9 +76,16 @@
 
         /*-- FOREACH DIAS MES --*/
         foreach($data_month as $data_day) {?>
+
+            <?php 
+                $classeDia = "";
+                if($diaSemana == 6 || $diaSemana ==7){
+                    $classeDia = "final-de-semana";
+                }
+            ?>
         
             <div 
-                class="dia dia-calendario dia-<?=$diaMes?>  semana-mes-<?=$numSemana?>" id="dia-<?=$diaMes?> <?php if($primeiroDiaMes == 1){echo "new-line";}?>"
+                class="dia dia-calendario dia-<?=$diaMes?> semana-mes-<?=$numSemana?> <?=$classeDia?>" id="dia-<?=$diaMes?>"
                 data-dia-mes="<?=$diaMes?>"
                 data-dia-semana="<?=$diaSemana?>"
                 data-semana="<?=$numSemana?>"
@@ -87,14 +94,16 @@
             <table>
                 
                 <!-- INFO DIA -->
-                <tr class="data-day" data-toggle="modal" data-target="#add-transacao" >
+                <tr class="data-day" data-toggle="modal" data-target="#add-transacao">
                     <th colspan="2" class="dia_mes"><?=$diaMes?></th>
                 </tr>
 
                 <!-- CONTEUDO DIA -->
-                <?php foreach($data_day as $content){?> 
+                <?php foreach($data_day as $content){
                 
-                    <?php $sub_categoria = valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])?>
+                    $sub_categoria = valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])
+                
+                ?> 
                 
                     <tr class="content-day IdSubCategoria-<?=$content["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao">  
                         
@@ -112,7 +121,8 @@
                                 >
                         </td>
                         
-                        <td class="descricao">
+                        <td class="descricao" data-toggle="tooltip" data-placement="top" title="<?=trim($content["DescricaoCategoria"])." - ".trim(valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"]))?>">
+
                             <?php if($content["Descricao"] == NULL){?>
                                 <?=trim($content["DescricaoSubCategoria"])?>
                             <?php } else{ ?>
@@ -120,6 +130,7 @@
                                 <?php if($content["IdTipoTransacao"] == "2"){?>
                                     - <?=$content["NumeroParcela"]?>/<?= $content["TotalParcelas"] ?>	
                             <?php }} ?>
+
                         </td>
                         
                         <td class="valor <?=sinal_valor($content["Valor"])?>"><?=numeroEmReais2($content["Valor"])?></td>

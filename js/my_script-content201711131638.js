@@ -35,25 +35,11 @@ setTimeout(function(){
 
 },300);
 
-// ----- Exibe Categorias
-var mostra_categorias = function(){
-    $(".categorias").slideDown(600);
-    $(".mostra-categoria").addClass("view");
-    $(".mostra-categoria").hide();
-    $(".oculta-categoria").show();
-};
-
-// ----- Oculta Categorias
-var oculta_categorias = function(){
-    $(".categorias").slideUp(600);
-    $(".mostra-categoria").removeClass("view");
-    $(".mostra-categoria").show();
-    $(".oculta-categoria").hide();
-};
-
 // --------------------- PREENCHE E CALCULA CATEGORIAS E SUB-CATEGORIAS --------------------- 
 $(".categoria-resumo").each(function() {
 
+    var dom_BoxCategoria = $(this).closest(".box");
+    var count_categoria = 0;
     var total_categoria = 0;
 
     $(this).find(".sub_categoria-resumo").each(function() {
@@ -81,6 +67,7 @@ $(".categoria-resumo").each(function() {
             $(conteudo).insertAfter(dom_subcategoria);
             
             count_subcategoria++;
+            count_categoria++;
             total_sub_categoria += valor;
         });
 
@@ -92,6 +79,10 @@ $(".categoria-resumo").each(function() {
         }
         
     });
+
+    if(count_categoria < 1){
+        dom_BoxCategoria.remove();
+    }
     
 });
 

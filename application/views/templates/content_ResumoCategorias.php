@@ -1,17 +1,3 @@
-<div class="ativa-categoria">
-        
-        <div class="mostra-categoria">
-            <h5>Mostrar Categorias</h5>
-            <img src="<?=base_url("img/seta_baixo.png")?>">
-        </div>
-            
-        <div class="oculta-categoria no-view">
-            <h5>Oculta Categorias</h5>
-            <img src="<?=base_url("img/seta_cima.png")?>">
-        </div>
-            
-</div>
-
 <!-- CATEGORIAS -->
 <div class="categorias no-view">
     
@@ -36,28 +22,37 @@
 
                     <?php foreach($fatura_cartao as $content){?>
 
-                    <?php $sub_categoria = valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])?>
+                        <tr class="content-fatura IdSubCategoria-<?=$content["IdSubCategoria"]?>" data-toggle="modal" data-target="#edita-cartao"> 
 
-                        <tr class="content-fatura content-<?=no_acento_code($sub_categoria)?>" data-toggle="modal" data-target="#edita-cartao"> 
+                        <td class="info-content no-view"
+                                data-id="<?=$content["Id"]?>"
+                                data-dia="Cartao"
+                                data-valor="<?=$content["Valor"]?>"
+                                data-type="<?=$content["IdTipoTransacao"]?>"
+                                data-p-total-atual="<?=$content["TotalParcelas"]?>"
+                                data-categoria-id="<?=$content["IdCategoria"]?>"
+                                data-categoria-descricao="<?=trim($content["DescricaoCategoria"])?>"
+                                data-subcategoria-id="<?=trim($content["IdSubCategoria"])?>"
+                                data-subcategoria-descricao="<?=trim(valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"]))?>"
+                                data-descricao="<?=trim($content["Descricao"])?>"
+                                >
+                        </td>
 
-                            <td class="no-view id"><?=$content["Id"]?></td>   
-                            <td class="no-view type"><?=$content["IdTipoTransacao"]?></td>        
-                            <td class="no-view categoria" value="<?=$content["IdCategoria"]?>"><?=$content["DescricaoCategoria"]?></td>
-                            <td class="no-view sub_categoria" value="<?=$content["IdSubCategoria"]?>"><?=valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])?></td>
-                            <td class="no-view p_total-atual"><?=$content["TotalParcelas"]?></td>    
-                            <td class="no-view IdTipoTransacaoCartao-atual"><?=$content["IdTipoTransacao"]?></td>    
+                        <td class="compra dataCompra-atual"><?=dataMysqlParaPtBr($content["DataCompra"])?></td>
+                        <td class="descricao" value="<?=$content["Descricao"]?>" data-toggle="tooltip" data-placement="top" title="<?=trim($content["DescricaoCategoria"])." - ".trim(valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"]))?>">
+                            
+                            <?php if($content["Descricao"] == NULL){
+                                echo $content["DescricaoSubCategoria"];
+                             } else{ 
+                                echo $content["Descricao"];
+                                if($content["IdTipoTransacao"] == "2"){
+                                    echo   "-".$content["NumeroParcela"]."/".$content["TotalParcelas"]; 	
+                                }
+                            } 
+                            ?>
 
-                            <td class="compra dataCompra-atual"><?=dataMysqlParaPtBr($content["DataCompra"])?></td>
-                            <td class="descricao" value="<?=$content["Descricao"]?>">
-                                <?php if($content["Descricao"] == NULL){?>
-                                <?=$content["DescricaoSubCategoria"]?>
-                                <?php } else{ ?>
-                                <?=$content["Descricao"]?>
-                                <?php if($content["IdTipoTransacao"] == "2"){?>
-                                    - <?=$content["NumeroParcela"]?>/<?= $content["TotalParcelas"] ?>	
-                                <?php }} ?>
-                            </td>
-                            <td class="valor" value="<?=numeroEmReais2($content["Valor"])?>"><?=numeroEmReais2($content["Valor"])?></td>
+                        </td>
+                        <td class="valor" value="<?=numeroEmReais2($content["Valor"])?>"><?=numeroEmReais2($content["Valor"])?></td>
 
                         </tr>
 
