@@ -47,17 +47,18 @@
                 </div>    
 
                 <!-- ADD CATEGORIA -->
-                <div class="adiciona-categoria hidden">
+                <div class="adiciona-categoria">
                     <label>Adiconar Categoria</label>
                     <input type="text" name="adiciona-categoria" class="input_adiciona-categoria form-control" Placeholder="Nome da Nova Categoria:">
                     <input type="text" name="adiciona-subcategoria" class="input_adiciona-subcategoria form-control" Placeholder="Nome da Nova Sub Categoria:">
-                    <button class="cancelar_nova_categoria btn btn-danger">Cancelar</button>
+                    <span class="cancelar_nova_categoria btn btn-danger">Cancelar</span>
                 </div>
                 
                 <!-- ADD SUB_CATEGORIA -->
-                <div class="adiciona-sub_categoria hidden">
+                <div class="adiciona-sub_categoria">
                     <label>Adiconar Sub Categoria</label>
-                    <input type="text" name="adiciona-sub_categoria" class="form-control">
+                    <input type="text" name="adiciona-sub_categoria" class="form-control input_adiciona-subcategoria">
+                    <span class="cancelar_nova_subcategoria btn btn-danger">Cancelar</span>
                 </div>    
                 
                 <!-- DESCRIÇÃO -->
@@ -94,7 +95,7 @@
     </div>
 </div>
 
-    <!-- MODAL - EDITAR TRANSAÇÃO  -->
+<!-- MODAL - EDITAR TRANSAÇÃO  -->
 <div class="modal fade modal-edita" id="edit-transacao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -146,13 +147,13 @@
                 </div>    
 
                 <!-- ADD CATEGORIA -->
-                <div class="adiciona-categoria hidden">
+                <div class="adiciona-categoria">
                     <label>Adiconar Categoria</label>
                     <input type="text" name="adiciona-categoria" class="form-control" Placeholder="Nome da Nova Categoria:">
                 </div>
                 
                 <!-- ADD SUB_CATEGORIA -->
-                <div class="adiciona-sub_categoria hidden">
+                <div class="adiciona-sub_categoria">
                     <label>Adiconar Sub Categoria</label>
                     <select name="categoria-sub" class="categoria-sub form-control">
                         <option>Categoria Relacionada</option>

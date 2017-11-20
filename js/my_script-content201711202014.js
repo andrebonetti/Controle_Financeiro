@@ -102,15 +102,19 @@ $("tr.data-day").click(function(){
     $(".modal-adiciona").find(".dia-add").attr("value",diaMes);
 });
 
-var AlteraCategoria = function(){
-    
-    var categoria_selecionada = $(this).val();
+$(".categoria_modal").change(function(){
+
+    var dom_categoria_selecionada = $(this);
+    var categoria_selecionada = dom_categoria_selecionada.val();
     
     if(categoria_selecionada == "nova-categoria"){
 
-        $(".adiciona-categoria").slideDown();
+        var dom_adicionaCategoria = dom_categoria_selecionada.closest(".modal-body").find(".adiciona-categoria");
         
-        var nova_categoria = $(".adiciona-categoria").find("input").val();
+        dom_adicionaCategoria.css("display","table");
+        dom_adicionaCategoria.slideDown();
+        
+        var nova_categoria = dom_adicionaCategoria.find("input").val();
     
         if(nova_categoria != ""){
             $("select.categoria-sub").append("<option value='categoria-nova'>"+nova_categoria+"</option>");
@@ -132,26 +136,37 @@ var AlteraCategoria = function(){
         })
     }
     
-};
+});
 
-var CancelarNovaCategoria = function(){
+$(".subcategoria_modal").change(function(){
     
-    $(".adiciona-categoria").slideUp();
-    $("input_adiciona-categoria").val("");
-    
-}
-
-var AlteraSubCategoria = function(){
-
-    var subCategoria_selecionada = $(this).val();
+    var dom_subCategoria_selecionada = $(this);
+    var subCategoria_selecionada = dom_subCategoria_selecionada.val();
 
     if(subCategoria_selecionada == "nova-sub_categoria"){
+
+        var dom_adicionaSubCategoria = dom_subCategoria_selecionada.closest(".modal-body").find(".adiciona-sub_categoria");
         
-        $(".adiciona-sub_categoria").slideDown();
+        dom_adicionaSubCategoria.css("display","table");
+        dom_adicionaSubCategoria.slideDown();
         
         var nova_sub_categoria = $(".adiciona-categoria").find("input").val(); 
     }
-};
+});
+
+$(".cancelar_nova_categoria").click(function(){
+
+    $(".adiciona-categoria").slideUp();
+    $("input_adiciona-categoria").val("");
+    
+});
+
+$(".cancelar_nova_subcategoria").click(function(){
+    
+        $(".adiciona-sub_categoria").slideUp();
+        $("input_adiciona-subcategoria").val("");
+        
+    });
 
 // -------------------------------- PREENCHE MODAL - EDICAO TRANSACAO -----------------------------
 $(".content-day").click(function(){
@@ -262,9 +277,6 @@ var alteracao_manual = function(){
 }
 
 // -------------- EVENTOS ----------------------
-$(".categoria_modal").on("change",AlteraCategoria);
-$(".subcategoria_modal").on("change",AlteraSubCategoria);
-$(".cancelar_nova_categoria").on("click",CancelarNovaCategoria);
 $(".content-fatura").on("click",edita_fatura);
 
 // -- ALTERACAO MANUAL -- 
