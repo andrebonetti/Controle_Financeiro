@@ -21,8 +21,10 @@
 	</head>
 
 	<body>
+
+        <?=anchor("/","",array("class"=>"no-view base_url"))?>
         
-        <header>
+        <header> 
             <div class="myContainer">
                 
             </div>    
