@@ -6,26 +6,28 @@
 			<tr>
 				<th>Ano</th>
 				<th>Mês</th>
-				<th>Salário</th>
+				<th>Receita</th>
+				<th>Despesas</th>
 				<th>Saldo Mês</th>
 				<th>Saldo Final</th>
 				<th>Poupança</th>
 				<th>Poupança Final</th>
 			</tr>
 			
-			<?php foreach($data as $content){ ?>
+			<?php foreach($lGeral as $content){ ?>
 			
 				<tr>
 					<!--ANO-->
-					<?php if($content["mes"] == 1){?><td><?=$content["ano"]?></td><?php } 
+					<?php if($content["Mes"] == 1){?><td><?=$content["Ano"]?></td><?php } 
 					else {?><td></td><?php } ?>
 					
-					<td><?=nome_mes($content["mes"])?></td>
-					<td><?=numeroEmReais2($content["salario"])?></td>
-					<td class="<?=sinal_valor($content["saldo_mes"])?>"><?=numeroEmReais2($content["saldo_mes"])?></td>
-					<td><?=numeroEmReais2($content["saldo_final"])?></td>
-					<td class="<?=sinal_valor($content["poupanca"])?>"><?=numeroEmReais2($content["poupanca"])?></td>
-					<td><?=numeroEmReais2($content["poupanca_final"])?></td>
+					<td><?=nome_mes($content["Mes"])?></td>
+					<td><?=numeroEmReais2($content["Receita"])?></td>
+					<td><?=numeroEmReais2($content["Despesas"])?></td>
+					<td class="<?=sinal_valor($content["SaldoMes"])?>"><?=numeroEmReais2($content["SaldoMes"])?></td>
+					<td><?=numeroEmReais2($content["SaldoFinal"])?></td>
+					<td class="<?=sinal_valor($content["Poupanca"])?>"><?=numeroEmReais2($content["Poupanca"])?></td>
+					<td><?=numeroEmReais2($content["PoupancaFinal"])?></td>
 					
 				</tr>
 			

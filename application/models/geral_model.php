@@ -2,7 +2,7 @@
 	class Geral_model extends CI_Model {
 			
         // -- SELECT -- 
-		function Listar($pData = null,$pOrderBy = null){
+		function Listar($pData = null){
  			
             if(isset($pData["Id"])){$this->db->where("Id",$pData["Id"]);}  
             if(isset($pData["Receita"])){$this->db->where("Receita",$pData["Receita"]);}
@@ -31,8 +31,8 @@
                 if(isset($pData["Mes"])){$this->db->where("Mes",$pData["Mes"]);}
             }
             
-            if($pOrderBy != null){
-                $this->db->order_by($pOrderBy);
+            if(isset($pData["OrderBy"]) != null){
+                $this->db->order_by($pData["OrderBy"]);
             }
             
 			return $this->db->get("geral")->result_array();		       

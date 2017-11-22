@@ -304,24 +304,18 @@
 	   }
 
 	   public function geral(){
+
+           $this->output->enable_profiler(TRUE);
 	   		
-			$lista_anos = $this->geral_model->lista_distinct("ano");
-			
-			$data = array();
-			foreach($lista_anos as $lista){
-				$meses = $this->geral_model->get_where("ano",$lista["ano"]);
-				
-				foreach($meses as $mes){
-				    $mes_data = $this->geral_model->get_where2("ano",$lista["ano"],"mes",$mes["mes"]);
-				    $data[$lista["ano"]."-".$mes["mes"]] = $this->geral_model->get_where2("ano",$lista["ano"],"mes",$mes["mes"]);
-			}}
-		
+            $data["OrderBy"] = "Ano,Mes";
+            $lGeral = $this->geral_model->Listar($data);
+
 			$content = array( 
-				"anos"		=> $lista_anos,
-				"data"		=> $data,
+				"lGeral"		=> $lGeral,
 			);
 		
-			/*VIEW*/$this->load->template("geral.php",$content);
+			//VIEW
+            $this->load->template("geral.php",$content);
             	
 		
 	   }	
