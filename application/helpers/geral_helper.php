@@ -37,7 +37,7 @@
         
         $lGeral = $ci->geral_model->Listar($pData);
         
-        var_dump($lGeral);
+        //var_dump($lGeral);
 
         $saldoAnterior = 0;
         $cont = 0;
@@ -51,7 +51,7 @@
                 
                 $dataGeral["SaldoFinal"] = $saldoAnterior + $itemGeral["SaldoMes"];
 
-                echo $dataGeral["SaldoFinal"];
+                //echo $dataGeral["SaldoFinal"];
                 $ci->geral_model->Atualizar($dataGeral);
             }
             
@@ -101,12 +101,12 @@
             $dataGeralFinal                = $itemGeral;
 			$dataGeralFinal["SaldoFinal"] += $pData["Valor"];
             
-            echo "var_dump = geral_UpdateSaldoMes Antes";
+            //echo "var_dump = geral_UpdateSaldoMes Antes";
 
             if($pTipo == 1){$dataGeralFinal["Receita"] += $pData["Valor"];}        
             if($pTipo == 2){$dataGeralFinal["Despesas"] += $pData["Valor"]*(-1);}
             
-            echo "var_dump = geral_UpdateSaldoMes";
+            //echo "var_dump = geral_UpdateSaldoMes";
 
             // -- BD UPDATE --
             $ci->geral_model->Atualizar($dataGeralFinal);	
@@ -293,4 +293,70 @@
         }
         
         return $pDataGeral;
+    }
+
+    function geral_BuscarCompetenciaAnterior($pAno,$pMes){
+
+        $ci = get_instance();
+
+        if($pMes == 1){
+            $competenciaAnterior["Mes"] = 12;
+            $competenciaAnterior["Ano"] = $pAno-1;
+        }
+        else{
+            $competenciaAnterior["Mes"] = $pMes-1;;
+            $competenciaAnterior["Ano"] = $pAno;
+        }	
+
+        return $ci->geral_model->Buscar($competenciaAnterior);
+
+    }
+
+    function geral_verificarConsistencia($competenciaAnterior,$competenciaAtual,$pTotalReceita,$pTotalDespesas,$saldoFinalDia){
+
+        $ci = get_instance();
+
+        $newDataCompetenciaAtual = $competenciaAtual;
+
+        if( (($competenciaAnterior["SaldoFinal"] + $competenciaAtual["SaldoMes"]) != $competenciaAtual["SaldoFinal"]) || ( $competenciaAtual["SaldoFinal"] != (string) $saldoFinalDia) ){
+            
+            //echo $competenciaAnterior["SaldoFinal"] ."+". $competenciaAtual["SaldoMes"]."=".$competenciaAtual["SaldoFinal"]." / ".$competenciaAtual["SaldoFinal"]."!=".$saldoFinalDia.  " --- DIFERENTE";
+
+            $newDataCompetenciaAtual["Ano"]         = $competenciaAtual["Ano"]; 
+            $newDataCompetenciaAtual["Mes"]         = $competenciaAtual["Mes"];          
+            $newDataCompetenciaAtual["SaldoFinal"]  = $saldoFinalDia;
+            $newDataCompetenciaAtual["SaldoMes"]    = $saldoFinalDia - $competenciaAnterior["SaldoFinal"];
+
+            if( ($competenciaAtual["Receita"] != (string)$pTotalReceita )||($competenciaAtual["Despesas"] != (string)$pTotalDespesas )  ){
+                $newDataCompetenciaAtual["Receita"] = $pTotalReceita;
+                $newDataCompetenciaAtual["Despesas"]= $pTotalDespesas;
+            }
+
+            $ci->geral_model->Atualizar_Manual($newDataCompetenciaAtual);
+
+            $dataComptencia                         = calcularCompetencia($competenciaAtual["Ano"],$competenciaAtual["Mes"],1);     
+            $data["Ano"]                            = $dataComptencia["Ano"];        
+            $data["Mes"]                            = $dataComptencia["Mes"]; 
+
+            $data["Valor"]                          = $newDataCompetenciaAtual["SaldoFinal"] - $competenciaAtual["SaldoFinal"];
+            $data["IdTipoTransacao"]                = 3;
+
+            geral_UpdateSaldo($data,1);
+
+        }else{
+
+            if( ($competenciaAtual["Receita"] != (string)$pTotalReceita )||($competenciaAtual["Despesas"] != (string)$pTotalDespesas )  ){
+
+                $newDataCompetenciaAtual["Ano"]         = $competenciaAtual["Ano"]; 
+                $newDataCompetenciaAtual["Mes"]         = $competenciaAtual["Mes"];  
+                $newDataCompetenciaAtual["Receita"]     = $pTotalReceita;
+                $newDataCompetenciaAtual["Despesas"]    = $pTotalDespesas;
+
+                $ci->geral_model->Atualizar_Manual($newDataCompetenciaAtual);
+
+            }
+
+        }
+
+        return $newDataCompetenciaAtual;
     }

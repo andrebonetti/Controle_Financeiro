@@ -63,18 +63,18 @@
                 <div class="total_cartao">
 
                     <span class="alteracao_manual valor-total" name="Cartao" title="Alterar" value="0">Alterar</span>
-                    <span class="valor_span"><?=numeroEmReais2(-$saldo_atual["Cartao"])?></span> 
+                    <span class="valor_span"><?=numeroEmReais2(-$competenciaAtual["Cartao"])?></span> 
 
                     <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-Cartao"))?>
 
                         <input type="hidden" name="tipo_alteracao" value="Cartao">
                         <input type="hidden" name="ano" value="<?=$ano?>">
                         <input type="hidden" name="mes" value="<?=$mes?>">
-                        <input type="hidden" name="ValorAnterior" value="<?=$saldo_atual["Cartao"]?>">
-                        <input type="hidden" name="SaldoMes" value="<?=$saldo_atual["SaldoMes"]?>">
-                        <input type="hidden" name="SaldoFinal" value="<?=$saldo_atual["SaldoFinal"]?>">
+                        <input type="hidden" name="ValorAnterior" value="<?=$competenciaAtual["Cartao"]?>">
+                        <input type="hidden" name="SaldoMes" value="<?=$competenciaAtual["SaldoMes"]?>">
+                        <input type="hidden" name="SaldoFinal" value="<?=$competenciaAtual["SaldoFinal"]?>">
 
-                        <input type="text" class="form-control input-Cartao" name="valor" value="<?=numeroEmReais2($saldo_atual["Cartao"])?>">
+                        <input type="text" class="form-control input-Cartao" name="valor" value="<?=numeroEmReais2($competenciaAtual["Cartao"])?>">
 
                         <input type="submit" class="btn btn-success" value="Ok"> 
 

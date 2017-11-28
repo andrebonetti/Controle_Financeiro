@@ -56,3 +56,42 @@ function nome_mes($mes){
     if($mes == 11){return "Novembro";};
     if($mes == 12){return "Dezembro";};  
 }
+
+function calcularCompetencia($pAno,$pMes,$pNumParam){
+
+    if($pNumParam > 0){
+
+        for($n = 1;$n <= $pNumParam;$n ++){
+
+            if($pMes == 12){
+                $pMes = 1;
+                $pAno ++;
+            }
+            else{
+                $pMes ++;
+            }
+
+        }
+
+    }
+    if($pNumParam < 0){
+    
+        for($n = 1;$n <= $pNumParam;$n ++){
+
+            if($pMes == 1){
+                $pMes = 2;
+                $pAno --;
+            }
+            else{
+                $pMes --;
+            }
+
+        }
+
+    }
+    
+    $data["Ano"] = $pAno;
+    $data["Mes"] = $pMes;
+
+    return $data;
+}

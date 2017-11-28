@@ -5,7 +5,7 @@
         <div class="despesas">
             <p> 
                 <span class="alteracao_manual" name="despesas" title="Alterar" value="0">Despesas:</span>
-                <span class="valor_span"><?=numeroEmReais2($saldo_atual["Despesas"])?></span>
+                <span class="valor_span"><?=numeroEmReais2($competenciaAtual["Despesas"])?></span>
             </p>
 
             
@@ -15,7 +15,7 @@
                 <input type="hidden" name="ano" value="<?=$ano?>">
                 <input type="hidden" name="mes" value="<?=$mes?>">
             
-                <input type="text" class="form-control input-despesas" name="valor" value="<?=numeroEmReais2($saldo_atual["Despesas"])?>">
+                <input type="text" class="form-control input-despesas" name="valor" value="<?=numeroEmReais2($competenciaAtual["Despesas"])?>">
                 
                     <input type="submit" class="btn btn-success" value="Ok"> 
             
@@ -25,7 +25,7 @@
         <div class="receita">
             <p> 
                 <span class="alteracao_manual" name="receita" value="0">Receita:</span>
-                <span class="valor_span"><?=numeroEmReais2($saldo_atual["Receita"])?></span>
+                <span class="valor_span"><?=numeroEmReais2($competenciaAtual["Receita"])?></span>
             </p>
             <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-receita"))?>
             
@@ -33,7 +33,7 @@
                 <input type="hidden" name="ano" value="<?=$ano?>">
                 <input type="hidden" name="mes" value="<?=$mes?>">
             
-                <input type="text" class="form-control input-receita" name="valor" value="<?=numeroEmReais2($saldo_atual["Receita"])?>">
+                <input type="text" class="form-control input-receita" name="valor" value="<?=numeroEmReais2($competenciaAtual["Receita"])?>">
                 
                     <input type="submit" class="btn btn-success" value="Ok"> 
             
@@ -75,7 +75,7 @@
         } 
 
         /*-- FOREACH DIAS MES --*/
-        foreach($data_month as $data_day) {?>
+        foreach($dataMes as $dataDia) {?>
 
             <?php 
                 $classeDia = "";
@@ -99,41 +99,41 @@
                 </tr>
 
                 <!-- CONTEUDO DIA -->
-                <?php foreach($data_day as $content){
+                <?php foreach($dataDia as $dataTransacao){
                 
-                    $sub_categoria = valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"])
+                    $sub_categoria = valida_sub($dataTransacao["DescricaoCategoria"],$dataTransacao["DescricaoSubCategoria"])
                 
                 ?> 
                 
-                    <tr class="content-day IdSubCategoria-<?=$content["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao">  
+                    <tr class="content-day IdSubCategoria-<?=$dataTransacao["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao">  
                         
                         <td class="info-content no-view"
-                                data-id="<?=$content["Id"]?>"
-                                data-dia="<?=$content["Dia"]?>"
-                                data-valor="<?=$content["Valor"]?>"
-                                data-type="<?=$content["IdTipoTransacao"]?>"
-                                data-p-total-atual="<?=$content["TotalParcelas"]?>"
-                                data-categoria-id="<?=$content["IdCategoria"]?>"
-                                data-categoria-descricao="<?=trim($content["DescricaoCategoria"])?>"
-                                data-subcategoria-id="<?=trim($content["IdSubCategoria"])?>"
-                                data-subcategoria-descricao="<?=trim(valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"]))?>"
-                                data-descricao="<?=trim($content["Descricao"])?>"
+                                data-id="<?=$dataTransacao["Id"]?>"
+                                data-dia="<?=$dataTransacao["Dia"]?>"
+                                data-valor="<?=$dataTransacao["Valor"]?>"
+                                data-type="<?=$dataTransacao["IdTipoTransacao"]?>"
+                                data-p-total-atual="<?=$dataTransacao["TotalParcelas"]?>"
+                                data-categoria-id="<?=$dataTransacao["IdCategoria"]?>"
+                                data-categoria-descricao="<?=trim($dataTransacao["DescricaoCategoria"])?>"
+                                data-subcategoria-id="<?=trim($dataTransacao["IdSubCategoria"])?>"
+                                data-subcategoria-descricao="<?=trim(valida_sub($dataTransacao["DescricaoCategoria"],$dataTransacao["DescricaoSubCategoria"]))?>"
+                                data-descricao="<?=trim($dataTransacao["Descricao"])?>"
                                 >
                         </td>
                         
-                        <td class="descricao" data-toggle="tooltip" data-placement="top" title="<?=trim($content["DescricaoCategoria"])." - ".trim(valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"]))?>">
+                        <td class="descricao" data-toggle="tooltip" data-placement="top" title="<?=trim($dataTransacao["DescricaoCategoria"])." - ".trim(valida_sub($dataTransacao["DescricaoCategoria"],$dataTransacao["DescricaoSubCategoria"]))?>">
 
-                            <?php if($content["Descricao"] == NULL){?>
-                                <?=trim($content["DescricaoSubCategoria"])?>
+                            <?php if($dataTransacao["Descricao"] == NULL){?>
+                                <?=trim($dataTransacao["DescricaoSubCategoria"])?>
                             <?php } else{ ?>
-                                <?=trim($content["Descricao"])?>
-                                <?php if($content["IdTipoTransacao"] == "2"){?>
-                                    - <?=$content["NumeroParcela"]?>/<?= $content["TotalParcelas"] ?>	
+                                <?=trim($dataTransacao["Descricao"])?>
+                                <?php if($dataTransacao["IdTipoTransacao"] == "2"){?>
+                                    - <?=$dataTransacao["NumeroParcela"]?>/<?= $dataTransacao["TotalParcelas"] ?>	
                             <?php }} ?>
 
                         </td>
                         
-                        <td class="valor <?=sinal_valor($content["Valor"])?>"><?=numeroEmReais2($content["Valor"])?></td>
+                        <td class="valor <?=sinal_valor($dataTransacao["Valor"])?>"><?=numeroEmReais2($dataTransacao["Valor"])?></td>
                         
                     </tr>
                 
@@ -157,7 +157,7 @@
                 <?php if( (($diaMes == 9)&&($primeiroDiaMes < 6)) || ($diaMes == 10 && $primeiroDiaMes == 1) || ($diaMes == 11 && $primeiroDiaMes == 1) ) {?>
                     <tr class="cartao">
                         <td class='cartao'>Cartão</td>
-                        <td class='valor-fatura valor' value="<?=-$saldo_atual["Cartao"]?>"><?=numeroEmReais2(-$saldo_atual["Cartao"])?></td>
+                        <td class='valor-fatura valor' value="<?=-$competenciaAtual["Cartao"]?>"><?=numeroEmReais2(-$competenciaAtual["Cartao"])?></td>
                     </tr>
                 <?php } ?>
                 
