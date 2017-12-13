@@ -92,13 +92,13 @@
             /*VALIDACAO*/valida_usuario();
             
             $data                    = transacao_getPosts();
+            
             if($pIsExclusao == 1){$data["Valor"] = 0;}
             echo "Id: ".$data["Id"]."<br>";
 
             $dataBusca["Id"]         = $data["Id"];
 			$transacaoAtual          = $this->transacoes_model->Buscar($dataBusca);
             
-            $data["IdTipoTransacao"] = $transacaoAtual["IdTipoTransacao"];
             $isTransacaoValidada     = ValidaEntidadeTransacao($data);
             
             if($isTransacaoValidada = true)
@@ -110,7 +110,7 @@
                 $hasAlteracaoValor = false;
 
                 // -- ALTERACAO VALOR --
-                if(($data["Valor"] != $transacaoAtual["Valor"])){
+                if(((float)$data["Valor"] != (float)$transacaoAtual["Valor"])){
 
                     $hasAlteracaoValor = true;
                     
@@ -140,61 +140,111 @@
 
                     geral_UpdateSaldo($dataParcela);
                 }
-                // -- SEM ALTERAÇÃO MÊS
                 else{
-
+                    // -- SEM ALTERAÇÃO MÊS
                     echo "Sem Alteração Mês <br>";
                     
                     //Transacao Recorrente
-                    if($transacaoAtual["IdTipoTransacao"] == 1)
-                    {
+                    if($transacaoAtual["IdTipoTransacao"] == 1){
                         echo "Transação Tipo: 1 <br>";
                         
-                        if($mes == 1)
-                        {
-                            $transacaoAtual["AnoFim"] = $ano - 1;
-                            $transacaoAtual["MesFim"] = 12;                   
-                        }
-                        else{
-                            $transacaoAtual["AnoFim"] = $ano;
-                            $transacaoAtual["MesFim"] = $mes-1;
-                        }
-
-                        var_dump($transacaoAtual);
+                        $dataComptencia = calcularCompetencia($ano,$mes,-1);     
+                        var_dump($dataComptencia);
+                        $transacaoAtual["AnoFim"]    = $dataComptencia["Ano"];        
+                        $transacaoAtual["MesFim"]    = $dataComptencia["Mes"]; 
 
                         $this->transacoes_model->Atualizar($transacaoAtual);
 
                         if($pIsExclusao != 1)
                         {
-                            $transacaoAtual["Dia"] = $data["Dia"];
-                            $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
-                            $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
-                            $transacaoAtual["Descricao"] = $data["Descricao"];
-                            $transacaoAtual["Valor"] = $data["Valor"];
-                            $transacaoAtual["Ano"] = $ano;
-                            $transacaoAtual["Mes"] = $mes;  
                             $transacaoAtual["AnoFim"] = 2050;
-                            $transacaoAtual["MesFim"] = 12;  
+                            $transacaoAtual["MesFim"] = 12; 
+                           
+                            //ESPELHAR
+                            if(isset($data["espelhar-proximas"]) && $data["espelhar-proximas"] == true ){
 
-                            $this->transacoes_model->Incluir($transacaoAtual);
+                                $transacaoAtual["Dia"] = $data["Dia"];
+                                $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
+                                $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
+                                $transacaoAtual["Descricao"] = $data["Descricao"];
+                                $transacaoAtual["Valor"] = $data["Valor"];
+                                $transacaoAtual["Ano"] = $ano;
+                                $transacaoAtual["Mes"] = $mes;  
+                                 
+                                var_dump($transacaoAtual);
+                                $this->transacoes_model->Incluir($transacaoAtual);
+
+                            }
+                            //EXCEÇÃO
+                            else{
+
+                                //Transacao Igual - Recorrente Proximo Mes
+                                $dataComptencia = calcularCompetencia($ano,$mes,1);     
+                                $transacaoAtual["Ano"]    = $dataComptencia["Ano"];        
+                                $transacaoAtual["Mes"]    = $dataComptencia["Mes"];   
+
+                                $this->transacoes_model->Incluir($transacaoAtual);
+
+                                //Transacao Unica
+                                $transacaoAtual["IdTipoTransacao"] = 3;
+                                $transacaoAtual["Dia"] = $data["Dia"];
+                                $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
+                                $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
+                                $transacaoAtual["Descricao"] = $data["Descricao"];
+                                $transacaoAtual["Valor"] = $data["Valor"];
+                                $transacaoAtual["Ano"] = $ano;
+                                $transacaoAtual["Mes"] = $mes;
+
+                                $this->transacoes_model->Incluir($transacaoAtual);
+                            }
+
                         }
                     }
-                    
-                    //Transacao Parcelada / Transacao Simples
                     else{
-                        
-                        echo "Transação Tipo: 2 ou 3 <br>";
-                        
+
                         $transacaoAtual["Dia"] = $data["Dia"];
                         $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
                         $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
                         $transacaoAtual["Descricao"] = $data["Descricao"];
                         $transacaoAtual["Valor"] = $data["Valor"];
                         
-                        var_dump($data);
-                        var_dump($transacaoAtual);
+                        //Transacao Parcelada 
+                        if($transacaoAtual["IdTipoTransacao"] == 2){
                         
-                        $this->transacoes_model->Atualizar($transacaoAtual);
+                            echo "Transação Tipo: 2<br>";  
+                            
+                            if($data["espelhar-proximas"]){
+                                $dataBuscaParcela["CodigoTransacao"] = $data["CodigoTransacao"];
+                                $dataBuscaParcela["NumeroParcela >="] = $data["NumeroParcela"];
+                                
+                                $dataParcelas = $this->transacoes_model->Listar($dataBuscaParcela);
+
+                                foreach($dataParcelas as $parcela){
+
+                                    $parcela["Dia"] = $data["Dia"];
+                                    $parcela["IdCategoria"] = $data["IdCategoria"];
+                                    $parcela["IdSubCategoria"] = $data["IdSubCategoria"];
+                                    $parcela["Descricao"] = $data["Descricao"];
+                                    $parcela["Valor"] = $data["Valor"];
+
+                                    $this->transacoes_model->Atualizar($parcela); 
+
+                                }
+                            }
+                            else{
+                                $this->transacoes_model->Atualizar($transacaoAtual); 
+                            }
+                        }
+
+                        // Transacao Simples
+                        if($transacaoAtual["IdTipoTransacao"] == 3){
+                            
+                            echo "Transação Tipo: 3 <br>";
+
+                            $this->transacoes_model->Atualizar($transacaoAtual);
+                        }
+
+                        
                     }
                     
                     if($hasAlteracaoValor == true)

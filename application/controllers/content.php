@@ -80,14 +80,6 @@
                         $dataComptencia = calcularCompetencia($pAno,$pMes,-1);     
                         $dataBusca["Ano"]    = $dataComptencia["Ano"];        
                         $dataBusca["Mes"]    = $dataComptencia["Mes"]; 
-                        /*if($pMes == 1){
-                            $dataBusca["Mes"] = 12;
-                            $dataBusca["Ano"] = $pAno-1;
-                        }
-                        else{
-                            $dataBusca["Mes"] = $pMes-1;;
-                            $dataBusca["Ano"] = $pAno;
-                        }*/
                         
                         if(($diaN - 2) == -1)
                         {

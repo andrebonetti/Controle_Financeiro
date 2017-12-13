@@ -112,12 +112,14 @@
                                 data-dia="<?=$dataTransacao["Dia"]?>"
                                 data-valor="<?=$dataTransacao["Valor"]?>"
                                 data-type="<?=$dataTransacao["IdTipoTransacao"]?>"
+                                data-p-atual="<?=$dataTransacao["NumeroParcela"]?>"
                                 data-p-total-atual="<?=$dataTransacao["TotalParcelas"]?>"
                                 data-categoria-id="<?=$dataTransacao["IdCategoria"]?>"
                                 data-categoria-descricao="<?=trim($dataTransacao["DescricaoCategoria"])?>"
                                 data-subcategoria-id="<?=trim($dataTransacao["IdSubCategoria"])?>"
                                 data-subcategoria-descricao="<?=trim(valida_sub($dataTransacao["DescricaoCategoria"],$dataTransacao["DescricaoSubCategoria"]))?>"
                                 data-descricao="<?=trim($dataTransacao["Descricao"])?>"
+                                data-codigo-transacao="<?=trim($dataTransacao["CodigoTransacao"])?>"
                                 >
                         </td>
                         

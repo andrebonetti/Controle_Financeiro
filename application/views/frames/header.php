@@ -8,17 +8,15 @@
         
         <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
              
-        <link rel="shortcut icon" type="image/x-icon" href=">" title="">
+        <link rel="shortcut icon" type="image/x-icon" href="<?=base_url("img/Shortcut.png")?>" title="" >
         <title> Controle Financeiro </title>
                       
         <link rel="stylesheet" type="text/css" href="<?=base_url("libs/css/bootstrap.css")?>">     
         <link rel="stylesheet/less" href="<?=base_url("less/style.less")?>">    
         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/popper.min.js"></script>
         <script src="<?=base_url("libs/js/jquery-2.1.3.min.js")?>"></script>
         <script src="<?=base_url("libs/js/bootstrap.js")?>"></script>
         <script src="<?=base_url("libs/js/less.js")?>"></script>
-
                	    	
 	</head>
 

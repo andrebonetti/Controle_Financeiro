@@ -101,13 +101,17 @@
     <div class="modal-content">
         <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Editar Transação</h4>
+        <h4 class="modal-title" id="myModalLabel">Editar Transação : <span class="tipo-transacao"></span></h4>
         </div>
         <div class="modal-body">
             <?= form_open("adm_crud/transacao_update",array("class"=>"link-update"))?>
 
                 <input type="hidden" class="id-edit" name="id" value="">
-                
+                <input type="hidden" class="codigo-transacao" name="codigoTransacao" value="">
+                <input type="hidden" class="p-atual" name="numero-parcela" value="">
+                <input type="hidden" class="p-total" name="parcela-total" value="">
+                <input type="hidden" class="id-tipo-transacao" name="id-tipo-transacao" value="">
+
                 <!-- DIA -->
                 <div class="dia dia-edit">
                     <label>Dia</label>
@@ -179,8 +183,12 @@
             
                 <!-- PARCELAS -->
                 <div class="transacao-parcelada">
-                    <label>Numero de Parcelas</label>
+                    <label>Parcela / Total Parcelas</label>
                     <input type="number" class="p-total-atual form-control" name="total" value="0" placeholder="Número de Parcelas"/>
+                </div>
+
+                <div class="opcoes-transacao-repeticao no-view">
+                    <p class="alert alert-warning"><input type="checkbox" class="EspelharProximasFaturas" name="espelhar-proximas"/> Espelhar Próximas Transações Parceladas<p>
                 </div>
 
                 <div class="buttons">

@@ -76,10 +76,10 @@ function calcularCompetencia($pAno,$pMes,$pNumParam){
     }
     if($pNumParam < 0){
     
-        for($n = 1;$n <= $pNumParam;$n ++){
-
+        for($n = -1;$n >= $pNumParam;$n --){
+            
             if($pMes == 1){
-                $pMes = 2;
+                $pMes = 12;
                 $pAno --;
             }
             else{

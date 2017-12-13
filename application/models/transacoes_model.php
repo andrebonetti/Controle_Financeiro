@@ -12,7 +12,12 @@
             if(isset($pData["NumeroParcela"])){$this->db->where("transacoes.NumeroParcela",$pData["NumeroParcela"]);}
             if(isset($pData["TotalParcelas"])){$this->db->where("transacoes.TotalParcelas",$pData["TotalParcelas"]);}
             if(isset($pData["Valor"])){$this->db->where("transacoes.Valor",$pData["Valor"]);}
-            
+            if(isset($pData["CodigoTransacao"])){$this->db->where("transacoes.CodigoTransacao",$pData["CodigoTransacao"]);}
+            if(isset($pData["NumeroParcela >"])){$this->db->where("transacoes.NumeroParcela >",$pData["NumeroParcela >"]);}
+            if(isset($pData["NumeroParcela >="])){$this->db->where("transacoes.NumeroParcela >=",$pData["NumeroParcela >="]);}
+            if(isset($pData["NumeroParcela <"])){$this->db->where("transacoes.NumeroParcela <",$pData["NumeroParcela <"]);}
+            if(isset($pData["NumeroParcela <="])){$this->db->where("transacoes.NumeroParcela <=",$pData["NumeroParcela <="]);}
+
             if((isset($pData["isListaPorTipo"]))&&($pData["isListaPorTipo"] == true))
             {
                 $this->db->where("valor !=","0");

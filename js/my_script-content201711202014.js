@@ -183,23 +183,28 @@ $(".content-day").click(function(){
     var sub_categoria_id        = info_content.data("subcategoria-id");
     var descricao               = info_content.data("descricao");
     var valor                   = info_content.data("valor");
+    var parcelaAtual           = info_content.data("p-atual");
     var totalParcelas           = info_content.data("p-total-atual");
+    var codigoTransacao         = info_content.data("codigo-transacao");
 
     //Preenche Inputs
-
     var_DomModalEdita = $(".modal-edita");
 
     var ano = var_DomModalEdita.find(".ano-edit").attr("value");
     var mes = var_DomModalEdita.find(".mes-edit").attr("value");
     
     var_DomModalEdita.find(".id-edit").attr("value",id);
+    var_DomModalEdita.find(".codigo-transacao").attr("value",codigoTransacao);
     var_DomModalEdita.find(".dia-edit").attr("value",dia);
     var_DomModalEdita.find(".categoria-atual").val(categoria_id).change();
     var_DomModalEdita.find(".sub_categoria-atual").val(sub_categoria_id).change();
     var_DomModalEdita.find(".descricao-atual").attr("value",descricao);
-    var_DomModalEdita.find(".valor-atual").attr("value",valor);
-    var_DomModalEdita.find(".p-total-atual").attr("value",totalParcelas);
+    var_DomModalEdita.find(".valor-atual").attr("value",formatarReal(valor));
+    var_DomModalEdita.find(".p-atual").attr("value",parcelaAtual);
+    var_DomModalEdita.find(".p-total").attr("value",totalParcelas);
+    var_DomModalEdita.find(".p-total-atual").attr("value",parcelaAtual +"/"+ totalParcelas);
     var_DomModalEdita.find(".link-update").attr("action",base_url+"adm_crud/transacao_update/"+ano+"/"+mes+"/"+id);
+    var_DomModalEdita.find(".id-tipo-transacao").attr("value",type);
     
 	$('.p-total-atual').attr("disabled", true);
     $('.p-total-atual').css("background-color", "#cccccc"); 
@@ -208,12 +213,24 @@ $(".content-day").click(function(){
     {
         var_DomModalEdita.find(".mes-edit").attr("disabled", true);
         var_DomModalEdita.find(".ano-edit").attr("disabled", true);
+        $(".opcoes-transacao-repeticao").removeClass("no-view");
+
+        $(".tipo-transacao").text("Transação Recorrente");
     }
     else{
         var_DomModalEdita.find(".mes-edit").attr("disabled", false);
         var_DomModalEdita.find(".ano-edit").attr("disabled", false);
     }
-    
+
+    if(type == "2"){
+        $(".tipo-transacao").text("Transação Parcelada");
+        $(".opcoes-transacao-repeticao").removeClass("no-view");
+    }
+    if(type == "3"){
+        $(".tipo-transacao").text("Transação Comum");
+        $(".opcoes-transacao-repeticao").addClass("no-view");
+    }
+
 });
 
 // -------------------------------- PREENCHE MODAL - EDICAO CARTAO -----------------------------
@@ -237,7 +254,7 @@ var edita_fatura = function(){
     $(".modal-cartao-edit").find(".categoria-atual").val(categoria_id).change();
     $(".modal-cartao-edit").find(".sub_categoria-atual").val(sub_categoria_id).change();
     $(".modal-cartao-edit").find(".descricao-atual").attr("value",descricao);
-    $(".modal-cartao-edit").find(".valor-atual").attr("value",valor);
+    $(".modal-cartao-edit").find(".valor-atual").attr("value",formatarReal(valor));
     $(".modal-cartao-edit").find(".p-total-atual").attr("value",totalParcelas);
     $(".modal-cartao-edit").find(".p-total-atual-hidden").attr("value",totalParcelas);
     $(".modal-cartao-edit").find(".link-update").attr("action",base_url+"adm_crud/cartao_update/"+ano+"/"+mes+"/"+id);
@@ -292,7 +309,7 @@ function formatarReal(mixed) {
         tmp = tmp.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
     
     if(parseFloat(mixed) < 0){
-        tmp = "- "+tmp;    
+        tmp = "-"+tmp;    
     }
     
     return tmp;

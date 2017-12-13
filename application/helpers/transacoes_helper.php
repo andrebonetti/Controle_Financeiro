@@ -4,11 +4,13 @@
         
 		$ci = get_instance();
         
-        if($ci->input->post("dia") != ""){$data["Dia"] 		= $ci->input->post("dia");}
-        $data["Descricao"] 	= $ci->input->post("descricao");	
-        $data["Valor"]		= valor_decimal($ci->input->post("valor"));		
-        $data["Ano"]        = $ci->input->post("ano");	
-        $data["Mes"]  		= $ci->input->post("mes");
+        if($ci->input->post("dia")  != ""){$data["Dia"] 		= $ci->input->post("dia");}
+        $data["Descricao"] 	        = $ci->input->post("descricao");	
+        $data["Valor"]		        = valor_decimal($ci->input->post("valor"));		
+        $data["Ano"]                = $ci->input->post("ano");	
+        $data["Mes"]  		        = $ci->input->post("mes");
+        $data["CodigoTransacao"]    = $ci->input->post("codigoTransacao");
+        $data["NumeroParcela"]      = $ci->input->post("numero-parcela");
 
         // ----- CATEGORIA -----
         
@@ -54,19 +56,27 @@
         if($ci->input->post("usuario") > 0){$data["IdUsuario"] = $ci->input->post("usuario");}
         
         // ----- TYPE -----
-        $data["IdTipoTransacao"] = 3;
-
-        //Recorrente
-        if($ci->input->post("isRecorrente") == 1)
-        {
-            $data["IdTipoTransacao"] = 1;
+        if($ci->input->post("id-tipo-transacao")){
+            $data["IdTipoTransacao"] = $ci->input->post("id-tipo-transacao");
         }
         else{
-            //Recorrente 
-            if($ci->input->post("totalParcelas") > 0)
+
+            $data["IdTipoTransacao"] = 3;
+
+            //Recorrente
+            if($ci->input->post("isRecorrente") == 1)
             {
-                $data["IdTipoTransacao"]    = 2;
-                $data["TotalParcelas"] = $ci->input->post("totalParcelas");
+                $data["IdTipoTransacao"] = 1;
+            }
+            else{
+                //Parcelada 
+                if($ci->input->post("parcela-total") > 0)
+                {
+                    $data["IdTipoTransacao"]    = 2;
+                    $data["TotalParcelas"] = $ci->input->post("totalParcelas");
+
+                    $data["espelhar-proximas"] = $ci->input->post("espelhar-proximas");
+                }
             }
         }
 
