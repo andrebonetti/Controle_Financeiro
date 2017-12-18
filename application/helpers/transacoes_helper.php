@@ -118,3 +118,52 @@
         }
         
     }
+
+    function buscarTransacoesPorTipo($pTipo,$pParam){
+
+        $ci = get_instance();
+
+        $pParam["IdTipoTransacao"]    = $pTipo;
+        if($pTipo == 3){
+            return $ci->transacoes_model->Listar($pParam);
+        }
+        if($pTipo == 1 || $pTipo == 2 || $pTipo == 4){
+
+            $diaSemana  = date("w", mktime(0,0,0,$pParam["Mes"],$pParam["Dia"],$pParam["Ano"])); 
+            $dataDia    = array();
+            $diaParam   = $pParam["Dia"];
+
+            if($diaSemana == 1) {
+                
+                //SABADO
+                $pParam["Dia"] = $diaParam - 2;   
+                        
+                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                    array_push($dataDia,$itemContent);
+                }
+                        
+                //DOMINGO
+                $pParam["Dia"] = $diaParam - 1;   
+                        
+                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                    array_push($dataDia,$itemContent);
+                }
+
+            }
+                        
+            // -- SEGUNDA A SEXTA 
+            if(($diaSemana >= 1)&&($diaSemana <= 5))
+            {
+                $pParam["Dia"] = $diaParam;  
+
+                foreach( $ci->transacoes_model->Listar($pParam) as $itemContent){
+                    array_push($dataDia,$itemContent);
+                }
+            }
+
+            return $dataDia;
+
+        }
+                           
+
+    }
