@@ -13,16 +13,21 @@
             /* -- DATA -- */
             $data                   = transacao_getPosts();	
             $isTransacaoValidada    = ValidaEntidadeTransacao($data);
+
+            echo "transacao_insert: <br>";
             
             if($isTransacaoValidada = true)
             {
                 // DATA INCLUSAO
                 date_default_timezone_set('America/Sao_Paulo');
                 $data["DataInclusao"] = date('Y-m-d H:i:s');
+                unset($data["espelhar-proximas"]);
                 
                 if($data["Valor"] > 0){$tipo = 1;}
                 else{$tipo = 2;}
                 
+                echo "IdTipoTransacao: ". $data["IdTipoTransacao"]."<br>";    
+
                 // -- TYPE 1 = Transação Recorrente -- 
                 if($data["IdTipoTransacao"] == 1){
 
@@ -42,13 +47,18 @@
                     $anoParcela = $data["Ano"];
                     $mesParcela = $data["Mes"];
 
+                    $ultimoCodigoTransacao  = $this->transacoes_model->bucarUltimoCodigoTransacao();
+                    $proximo                = $ultimoCodigoTransacao["CodigoTransacao"] + 1;
+                    echo "Proximo Codigo Transacao: ".$proximo ;
+
                     for($n = 1;$n <= $data["TotalParcelas"] ; $n++){
 
                         $dataParcela = $data;
 
-                        $dataParcela["Ano"]		= $anoParcela;	
-                        $dataParcela["Mes"]		= $mesParcela;										
-                        $dataParcela["NumeroParcela"] = $n;
+                        $dataParcela["Ano"]		        = $anoParcela;	
+                        $dataParcela["Mes"]		        = $mesParcela;										
+                        $dataParcela["NumeroParcela"]   = $n;
+                        $dataParcela["CodigoTransacao"] = $proximo;
 
                         // -- BD INSERT -- 
                         $this->transacoes_model->Incluir($dataParcela);
@@ -76,6 +86,7 @@
                 }
             }
             else{
+                echo "Existem campos obrigatórios não preenchidos";
                 $ci->session->set_flashdata('msg-error',"Existem campos obrigatórios não preenchidos");
             }
 			

@@ -96,6 +96,12 @@
             $this->db->from("transacoes");   
             return $this->db->get()->row_array();    
         }
+
+        function bucarUltimoCodigoTransacao(){
+            $this->db->select_max('CodigoTransacao');
+            $this->db->from("transacoes");
+            return $this->db->get()->row_array();
+        }
               
         // -- INSERT --
         function Incluir($pData){

@@ -76,7 +76,7 @@
             }
             else{
                 //Parcelada 
-                if($ci->input->post("parcela-total") > 0)
+                if($ci->input->post("totalParcelas") > 0)
                 {
                     $data["IdTipoTransacao"]    = 2;
                     $data["TotalParcelas"] = $ci->input->post("totalParcelas");
