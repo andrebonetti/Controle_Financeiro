@@ -42,20 +42,10 @@
             // -- DIAS --    
             for ($diaN = 1; $diaN <= $qtdeDiasMes ;$diaN++){
                 
-                $Dia_transacoesSimples                  = null;
-                $Dia_transacoesParceladas               = null;
-                $lDia_transacoesParceladasSabado        = null;
-                $lDia_transacoesParceladasDomingo       = null;
-                $lDia_transacoesRecorrentes             = null;
-                $lDia_transacoesRecorrentesSabado       = null;
-                $lDia_transacoesRecorrentesDomingo      = null;
-                
                 $dataMes[$diaN]                        = array();
                 $dataBusca["Dia"]                      = $diaN;
                 $dataBusca["Mes"]                      = $pMes;
                 $dataBusca["Ano"]                      = $pAno;
-                $diaSemana                             = date("w", mktime(0,0,0,$dataBusca["Mes"],$diaN,$dataBusca["Ano"]));  
-                $dataDia                               = array();
                 $DiaSaldo                              = array();
                 $Saldo                                 = $competenciaAnterior["SaldoFinal"];
                 $dataBusca["PreencherEntidadesFilhas"] = true;
@@ -116,13 +106,11 @@
             // -- CARTAO --
             $data_cartao = array();
            
-            $cartao_Recorrente       = $this->cartao_model->ListarFaturaRecorrente($dataBusca);
-            foreach($cartao_Recorrente as $itemContent){
+            foreach($this->cartao_model->ListarFaturaRecorrente($dataBusca) as $itemContent){
                 array_push($data_cartao,$itemContent);
             }  
            
-            $cartao_SimplesParcelado = $this->cartao_model->ListarFaturaSimplesParcelada($dataBusca);
-            foreach($cartao_SimplesParcelado as $itemContent){
+            foreach($this->cartao_model->ListarFaturaSimplesParcelada($dataBusca) as $itemContent){
                 array_push($data_cartao,$itemContent);
             }
             

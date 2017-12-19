@@ -149,7 +149,6 @@
                         echo "Transação Tipo: 1 <br>";
                         
                         $dataComptencia = calcularCompetencia($ano,$mes,-1);     
-                        var_dump($dataComptencia);
                         $transacaoAtual["AnoFim"]    = $dataComptencia["Ano"];        
                         $transacaoAtual["MesFim"]    = $dataComptencia["Mes"]; 
 
@@ -163,11 +162,13 @@
                             //ESPELHAR
                             if(isset($data["espelhar-proximas"]) && $data["espelhar-proximas"] == true ){
 
+                                echo "espelhar-proximas";
                                 $transacaoAtual["Dia"] = $data["Dia"];
                                 $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
                                 $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
                                 $transacaoAtual["Descricao"] = $data["Descricao"];
                                 $transacaoAtual["Valor"] = $data["Valor"];
+                                $transacaoAtual["CodigoTransacao"] = $data["CodigoTransacao"];
                                 $transacaoAtual["Ano"] = $ano;
                                 $transacaoAtual["Mes"] = $mes;  
                                  
@@ -178,6 +179,7 @@
                             //EXCEÇÃO
                             else{
 
+                                echo "sem espelhar";
                                 //Transacao Igual - Recorrente Proximo Mes
                                 $dataComptencia = calcularCompetencia($ano,$mes,1);     
                                 $transacaoAtual["Ano"]    = $dataComptencia["Ano"];        
@@ -271,7 +273,7 @@
   
             // -- MSG SUCESSO - REDIRECT
             $this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
-            redirect("content/month_content/".$ano."/".$mes);
+            //redirect("content/month_content/".$ano."/".$mes);
 
 		}
         

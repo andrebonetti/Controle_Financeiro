@@ -58,6 +58,10 @@
         // ----- TYPE -----
         if($ci->input->post("id-tipo-transacao")){
             $data["IdTipoTransacao"] = $ci->input->post("id-tipo-transacao");
+
+            if($data["IdTipoTransacao"] != 3){
+                $data["espelhar-proximas"] = $ci->input->post("espelhar-proximas");
+            }
         }
         else{
 
@@ -67,6 +71,8 @@
             if($ci->input->post("isRecorrente") == 1)
             {
                 $data["IdTipoTransacao"] = 1;
+
+                $data["espelhar-proximas"] = $ci->input->post("espelhar-proximas");
             }
             else{
                 //Parcelada 
@@ -129,10 +135,12 @@
         }
         if($pTipo == 1 || $pTipo == 2 || $pTipo == 4){
 
-            $diaSemana  = date("w", mktime(0,0,0,$pParam["Mes"],$pParam["Dia"],$pParam["Ano"])); 
-            $dataDia    = array();
-            $diaParam   = $pParam["Dia"];
+            $diaSemana   = date("w", mktime(0,0,0,$pParam["Mes"],$pParam["Dia"],$pParam["Ano"])); 
+            $qtdeDiasMes =  days_in_month($pParam["Mes"]);
+            $dataDia     = array();
+            $diaParam    = $pParam["Dia"];
 
+            //Transações do FDS caem na Segunda
             if($diaSemana == 1) {
                 
                 //SABADO
@@ -144,6 +152,27 @@
                         
                 //DOMINGO
                 $pParam["Dia"] = $diaParam - 1;   
+                        
+                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                    array_push($dataDia,$itemContent);
+                }
+
+            }
+
+            //Transacoes Final do Mes no ultimo dias
+            if($pParam["Dia"] == $qtdeDiasMes){
+
+            //if(($diaSemana == 5)&&( ($pParam["Dia"] == 29)||($pParam["Dia"] == 30) )) {
+                
+                //SABADO
+                $pParam["Dia"] = $diaParam + 1;   
+                        
+                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                    array_push($dataDia,$itemContent);
+                }
+                        
+                //DOMINGO
+                $pParam["Dia"] = $diaParam + 2;   
                         
                 foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
                     array_push($dataDia,$itemContent);
