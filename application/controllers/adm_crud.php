@@ -284,7 +284,7 @@
   
             // -- MSG SUCESSO - REDIRECT
             $this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
-            //redirect("content/month_content/".$ano."/".$mes);
+            redirect("content/month_content/".$ano."/".$mes);
 
 		}
         

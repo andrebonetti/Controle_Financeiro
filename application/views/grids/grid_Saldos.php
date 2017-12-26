@@ -23,7 +23,7 @@
         <?= form_close()?>
         
     </div>
-    
+
     <div class="saldo-futuro" value="<?=$competenciaAtual["SaldoFinal"]?>">
         
         <span class="alteracao_manual" name="SaldoFinal" title="Alterar" value="0">Saldo Futuro:</span>
@@ -43,5 +43,7 @@
         <?= form_close()?>
         
     </div>
+
+    <?php $this->view('sniplets/menu_Competencias.php'); ?>
     
 </div>

@@ -3,15 +3,9 @@
 class MY_Loader extends CI_Loader {
    
     public function template($nome,$content) {
-        $this->view("frames/header.php",$content);
-        $this->view($nome,$content);
-        $this->view("frames/footer.php",$content);
-    }
-    
-    public function template_adm($nome,$content) {
-        $this->view("adm/frames/header.php",$content);
-        $this->view($nome,$content);
-        $this->view("adm/frames/footer.php",$content);
+        $this->view("base_html/header.php",$content);
+        $this->view("templates/".$nome,$content);
+        $this->view("base_html/footer.php",$content);
     }
 
 }

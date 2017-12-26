@@ -3,7 +3,8 @@
 	class Login extends CI_Controller{
         
         public function index(){	
-		  	/*VIEW*/$this->load->template("signin.php",$content = array());           
+		  	//VIEW
+			$this->load->template("template_signin.php",$content = array());           
 	    }
         
         public function validacao(){	
@@ -15,8 +16,9 @@
 
 			$atual_y = mdate("%Y");
 			$atual_m = mdate("%m");
-						
-            /*REDIRECT*/login_result($resultado,"content/month_content/$atual_y/$atual_m");	     
+		
+            //REDIRECT
+			login_result($resultado,"content/month_content/$atual_y/$atual_m");	     
 		}
     
     }

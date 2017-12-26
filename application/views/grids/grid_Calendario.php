@@ -100,9 +100,9 @@
 
                 <!-- CONTEUDO DIA -->
                 <?php foreach($dataDia as $dataTransacao){
-                
-                    $sub_categoria = valida_sub($dataTransacao["DescricaoCategoria"],$dataTransacao["DescricaoSubCategoria"])
-                
+                               
+                    if(!isset($dataTransacao["IsResumo"])){
+
                 ?> 
                 
                     <tr class="content-day IdSubCategoria-<?=$dataTransacao["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao">  
@@ -139,19 +139,19 @@
                         
                     </tr>
                 
-                <?php } ?>
+                <?php }} ?>
                 
                 <!-- RESUMO DIA -->
                 
-                <?php if(isset($DiaSaldo[$diaMes]["SaldoFinal"])){ ?>
+                <?php if(isset($dataDia["ResumoDia"]["HasSaldo"]) && $dataDia["ResumoDia"]["HasSaldo"] == true){ ?>
                 
                     <tr class="data-total_saldoDia">
                         <td class="titulo">Saldo Dia</td>
-                        <td class="valorSaldo"><?=numeroEmReais2($DiaSaldo[$diaMes]["SaldoDia"])?></td>
+                        <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["SaldoDia"])?></td>
                     </tr>
                         <tr class="data-total_saldoFinal">
                         <td class="titulo">Saldo Final</td>
-                        <td class="valorSaldo"><?=numeroEmReais2($DiaSaldo[$diaMes]["SaldoFinal"])?></td>
+                        <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["SaldoFinal"])?></td>
                     </tr>
 
                 <?php } ?>

@@ -63,15 +63,17 @@
             $totalDespesas = 0;
             foreach($dataMes as $dataDia){
                 
-                $diaSemana         = date("w", mktime(0,0,0,$pMes,$diaNDiaMes,$pAno)); 
+                $diaSemana            = date("w", mktime(0,0,0,$pMes,$diaNDiaMes,$pAno)); 
                 $diaNDiaMesTransacoes = 0;
+                $dataMes[$diaNDiaMes]["ResumoDia"]["IsResumo"] = true; 
+                $dataMes[$diaNDiaMes]["ResumoDia"]["HasSaldo"] = false; 
 
                 if( (($diaNDiaMes == 9)&&( ($diaSemana != 6)&&($diaSemana != 0) )) || ($diaNDiaMes == 10 && $diaSemana == 1) || ($diaNDiaMes == 11 && $diaSemana == 1) ){
                     
                     $saldoFinalDia += $competenciaAtual["Cartao"]*-1;
                     
-                    $DiaSaldo[$diaNDiaMes]["SaldoDia"] = $competenciaAtual["Cartao"]*-1;
-                    $DiaSaldo[$diaNDiaMes]["SaldoFinal"] = $saldoFinalDia;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"] = $competenciaAtual["Cartao"]*-1;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoFinal"] = $saldoFinalDia;
                     $totalDespesas += $competenciaAtual["Cartao"];
                         
                     $diaNDiaMesTransacoes ++;  
@@ -80,13 +82,13 @@
                 foreach($dataDia as $dataTransacao){
                     
                     if($diaNDiaMesTransacoes == 0){
-                        $DiaSaldo[$diaNDiaMes]["SaldoDia"] = 0; 
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"] = 0; 
                     }
                     
-                    $DiaSaldo[$diaNDiaMes]["SaldoDia"]   += $dataTransacao["Valor"];
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"]   += $dataTransacao["Valor"];
                     
                     $saldoFinalDia                       += $dataTransacao["Valor"];
-                    $DiaSaldo[$diaNDiaMes]["SaldoFinal"] = $saldoFinalDia;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoFinal"] = $saldoFinalDia;
 
                     if($dataTransacao["Valor"] >= 0){
                         $totalReceita += $dataTransacao["Valor"];
@@ -94,6 +96,8 @@
                     else{
                         $totalDespesas += $dataTransacao["Valor"]*(-1);
                     }
+
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["HasSaldo"] = true; 
                     
                     $diaNDiaMesTransacoes++;
                 }
@@ -124,7 +128,9 @@
             $lSubCategorias = $this->subCategoria_model->Listar($pDataSubCategoria);
             
             $lCategoriasFinal[$itemCategoria["DescricaoCategoria"]] = $lSubCategorias;
-        }      
+        }    
+
+        $lCompetencias = $this->geral_model->Listar($data); 
            
 		// --------------------------CONTENT----------------------------------
 		$content = array( 
@@ -138,13 +144,12 @@
 		"all_sub_categorias"  	=> $lSubCategoriasTotal,
         "fatura_cartao"   		=> $data_cartao,
         "sub_categorias"  		=> $lCategoriasFinal,      
-        "primeiroDiaMes"       	=> $primeiroDiaMes, 
-        "last_day"       		=> $diaN - 1, 
-		"dataMes"      		    => $dataMes,
-        "DiaSaldo"      		=> $DiaSaldo);
+        "primeiroDiaMes"       	=> $primeiroDiaMes,  
+        "lCompetencias"         => $lCompetencias,
+		"dataMes"      		    => $dataMes);
 		
 		// -- VIEW --
-        $this->load->template("content.php",$content);
+        $this->load->template("template_content.php",$content);
            
 	   }
 
@@ -160,7 +165,7 @@
 			);
 		
 			//VIEW
-            $this->load->template("geral.php",$content);
+            $this->load->template("template_geral.php",$content);
             	
 		
 	   }	
