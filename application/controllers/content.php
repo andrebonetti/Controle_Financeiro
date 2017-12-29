@@ -46,13 +46,11 @@
                 $dataBusca["Dia"]                      = $diaN;
                 $dataBusca["Mes"]                      = $pMes;
                 $dataBusca["Ano"]                      = $pAno;
-                $DiaSaldo                              = array();
-                $Saldo                                 = $competenciaAnterior["SaldoFinal"];
                 $dataBusca["PreencherEntidadesFilhas"] = true;
                 
-                foreach(buscarTransacoesPorTipo(1,$dataBusca) as $transacao){array_push($dataMes[$diaN],$transacao);}
-                foreach(buscarTransacoesPorTipo(2,$dataBusca) as $transacao){array_push($dataMes[$diaN],$transacao);}
-                foreach(buscarTransacoesPorTipo(3,$dataBusca) as $transacao){array_push($dataMes[$diaN],$transacao);}
+                foreach(buscarTransacoesPorTipo(1,$dataBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
+                foreach(buscarTransacoesPorTipo(2,$dataBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
+                foreach(buscarTransacoesPorTipo(3,$dataBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
                 
             }
            
@@ -130,7 +128,7 @@
             $lCategoriasFinal[$itemCategoria["DescricaoCategoria"]] = $lSubCategorias;
         }    
 
-        $lCompetencias = $this->geral_model->Listar($data); 
+        $lCompetencias = $this->geral_model->Listar(); 
            
 		// --------------------------CONTENT----------------------------------
 		$content = array( 
