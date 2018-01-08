@@ -141,6 +141,7 @@
                 if(((int)$data["Mes"] != (int)$transacaoAtual["Mes"])&&($data["IdTipoTransacao"] != 1)){
                     
                     echo "Alteração Mês: de ".$transacaoAtual["Mes"]." para ".$data["Mes"]."<br>";
+                    unset($data["espelhar-proximas"]);
                     
                     $this->transacoes_model->Atualizar($data);
 
