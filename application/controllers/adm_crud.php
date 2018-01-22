@@ -15,7 +15,7 @@
             $isTransacaoValidada    = ValidaEntidadeTransacao($data);
 
             echo "transacao_insert: <br>";
-            
+
             if($isTransacaoValidada = true)
             {
                 // DATA INCLUSAO
@@ -41,6 +41,7 @@
                     geral_UpdateSaldo($data,$tipo);
 
                 }
+
                 // -- TYPE 2 = Transação Parcelada -- 
                 if($data["IdTipoTransacao"] == 2){	
 
@@ -84,6 +85,16 @@
                     geral_UpdateSaldo($data,$tipo);
 
                 }
+
+                if($data["IdCartao"] > 0){
+
+                    // -- SALDO Cartao --
+                    //geral_UpdateCartaoMes($data);
+
+                    // -- SALDO GERAL CARTAO
+                    geral_UpdateSaldoMesCartao($data,$tipo);
+
+                }
             }
             else{
                 echo "Existem campos obrigatórios não preenchidos";
@@ -111,6 +122,8 @@
 			$transacaoAtual          = $this->transacoes_model->Buscar($dataBusca);
             
             $isTransacaoValidada     = ValidaEntidadeTransacao($data);
+
+            $this->db->trans_begin();
             
             if($isTransacaoValidada = true)
             {
@@ -151,6 +164,7 @@
                     $dataParcela["IdTipoTransacao"] = 3;
 
                     geral_UpdateSaldo($dataParcela);
+
                 }
                 else{
                     // -- SEM ALTERAÇÃO MÊS
@@ -216,7 +230,12 @@
                     }
                     else{
 
-                        $transacaoAtual["Dia"] = $data["Dia"];
+                        if((isset($data["IdCartao"])) && ($data["IdCartao"] > 0)){   
+                            $transacaoAtual["DataCompra"] = $data["DataCompra"];
+                        }else{
+                            $transacaoAtual["Dia"] = $data["Dia"];
+                        }
+
                         $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
                         $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
                         $transacaoAtual["Descricao"] = $data["Descricao"];
@@ -258,11 +277,13 @@
                             $this->transacoes_model->Atualizar($transacaoAtual);
                         }
 
-                        
                     }
                     
                     if($hasAlteracaoValor == true)
                     {
+                        echo "hasAlteracaoValor <br>";
+
+                        unset($transacaoAtual["Id"]);
                         $transacaoAtual["Valor"] = $valorDiferenca; 
                         
                         if($transacaoAtual["Valor"] > 0){$tipo = 1;}
@@ -273,6 +294,13 @@
                         
                         // -- SALDO GERAL --
                         geral_UpdateSaldo($transacaoAtual,$tipo);
+
+                        if($data["IdCartao"] > 0){    
+                            echo "IdCartao: ".$data["IdCartao"]."<br>";
+
+                            // -- SALDO GERAL CARTAO
+                            geral_UpdateSaldoMesCartao($transacaoAtual,$tipo);
+                        }
                     }
 
                 }
@@ -281,11 +309,13 @@
                 $ci->session->set_flashdata('msg-error',"Existem campos obrigatórios não preenchidos");
             }
             
+            $this->db->trans_commit();
+            
             echo "ano: ".$ano." mes: ".$mes;
   
             // -- MSG SUCESSO - REDIRECT
             $this->session->set_flashdata('msg-success',"Transação alterada com sucesso!");
-            redirect("content/month_content/".$ano."/".$mes);
+            //redirect("content/month_content/".$ano."/".$mes);
 
 		}
         

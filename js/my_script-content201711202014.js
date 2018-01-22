@@ -58,10 +58,21 @@ $(".categoria-resumo").each(function() {
             var dia          = info_content.data("dia");
             var valor        = info_content.data("valor");
             var descricao    = info_content.data("descricao");
+            var dataCompra   = info_content.data("datacompra");
+            var classe       = "";
+
+            if(dataCompra){
+                dia = "Cartao";
+                classe = "cartao";
+            }
+            else{
+                dia = ("00" + dia).slice(-2);
+                classe = "dia";
+            }
         
             conteudo         = conteudo +    
                 "<tr>"
-                +   "<td class='dia'>" + ("00" + dia).slice(-2)  + " - </td>"
+                +   "<td class='dia " + classe + "'>" + dia + "</td>"
                 +   "<td class='descricao'>" + descricao + "</td>"
                 +   "<td class='valor' value="+valor+" >" + formatarReal(valor) + "</td>"
                 +"</tr>";
@@ -99,7 +110,18 @@ $(".categoria-resumo").each(function() {
 $("tr.data-day").click(function(){
     var diaMes = $(this).closest(".dia").data("dia-mes");
 
+    $(".modal-adiciona").find(".dia").show();
+    $(".modal-adiciona").find(".dataCompra").hide();
+    $(".modal-adiciona").find(".idCartao").attr("value","");
     $(".modal-adiciona").find(".dia-add").attr("value",diaMes);
+});
+
+$(".insert-cartao").click(function(){
+    $(".modal-adiciona").find(".dia").hide();
+    $(".modal-adiciona").find(".dataCompra").show();
+
+    var Id = $(this).data("id");
+    $(".modal-adiciona").find(".idCartao").attr("value",Id);
 });
 
 $(".categoria_modal").change(function(){
@@ -183,12 +205,32 @@ $(".content-day").click(function(){
     var sub_categoria_id        = info_content.data("subcategoria-id");
     var descricao               = info_content.data("descricao");
     var valor                   = info_content.data("valor");
-    var parcelaAtual           = info_content.data("p-atual");
+    var parcelaAtual            = info_content.data("p-atual");
     var totalParcelas           = info_content.data("p-total-atual");
     var codigoTransacao         = info_content.data("codigo-transacao");
+    var iscontabilizado         = info_content.data("iscontabilizado");
 
     //Preenche Inputs
     var_DomModalEdita = $(".modal-edita");
+
+    var Id = $(this).data("idcartao");
+    if(Id){
+        var_DomModalEdita.find(".idCartao").attr("value",Id);
+
+        var_DomModalEdita.find(".dataCompra").show();
+        var_DomModalEdita.find(".dia").hide();
+        var_DomModalEdita.find(".mes").hide();
+        var_DomModalEdita.find(".ano").hide();
+
+        var datacompra = info_content.data("datacompra");
+        var_DomModalEdita.find(".data-compra").attr("value",datacompra);
+    }
+    else{
+        var_DomModalEdita.find(".dataCompra").hide();
+        var_DomModalEdita.find(".dia").show();
+        var_DomModalEdita.find(".mes").show();
+        var_DomModalEdita.find(".ano").show();
+    }
 
     var ano = var_DomModalEdita.find(".ano-edit").attr("value");
     var mes = var_DomModalEdita.find(".mes-edit").attr("value");
@@ -208,6 +250,17 @@ $(".content-day").click(function(){
     
 	$('.p-total-atual').attr("disabled", true);
     $('.p-total-atual').css("background-color", "#cccccc"); 
+
+    if(iscontabilizado == 1){
+        var_DomModalEdita.find(".isContabilizado").prop("checked",true);
+        var_DomModalEdita.find(".isContabilizado").closest("p").addClass("alert-success");
+        var_DomModalEdita.find(".isContabilizado").closest("p").removeClass("alert-danger");
+    }
+    else{
+        var_DomModalEdita.find(".isContabilizado").prop("checked",false);
+        var_DomModalEdita.find(".isContabilizado").closest("p").removeClass("alert-success");
+        var_DomModalEdita.find(".isContabilizado").closest("p").addClass("alert-danger");    
+    }
     
     if(type == "1")
     {
@@ -233,48 +286,6 @@ $(".content-day").click(function(){
 
 });
 
-// -------------------------------- PREENCHE MODAL - EDICAO CARTAO -----------------------------
-var edita_fatura = function(){
-    var id              = $(this).find(".id").text();
-    var type            = $(this).find(".type").text();
-    var categoria       = $(this).find(".categoria").text();
-    var categoria_id    = $(this).find(".categoria").attr("value");
-    var sub_categoria   = $(this).find(".sub_categoria").text();
-    var sub_categoria_id= $(this).find(".sub_categoria").attr("value");
-    var descricao       = $(this).find(".descricao").attr("value");
-    var valor           = $(this).find(".valor").attr("value");
-    var totalParcelas   = $(this).find(".p_total-atual").text();
-    var dataCompra      = $(this).find(".dataCompra-atual").text();
-    var IdTipoTransacao = $(this).find(".IdTipoTransacaoCartao-atual").text();
-    
-    var ano = $(".modal-cartao-edit").find(".ano").attr("value");
-    var mes = $(".modal-cartao-edit").find(".mes").attr("value");
-    
-    $(".modal-cartao-edit").find(".id-edit").attr("value",id);
-    $(".modal-cartao-edit").find(".categoria-atual").val(categoria_id).change();
-    $(".modal-cartao-edit").find(".sub_categoria-atual").val(sub_categoria_id).change();
-    $(".modal-cartao-edit").find(".descricao-atual").attr("value",descricao);
-    $(".modal-cartao-edit").find(".valor-atual").attr("value",formatarReal(valor));
-    $(".modal-cartao-edit").find(".p-total-atual").attr("value",totalParcelas);
-    $(".modal-cartao-edit").find(".p-total-atual-hidden").attr("value",totalParcelas);
-    $(".modal-cartao-edit").find(".link-update").attr("action",base_url+"adm_crud/cartao_update/"+ano+"/"+mes+"/"+id);
-    $(".modal-cartao-edit").find(".dataCompra-edit").attr("value",dataCompra);
-  
-    if(IdTipoTransacao == 1){
-        $(".modal-cartao-edit").find(".isRecorrente-edit").attr("value","1");
-    }
-    
-    $(".modal-cartao-edit").find('.p-total-atual').attr("disabled", true);
-    $(".modal-cartao-edit").find('.p-total-atual').css("background-color", "#cccccc"); 
-};
-
-$(".link-delete").on("click",function(){
-    
-    action = $(".modal-edita").find(".link-update").attr("action");
-    
-    $(".modal-edita").find(".link-update").attr("action",action +"/1");
-});
-
 // ---------------- ALTERACAO MANUAL ----------------------- //
 var alteracao_manual = function(){
     
@@ -294,10 +305,22 @@ var alteracao_manual = function(){
 }
 
 // -------------- EVENTOS ----------------------
-$(".content-fatura").on("click",edita_fatura);
-
 // -- ALTERACAO MANUAL -- 
 $(".alteracao_manual").on("click",alteracao_manual);
+
+
+$(".chkCheckboxModalTransacao").on("click",function(){
+
+    if($(this).prop("checked")){
+        $(this).closest("p").addClass("alert-success");
+        $(this).closest("p").removeClass("alert-danger");
+    }
+    else{
+        $(this).closest("p").removeClass("alert-success");
+        $(this).closest("p").addClass("alert-danger"); 
+    }
+
+});
 
 // -------------- FORMATACAO REAL ----------------------
 function formatarReal(mixed) {

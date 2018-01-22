@@ -79,8 +79,9 @@
         $ci = get_instance();
         
 		// ------ MES ------	
-        $dataGeralMes              = $ci->geral_model->Buscar($pData);	
         
+        $dataGeralMes              = $ci->geral_model->Buscar($pData);	
+
         if(!empty($dataGeralMes )){
         
             $dataGeralMes["Cartao"] += $pData["Valor"]*(-1);

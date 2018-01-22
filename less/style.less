@@ -393,6 +393,12 @@
                                     .negativo{color: #cb0000; }
                                     .positivo{color: #00ad21; }
                                 }
+
+                                tr.IsContabilizado-0{
+                                    opacity: 0.5;
+                                    background-color: lightgray;
+                                }
+
                                 tr.content-day:hover,tr.poupanca:hover{
                                     background-color: #bebeff;
                                     color: @white-10;
@@ -525,9 +531,29 @@
                                 table:extend(.full-container){
 
                                     td,th{
-                                        padding:1% 0.5%;
+                                        padding:1%;
                                         .border(0,@white-4);
                                         border-width:0 0 1px 0;
+                                    }
+
+                                    td.dia{
+                                        text-align: right;
+                                        border-width: 1px 1px 1px 0;
+
+                                        border-right-color: @white-8;
+                                        padding-right: 5px;
+                                    }
+
+                                    td.cartao{
+                                        color: orange;
+                                    }
+
+                                    td.descricao{
+
+                                        border-width: 1px 1px 1px 0;
+                                        border-right-color: @white-8;
+                                        padding-right: 5px;   
+
                                     }
                                     
                                     .valor-total-sub_categoria{
@@ -722,7 +748,7 @@
                            .float-config(right,30%);
                        }
 
-                       .opcoes-transacao-repeticao{
+                       .campoCheckboxModalTransacao{
                            float: left;
                         
                            p{
@@ -730,13 +756,14 @@
                                 padding-left: 30px;
                                 position: relative;
 
-                                .EspelharProximasFaturas{
+                                .chkCheckboxModalTransacao{
                                     width: 20px;
                                     height: 20px;
                                     position: absolute;
                                     top: 5px;
                                     left: 5px;
                                 }
+                                
                            }
                        }
 
@@ -856,6 +883,122 @@
                     }
                 }
             }
+        }
+
+        .modal-cartao{
+
+            .fatura-cartao{
+
+                .total_cartao{
+                    width: 100%;
+                    bottom: 0;
+                    text-align: right;
+                    font-size: 1.2em;
+                    font-weight: 600;
+                    color: orange;
+                    position: relative;
+                    
+                    span{
+                        //display: block;
+                    }
+
+                    span.alteracao_manual{
+                        cursor: pointer;
+                        color: @white-2;
+                    }
+
+                    span.valor_span{
+                        width: 100px;
+                        float: right;
+                    }
+
+                    form.alteracao_manual{
+
+                        input.input-Cartao{
+                            width: 95px;
+                            position: absolute;
+                            right: 0;
+                            top: 0;
+                            padding: 2px;
+                        }
+
+                        .btn-success{
+                            padding: 2px 3px;
+                            position: absolute;
+                            top: 4px;
+                            right: 2px;
+                        }
+
+                    }
+                    
+                }
+                        
+                tr.content-day:hover{
+                    background-color: #bebeff;
+                    color: @white-10;
+                    cursor:pointer;
+
+                    td.valor{
+                        border: none;
+                    }
+                }  
+
+                .categoria-content{
+                    
+                    h2{         
+                        background-color: #f7a816;
+                        color: @white-10;
+                        top: 0;
+                        border-radius: 4px 4px 0 0;
+                        width: 102.4%;
+                        margin-left: -1.1%;
+                        margin-top: -2%;
+                        font-size: 1.2em;
+                        padding: 5px;
+                    }
+
+                    .border(5px,@white-5);
+                    background-color: @white-10;
+                    padding: 1%;
+                
+                    .nome_sub_categoria{
+                        text-align: center;
+                    }
+                    
+                    table:extend(.full-container){
+
+                        td,th{
+                            padding:1% 0.5%;
+                            .border(0,@white-4);
+                            border-width:0 0 1px 0;
+                        }
+                        
+                        .valor-total-sub_categoria{
+                            font-weight: 600;
+                            font-size: 1.0em;
+                            text-align: right;
+                            padding:5px 2px 5px 0
+                        }
+                        
+                        .valor-total,.valor-total-categoria{
+                                bottom: 0;
+                                right: 0;
+                                margin-right: 35px;
+                                border: none;
+                                border-color: transparent;
+                                padding: 0;
+                                font-size: 1.2em;
+                                font-weight: 600;
+                        }
+                        
+                        .negativo{color: #cb0000; }
+                        .positivo{color: #00ad21; }
+                        
+                    }
+                }
+                               
+            }
+
         }
         
         .modal-cartao-edit{

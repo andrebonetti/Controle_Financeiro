@@ -79,23 +79,27 @@
                 }
                 foreach($dataDia as $dataTransacao){
                     
-                    if($diaNDiaMesTransacoes == 0){
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"] = 0; 
-                    }
-                    
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"]   += $dataTransacao["Valor"];
-                    
-                    $saldoFinalDia                       += $dataTransacao["Valor"];
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoFinal"] = $saldoFinalDia;
+                    if($dataTransacao["IsContabilizado"] == 1){
 
-                    if($dataTransacao["Valor"] >= 0){
-                        $totalReceita += $dataTransacao["Valor"];
-                    }
-                    else{
-                        $totalDespesas += $dataTransacao["Valor"]*(-1);
-                    }
+                        if($diaNDiaMesTransacoes == 0){
+                            $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"] = 0; 
+                        }
+                        
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"]   += $dataTransacao["Valor"];
+                        
+                        $saldoFinalDia                       += $dataTransacao["Valor"];
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoFinal"] = $saldoFinalDia;
 
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["HasSaldo"] = true; 
+                        if($dataTransacao["Valor"] >= 0){
+                            $totalReceita += $dataTransacao["Valor"];
+                        }
+                        else{
+                            $totalDespesas += $dataTransacao["Valor"]*(-1);
+                        }
+
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["HasSaldo"] = true; 
+
+                    }
                     
                     $diaNDiaMesTransacoes++;
                 }
@@ -128,6 +132,37 @@
             $lCategoriasFinal[$itemCategoria["DescricaoCategoria"]] = $lSubCategorias;
         }    
 
+        // -- CARTOES --
+        $lCartoes         = $this->cartoes_model->ListarCartoesAtivos(array("Ano"=>$pAno,"Mes"=>$pMes));
+
+        $dataBusca["IdCartao"] = 1;
+        unset($dataBusca["Dia"]);
+
+        $contCartao = 0;
+        foreach($lCartoes as $itemCartao){
+
+            $lCartoes[$contCartao]["lTransacao"] = array();
+
+            if($itemCartao["Id"] == 1){
+
+                foreach($this->cartao_model->ListarFaturaRecorrente($dataBusca) as $itemContent){
+                    array_push($lCartoes[$contCartao]["lTransacao"],$itemContent);
+                }  
+            
+                foreach($this->cartao_model->ListarFaturaSimplesParcelada($dataBusca) as $itemContent){
+                    array_push($lCartoes[$contCartao]["lTransacao"],$itemContent);
+                }
+
+            }
+
+            foreach(buscarTransacoesPorTipo(1,$dataBusca) as $transacao){array_push($lCartoes[$contCartao]["lTransacao"],$transacao);}
+            foreach(buscarTransacoesPorTipo(2,$dataBusca) as $transacao){array_push($lCartoes[$contCartao]["lTransacao"],$transacao);}
+            foreach(buscarTransacoesPorTipo(3,$dataBusca) as $transacao){array_push($lCartoes[$contCartao]["lTransacao"],$transacao);}
+
+            $contCartao++;
+        }
+
+        // -- COMPETENCIAS --
         $lCompetencias = $this->geral_model->Listar(); 
            
 		// --------------------------CONTENT----------------------------------
@@ -138,6 +173,7 @@
 		"ano"			  		=> $pAno,
 		"mes"			  		=> $pMes,
         "hoje"                  => $DiaAtual,
+        "lCartao"               => $lCartoes,
 		"categorias"	  		=> $lCategorias,
 		"all_sub_categorias"  	=> $lSubCategoriasTotal,
         "fatura_cartao"   		=> $data_cartao,

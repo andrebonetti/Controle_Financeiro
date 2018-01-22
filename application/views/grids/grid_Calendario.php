@@ -105,9 +105,9 @@
 
                 ?> 
                 
-                    <tr class="content-day IdSubCategoria-<?=$dataTransacao["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao">  
+                    <tr class="content-day IdSubCategoria-<?=$dataTransacao["IdSubCategoria"]?> IsContabilizado-<?=$dataTransacao["IsContabilizado"]?>" data-toggle="modal" data-target="#edit-transacao">  
                         
-                        <td class="info-content no-view"
+                        <td class="info-content no-view "
                                 data-id="<?=$dataTransacao["Id"]?>"
                                 data-dia="<?=$dataTransacao["Dia"]?>"
                                 data-valor="<?=$dataTransacao["Valor"]?>"
@@ -120,6 +120,7 @@
                                 data-subcategoria-descricao="<?=trim(valida_sub($dataTransacao["DescricaoCategoria"],$dataTransacao["DescricaoSubCategoria"]))?>"
                                 data-descricao="<?=trim($dataTransacao["Descricao"])?>"
                                 data-codigo-transacao="<?=trim($dataTransacao["CodigoTransacao"])?>"
+                                data-iscontabilizado="<?=$dataTransacao["IsContabilizado"]?>"
                                 >
                         </td>
                         
@@ -157,7 +158,7 @@
                 <?php } ?>
                 
                 <?php if( (($diaMes == 9)&&($primeiroDiaMes < 6)) || ($diaMes == 10 && $primeiroDiaMes == 1) || ($diaMes == 11 && $primeiroDiaMes == 1) ) {?>
-                    <tr class="cartao">
+                    <tr class="cartao" data-toggle="modal" data-target="#cartao_de_credito">
                         <td class='cartao'>Cartão</td>
                         <td class='valor-fatura valor' value="<?=-$competenciaAtual["Cartao"]?>"><?=numeroEmReais2(-$competenciaAtual["Cartao"])?></td>
                     </tr>

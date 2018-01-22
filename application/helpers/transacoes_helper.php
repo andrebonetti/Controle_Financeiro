@@ -4,14 +4,15 @@
         
 		$ci = get_instance();
         
-        if($ci->input->post("dia")  != ""){$data["Dia"] 		= $ci->input->post("dia");}
+        if($ci->input->post("dia") != "")       {$data["Dia"] = $ci->input->post("dia");}
+        if($ci->input->post("idCartao") != "")  {$data["IdCartao"] = $ci->input->post("idCartao");}
         $data["Descricao"] 	        = $ci->input->post("descricao");	
         $data["Valor"]		        = valor_decimal($ci->input->post("valor"));		
         $data["Ano"]                = $ci->input->post("ano");	
         $data["Mes"]  		        = $ci->input->post("mes");
         $data["CodigoTransacao"]    = $ci->input->post("codigoTransacao");
         $data["NumeroParcela"]      = $ci->input->post("numero-parcela");
-
+        
         // ----- CATEGORIA -----
         
             // -- NOVA CATEGORIA
@@ -128,7 +129,7 @@
     function buscarTransacoesPorTipo($pTipo,$pParam){
 
         $ci = get_instance();
-        $diaParam = $pParam["Dia"];
+        if(isset($pParam["Dia"])){$diaParam = $pParam["Dia"];}
 
         $pParam["IdTipoTransacao"]    = $pTipo;
         if($pTipo == 3){
@@ -136,124 +137,133 @@
             $dataDia     = array();
 
             foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                $itemContent["DiaCalendario"] = $diaParam;
+                if(isset($pParam["Dia"])){$itemContent["DiaCalendario"] = $diaParam;}
                 array_push($dataDia,$itemContent);
             }
 
         }
         if($pTipo == 1 || $pTipo == 2 || $pTipo == 4){
 
-            $diaSemana   = date("w", mktime(0,0,0,$pParam["Mes"],$diaParam,$pParam["Ano"]));         
-            $qtdeDiasMes =  days_in_month($pParam["Mes"]);
             $dataDia     = array();
- 
-            //Transações do FDS caem na Segunda
-            if($diaSemana == 1) {
+            if(isset($pParam["Dia"])){
+
+                $diaSemana   = date("w", mktime(0,0,0,$pParam["Mes"],$diaParam,$pParam["Ano"]));         
+                $qtdeDiasMes =  days_in_month($pParam["Mes"]);
                 
-                //SABADO
-                $pParam["Dia"] = $diaParam - 2;   
-                        
-                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam;
-                    array_push($dataDia,$itemContent);
+                //Transações do FDS caem na Segunda
+                if($diaSemana == 1) {
+                    
+                    //SABADO
+                    $pParam["Dia"] = $diaParam - 2;   
+                            
+                    foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam;
+                        array_push($dataDia,$itemContent);
+                    }
+                            
+                    //DOMINGO
+                    $pParam["Dia"] = $diaParam - 1;   
+                            
+                    foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam;
+                        array_push($dataDia,$itemContent);
+                    }
+
                 }
-                        
-                //DOMINGO
-                $pParam["Dia"] = $diaParam - 1;   
-                        
-                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam;
-                    array_push($dataDia,$itemContent);
-                }
-
-            }
-          
-            // -- SEGUNDA A SEXTA 
-            if(($diaSemana >= 1)&&($diaSemana <= 5))
-            {
-                $pParam["Dia"] = $diaParam;  
-
-                foreach( $ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam;
-                    array_push($dataDia,$itemContent);
-                }
-            }
-
-            //Transacoes Final do Mes no ultimo dias
-            if(($diaParam == $qtdeDiasMes)&&($diaSemana == 0)){
-
-                //echo "Dia => ". $diaParam ." Dia Semana => ".$diaSemana." Qtde Dias => ".$qtdeDiasMes." <br>";  
             
-                //ULTIMO DOMINGO 
-                $pParam["Dia"] = $diaParam; 
+                // -- SEGUNDA A SEXTA 
+                if(($diaSemana >= 1)&&($diaSemana <= 5))
+                {
+                    $pParam["Dia"] = $diaParam;  
 
-                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam-2;
-                    array_push($dataDia,$itemContent);
+                    foreach( $ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam;
+                        array_push($dataDia,$itemContent);
+                    }
                 }
 
-                //ULTIMO SABADO
-                $pParam["Dia"] = $diaParam-1; 
-                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam-2;
-                    array_push($dataDia,$itemContent);
-                }
+                //Transacoes Final do Mes no ultimo dias
+                if(($diaParam == $qtdeDiasMes)&&($diaSemana == 0)){
+
+                    //echo "Dia => ". $diaParam ." Dia Semana => ".$diaSemana." Qtde Dias => ".$qtdeDiasMes." <br>";  
                 
-            }
-            if(($diaParam == $qtdeDiasMes)&&($diaSemana == 6)){
+                    //ULTIMO DOMINGO 
+                    $pParam["Dia"] = $diaParam; 
 
-                //ULTIMO SABADO
-                $pParam["Dia"] = $diaParam; 
-                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam-1;
-                    array_push($dataDia,$itemContent);
+                    foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam-2;
+                        array_push($dataDia,$itemContent);
+                    }
+
+                    //ULTIMO SABADO
+                    $pParam["Dia"] = $diaParam-1; 
+                    foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam-2;
+                        array_push($dataDia,$itemContent);
+                    }
+                    
+                }
+                if(($diaParam == $qtdeDiasMes)&&($diaSemana == 6)){
+
+                    //ULTIMO SABADO
+                    $pParam["Dia"] = $diaParam; 
+                    foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam-1;
+                        array_push($dataDia,$itemContent);
+                    }
+
                 }
 
-            }
+                //Fevereiro Bissexto
+                if(($diaParam == $qtdeDiasMes)&&($pParam["Dia"] == 28)){
 
-            //Fevereiro Bissexto
-            if(($diaParam == $qtdeDiasMes)&&($pParam["Dia"] == 28)){
-
-                //echo "Dia => ". $diaParam ." Dia Semana => ".$diaSemana." Qtde Dias => ".$qtdeDiasMes." <br>";  
-             
-                $pParam["Dia"] = 29; 
-
-                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam;
-                    array_push($dataDia,$itemContent);
-                }
-
-                $pParam["Dia"] = 30;
-                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam;
-                    array_push($dataDia,$itemContent);
-                }
-
-                $pParam["Dia"] = 31;
-                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam;
-                    array_push($dataDia,$itemContent);
-                }
+                    //echo "Dia => ". $diaParam ." Dia Semana => ".$diaSemana." Qtde Dias => ".$qtdeDiasMes." <br>";  
                 
-            }
+                    $pParam["Dia"] = 29; 
 
-            //Fevereiro Não Bissexto
-            if(($diaParam == $qtdeDiasMes)&&($pParam["Dia"] == 29)){
+                    foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam;
+                        array_push($dataDia,$itemContent);
+                    }
 
-                //echo "Dia => ". $diaParam ." Dia Semana => ".$diaSemana." Qtde Dias => ".$qtdeDiasMes." <br>";  
-             
-                $pParam["Dia"] = 30;
-                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam;
-                    array_push($dataDia,$itemContent);
+                    $pParam["Dia"] = 30;
+                    foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam;
+                        array_push($dataDia,$itemContent);
+                    }
+
+                    $pParam["Dia"] = 31;
+                    foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam;
+                        array_push($dataDia,$itemContent);
+                    }
+                    
                 }
 
-                $pParam["Dia"] = 31;
-                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
-                    $itemContent["DiaCalendario"] = $diaParam;
-                    array_push($dataDia,$itemContent);
-                }
+                //Fevereiro Não Bissexto
+                if(($diaParam == $qtdeDiasMes)&&($pParam["Dia"] == 29)){
+
+                    //echo "Dia => ". $diaParam ." Dia Semana => ".$diaSemana." Qtde Dias => ".$qtdeDiasMes." <br>";  
                 
+                    $pParam["Dia"] = 30;
+                    foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam;
+                        array_push($dataDia,$itemContent);
+                    }
+
+                    $pParam["Dia"] = 31;
+                    foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                        $itemContent["DiaCalendario"] = $diaParam;
+                        array_push($dataDia,$itemContent);
+                    }
+                    
+                }
+
+            }
+            else{
+                foreach($ci->transacoes_model->Listar($pParam) as $itemContent){
+                    array_push($dataDia,$itemContent);
+                }
             }
 
         }

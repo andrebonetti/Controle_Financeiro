@@ -6,6 +6,7 @@
             
             if(isset($pData["Id"])){$this->db->where("transacoes.Id",$pData["id"]);}  
             if(isset($pData["IdUsuario"])){$this->db->where("transacoes.IdUsuario",$pData["IdUsuario"]);}
+            if(isset($pData["IdCartao"])){$this->db->where("transacoes.IdCartao",$pData["IdCartao"]);}
             if(isset($pData["IdCategoria"])){$this->db->where("transacoes.IdCategoria",$pData["IdCategoria"]);}
             if(isset($pData["IdSubCategoria"])){$this->db->where("transacoes.IdSubCategoria",$pData["IdSubCategoria"]);}
             if(isset($pData["Descricao"])){$this->db->where("transacoes.Descricao",$pData["Descricao"]);}
@@ -67,6 +68,8 @@
                     $this->db->join("sub_categoria", "sub_categoria.IdSubCategoria = transacoes.IdSubCategoria");
                 }
             }
+
+            $this->db->order_by("DataCompra");
             
             $this->db->from("transacoes");
             return $this->db->get()->result_array();

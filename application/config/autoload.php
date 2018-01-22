@@ -65,6 +65,7 @@ $autoload['model'] = array(
     'transacoes_model'
     ,'usuarios_model'
     ,'cartao_model'
+    ,'cartoes_model'
     ,"geral_model"
     ,"categoria_model"
     ,"subCategoria_model"
