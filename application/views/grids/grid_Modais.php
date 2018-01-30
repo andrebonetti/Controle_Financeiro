@@ -113,6 +113,7 @@
         <div class="modal-body">
             <?= form_open("adm_crud/transacao_update",array("class"=>"link-update"))?>
 
+                <input type="hidden" name="usuario" value="<?=$usuario['Id']?>">
                 <input type="hidden" class="id-edit" name="id" value="">
                 <input type="hidden" class="codigo-transacao" name="codigoTransacao" value="">
                 <input type="hidden" class="p-atual" name="numero-parcela" value="">

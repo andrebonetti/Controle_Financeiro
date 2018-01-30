@@ -37,6 +37,7 @@ $autoload['helper'] = array(
     ,"transacoes_helper"
     ,"geral_helper"
     ,"usuario_helper"
+    ,"config_helper"
 );
 
 /*

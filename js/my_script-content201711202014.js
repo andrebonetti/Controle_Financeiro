@@ -286,6 +286,13 @@ $(".content-day").click(function(){
 
 });
 
+$(".link-delete").on("click",function(){
+    
+    action = $(".modal-edita").find(".link-update").attr("action");
+    
+    $(".modal-edita").find(".link-update").attr("action",action +"/1");
+});
+
 // ---------------- ALTERACAO MANUAL ----------------------- //
 var alteracao_manual = function(){
     

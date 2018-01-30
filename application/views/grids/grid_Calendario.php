@@ -143,6 +143,13 @@
                 <?php }} ?>
                 
                 <!-- RESUMO DIA -->
+
+                <?php if( (($diaMes == 9)&&($primeiroDiaMes < 6)) || ($diaMes == 10 && $primeiroDiaMes == 1) || ($diaMes == 11 && $primeiroDiaMes == 1) ) {?>
+                    <tr class="cartao" data-toggle="modal" data-target="#cartao_de_credito">
+                        <td class='cartao'>Cartão</td>
+                        <td class='valor-fatura valor' value="<?=-$competenciaAtual["Cartao"]?>"><?=numeroEmReais2(-$competenciaAtual["Cartao"])?></td>
+                    </tr>
+                <?php } ?>
                 
                 <?php if(isset($dataDia["ResumoDia"]["HasSaldo"]) && $dataDia["ResumoDia"]["HasSaldo"] == true){ ?>
                 
@@ -155,13 +162,6 @@
                         <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["SaldoFinal"])?></td>
                     </tr>
 
-                <?php } ?>
-                
-                <?php if( (($diaMes == 9)&&($primeiroDiaMes < 6)) || ($diaMes == 10 && $primeiroDiaMes == 1) || ($diaMes == 11 && $primeiroDiaMes == 1) ) {?>
-                    <tr class="cartao" data-toggle="modal" data-target="#cartao_de_credito">
-                        <td class='cartao'>Cartão</td>
-                        <td class='valor-fatura valor' value="<?=-$competenciaAtual["Cartao"]?>"><?=numeroEmReais2(-$competenciaAtual["Cartao"])?></td>
-                    </tr>
                 <?php } ?>
                 
             </table>

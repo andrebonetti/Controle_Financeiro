@@ -4,7 +4,8 @@
 		    
        public function month_content($pAno,$pMes){
 			
-		$this->output->enable_profiler(TRUE);
+        // -- CONFIG    
+		$config = config_base();
 
         // -- USUARIO --
         $usuarioLogado = valida_acessoUsuario();
@@ -72,6 +73,7 @@
                     
                     $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"] = $competenciaAtual["Cartao"]*-1;
                     $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoFinal"] = $saldoFinalDia;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["HasSaldo"] = true; 
                     $totalDespesas += $competenciaAtual["Cartao"];
                         
                     $diaNDiaMesTransacoes ++;  
@@ -182,8 +184,10 @@
         "lCompetencias"         => $lCompetencias,
 		"dataMes"      		    => $dataMes);
 		
-		// -- VIEW --
-        $this->load->template("template_content.php",$content);
+        if($config["showTemplate"]){
+            // -- VIEW --
+            $this->load->template("template_content.php",$content);
+        }
            
 	   }
 

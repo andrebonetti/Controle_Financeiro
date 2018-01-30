@@ -99,15 +99,27 @@
     function ValidaEntidadeTransacao($data){
         
         if(
-            (isset($data["Dia"]))&&(($data["Dia"] > 0)&&($data["Dia"] <= 31 ))
+            (
+                (isset($data["Dia"]))&&(($data["Dia"] > 0)&&($data["Dia"] <= 31 ))
+                ||
+                (isset($data["DataCompra"]))
+            )
             &&
             (isset($data["Descricao"]))&&($data["Descricao"] != "")
             &&
-            (isset($data["Valor"]))&&($data["Valor"] > 0)	
+            (isset($data["Valor"]))&&($data["Valor"] != 0)	
             &&	
-            (isset($data["Ano"]))&&($data["Ano"] > 1900)
+            (isset($data["IdTipoTransacao"]))&&($data["IdTipoTransacao"] > 0)
             &&
-            (isset($data["Mes"]))&&(($data["Mes"] >= 1)&&($data["Mes"] <= 12))
+            (   
+                ($data["IdTipoTransacao"] == 1)
+                ||
+                (
+                    (isset($data["Ano"]))&&($data["Ano"] > 1900)
+                    &&
+                    (isset($data["Mes"]))&&(($data["Mes"] >= 1)&&($data["Mes"] <= 12))
+                )
+            )
             &&
             (isset($data["IdCategoria"]))&&($data["IdCategoria"] > 0)
             &&
@@ -121,6 +133,11 @@
             return true;
         }
         else{
+
+            echo "Existem campos obrigatórios não preenchidos";
+            $ci = get_instance();
+            $ci->session->set_flashdata('msg-error',"Existem campos obrigatórios não preenchidos");
+
             return false;
         }
         
