@@ -10,6 +10,9 @@
         //-- G / Saldos -->        
         $this->view('grids/grid_Saldos.php'); 
 
+        //-- G / Filtros -->        
+        $this->view('grids/grid_Filtros.php'); 
+
         //-- G / Calendario -->
         $this->view('grids/grid_Calendario.php'); 
         

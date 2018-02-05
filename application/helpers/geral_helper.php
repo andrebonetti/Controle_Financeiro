@@ -257,7 +257,7 @@
         }
         
         /*-- CARTAO --*/
-        $cartao_Recorrente       = $ci->cartao_model->ListarFaturaRecorrente($dataContent);
+        $cartao_Recorrente       = $ci->cartao_de_credito_model->ListarFaturaRecorrente($dataContent);
 
         foreach($cartao_Recorrente as $itemContent){
             

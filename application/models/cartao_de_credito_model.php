@@ -1,5 +1,5 @@
 <?php
-	class Cartao_model extends CI_Model {
+	class Cartao_de_credito_model extends CI_Model {
 				
 		// -- SELECT --		
         function ListarFaturaSimplesParcelada($pData = null,$pOrderBy = null){

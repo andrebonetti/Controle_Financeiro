@@ -5,24 +5,33 @@
        public function month_content($pAno,$pMes){
 			
         // -- CONFIG    
-		$config = config_base();
+		$config = config_base(array("showTemplate" => true));//array("rollback" => true,"retorno" => false)); 
 
         // -- USUARIO --
-        $usuarioLogado = valida_acessoUsuario();
+        $paramBusca["Usuario"]          = valida_acessoUsuario();
 
-		// ----- TABELAS -----
-           
         // -- SALDO --
-        $dataBusca["IdUsuario"]         = $usuarioLogado["Id"];    
-        $dataBusca["Mes"]               = $pMes;
-        $dataBusca["Ano"]               = $pAno;
-        $dataBusca["isListaPorTipo"]    = true;
+        $paramBusca["Mes"]               = $pMes;
+        $paramBusca["Ano"]               = $pAno;
+        $paramBusca["isListaPorTipo"]    = true;
+        $paramBusca["HasInnerJoin"]      = true;
 
-        $competenciaAtual   	= $this->geral_model->Buscar($dataBusca);
-           
+        $competenciaAtual   	         = $this->geral_model       ->Buscar($paramBusca);
+        $lcontaUsuario   	             = $this->contas_model      ->Listar($paramBusca);
+        
+        $lSaldoMes["Total"]["SaldoAnterior"] = 0;   
+        $lSaldoMes["Total"]["SaldoMes"] = 0;  
+        $lSaldoMes["Total"]["SaldoFinal"] = 0;                  
+        foreach($lcontaUsuario as $itemConta){
+            $lSaldoMes[$itemConta["Id"]]         =  $itemConta["Saldo"];
+            $lSaldoMes["Total"]["SaldoAnterior"] += $itemConta["Saldo"]["SaldoAnterior"];
+            $lSaldoMes["Total"]["SaldoMes"]      += $itemConta["Saldo"]["SaldoMes"];
+            $lSaldoMes["Total"]["SaldoFinal"]    += $itemConta["Saldo"]["SaldoFinal"];
+        }                  
+
         if(empty($competenciaAtual)){
-            geral_CriarCompetencia($dataBusca);
-            $competenciaAtual = $this->geral_model->Buscar($dataBusca);
+            geral_CriarCompetencia($paramBusca);
+            $competenciaAtual = $this->geral_model->Buscar($paramBusca);
         }
            
         $competenciaAnterior = geral_BuscarCompetenciaAnterior($pAno,$pMes);
@@ -44,14 +53,14 @@
             for ($diaN = 1; $diaN <= $qtdeDiasMes ;$diaN++){
                 
                 $dataMes[$diaN]                        = array();
-                $dataBusca["Dia"]                      = $diaN;
-                $dataBusca["Mes"]                      = $pMes;
-                $dataBusca["Ano"]                      = $pAno;
-                $dataBusca["PreencherEntidadesFilhas"] = true;
+                $paramBusca["Dia"]                      = $diaN;
+                $paramBusca["Mes"]                      = $pMes;
+                $paramBusca["Ano"]                      = $pAno;
+                $paramBusca["PreencherEntidadesFilhas"] = true;
                 
-                foreach(buscarTransacoesPorTipo(1,$dataBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
-                foreach(buscarTransacoesPorTipo(2,$dataBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
-                foreach(buscarTransacoesPorTipo(3,$dataBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
+                foreach(buscarTransacoesPorTipo(1,$paramBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
+                foreach(buscarTransacoesPorTipo(2,$paramBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
+                foreach(buscarTransacoesPorTipo(3,$paramBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
                 
             }
            
@@ -114,11 +123,11 @@
             // -- CARTAO --
             $data_cartao = array();
            
-            foreach($this->cartao_model->ListarFaturaRecorrente($dataBusca) as $itemContent){
+            foreach($this->cartao_de_credito_model->ListarFaturaRecorrente($paramBusca) as $itemContent){
                 array_push($data_cartao,$itemContent);
             }  
            
-            foreach($this->cartao_model->ListarFaturaSimplesParcelada($dataBusca) as $itemContent){
+            foreach($this->cartao_de_credito_model->ListarFaturaSimplesParcelada($paramBusca) as $itemContent){
                 array_push($data_cartao,$itemContent);
             }
             
@@ -137,8 +146,8 @@
         // -- CARTOES --
         $lCartoes         = $this->cartoes_model->ListarCartoesAtivos(array("Ano"=>$pAno,"Mes"=>$pMes));
 
-        $dataBusca["IdCartao"] = 1;
-        unset($dataBusca["Dia"]);
+        $paramBusca["IdCartao"] = 1;
+        unset($paramBusca["Dia"]);
 
         $contCartao = 0;
         foreach($lCartoes as $itemCartao){
@@ -147,19 +156,19 @@
 
             if($itemCartao["Id"] == 1){
 
-                foreach($this->cartao_model->ListarFaturaRecorrente($dataBusca) as $itemContent){
+                foreach($this->cartao_de_credito_model->ListarFaturaRecorrente($paramBusca) as $itemContent){
                     array_push($lCartoes[$contCartao]["lTransacao"],$itemContent);
                 }  
             
-                foreach($this->cartao_model->ListarFaturaSimplesParcelada($dataBusca) as $itemContent){
+                foreach($this->cartao_de_credito_model->ListarFaturaSimplesParcelada($paramBusca) as $itemContent){
                     array_push($lCartoes[$contCartao]["lTransacao"],$itemContent);
                 }
 
             }
 
-            foreach(buscarTransacoesPorTipo(1,$dataBusca) as $transacao){array_push($lCartoes[$contCartao]["lTransacao"],$transacao);}
-            foreach(buscarTransacoesPorTipo(2,$dataBusca) as $transacao){array_push($lCartoes[$contCartao]["lTransacao"],$transacao);}
-            foreach(buscarTransacoesPorTipo(3,$dataBusca) as $transacao){array_push($lCartoes[$contCartao]["lTransacao"],$transacao);}
+            foreach(buscarTransacoesPorTipo(1,$paramBusca) as $transacao){array_push($lCartoes[$contCartao]["lTransacao"],$transacao);}
+            foreach(buscarTransacoesPorTipo(2,$paramBusca) as $transacao){array_push($lCartoes[$contCartao]["lTransacao"],$transacao);}
+            foreach(buscarTransacoesPorTipo(3,$paramBusca) as $transacao){array_push($lCartoes[$contCartao]["lTransacao"],$transacao);}
 
             $contCartao++;
         }
@@ -171,7 +180,7 @@
 		$content = array( 
 		"competenciaAnterior"	=> $competenciaAnterior,
 		"competenciaAtual"		=> $competenciaAtual,       
-		"usuario"		  		=> $usuarioLogado,
+		"usuario"		  		=> $paramBusca["Usuario"],
 		"ano"			  		=> $pAno,
 		"mes"			  		=> $pMes,
         "hoje"                  => $DiaAtual,
@@ -182,7 +191,9 @@
         "sub_categorias"  		=> $lCategoriasFinal,      
         "primeiroDiaMes"       	=> $primeiroDiaMes,  
         "lCompetencias"         => $lCompetencias,
-		"dataMes"      		    => $dataMes);
+		"dataMes"      		    => $dataMes,
+        "lcontaUsuario"      	=> $lcontaUsuario,
+        "lSaldoMes"      		=> $lSaldoMes);
 		
         if($config["showTemplate"]){
             // -- VIEW --

@@ -44,160 +44,166 @@
                     display: table;
                     margin-bottom:1%;
 
-                    div{
-                        padding: 1%;
-                        display:table;
-                        font-size: 1.25em;
-                        border-radius: 4px;
-                        background-color:yellow;
+                    .SaldoConta{
+                        width: 100%;
+                        display: table;
 
-                        span{
-                          text-align:right;
-                          .float-config(right,auto);
+                        div{
+                            padding: 1%;
+                            display:table;
+                            font-size: 1.25em;
+                            border-radius: 4px;
+                            background-color:yellow;
+
+                            span{
+                              text-align:right;
+                              .float-config(right,auto);
+                            }
                         }
-                    }
 
-                    .saldo-anterior,.poup-anterior{
-                        .float-config(left,20%);
-                        margin-right: 1%;
-                        color:@black-2;
-                        background-color: @white-7;
-                    }
+                        .saldo-anterior,.poup-anterior{
+                            .float-config(left,20%);
+                            margin-right: 1%;
+                            color:@black-2;
+                            background-color: @white-7;
+                        }
 
-                    .saldo-mes,.poup-mes{
-                        .float-config(left,20%);
-                        color:@black-2;
-                        background-color: @white-7;
-                        position: relative;
+                        .saldo-mes,.poup-mes{
+                            .float-config(left,20%);
+                            color:@black-2;
+                            background-color: @white-7;
+                            position: relative;
+                            
+                            span{
+                                display: block;
+                                float: left;
+                            }
+
+                            span.alteracao_manual{
+                                cursor: pointer;
+                            }
+
+                            span.valor_span{
+                                width: 100px;
+                                float: right;
+                            }
                         
-                        span{
-                            display: block;
-                            float: left;
-                        }
+                            form.alteracao_manual{
 
-                        span.alteracao_manual{
-                            cursor: pointer;
-                        }
-
-                        span.valor_span{
-                            width: 100px;
-                            float: right;
-                        }
-                    
-                        form.alteracao_manual{
-
-                            input.input-SaldoMes{
-                                width: 120px;
-                                position: absolute;
-                                right: 3px;
-                                top: 10px;
-                                padding: 2px;
+                                input.input-SaldoMes{
+                                    width: 120px;
+                                    position: absolute;
+                                    right: 3px;
+                                    top: 10px;
+                                    padding: 2px;
+                                }
+                                
+                                .btn-success{
+                                    padding: 2px 3px;
+                                    position: absolute;
+                                    top: 14px;
+                                    right: 8px;
+                                }
+                                
                             }
-                            
-                            .btn-success{
-                                padding: 2px 3px;
-                                position: absolute;
-                                top: 14px;
-                                right: 8px;
-                            }
-                            
                         }
-                    }
-                    
-                    .saldo-mes:hover,.saldo-futuro:hover{
-                        background-color: @white-2;
-                            
-                        span{
-                            color: #f2f200;
-                        }
-                    }
-
-                    .saldo-dia{
-                        .float-config(left,20%);
-                        position: fixed;
-                        margin-left: 555px;
-                        padding:8px 5px 3px 5px;
-                        color:@black-2;
-                        background-color: @white-10;
-
-                        p{
-                            float: left;
-                            padding-top: 3px;
-                        }
-
-                        input{
-                            width: 40px;
-                            float: left;
-                            margin: 0 1% 0 2%;
-                            text-align: center;
-                        }
-
-                        span{
-                            float: left;
-                            margin-left: 12px;
-                            margin-top: 3px;
-
-                        }
-
-                        span.positivo{
-                            color: #14a614;
-                        }
-
-                        span.negativo{
-                            color: #cb0000;
-                        }
-                    }
-
-                    .saldo-futuro,.poup-futuro{
-                        .float-config(right,20%);
-                        background-color:yellow;
-                        position: relative;
                         
-                        span{
-                            display: block;
-                            float: left;
-                        }
-
-                        span.alteracao_manual{
-                            cursor: pointer;
-                        }
-
-                        span.valor_span{
-                            width: 100px;
-                            float: right;
-                        }
-                    
-                        form.alteracao_manual{
-
-                            input.input-SaldoFinal{
-                                width: 120px;
-                                position: absolute;
-                                right: 3px;
-                                top: 10px;
-                                padding: 2px;
+                        .saldo-mes:hover,.saldo-futuro:hover{
+                            background-color: @white-2;
+                                
+                            span{
+                                color: #f2f200;
                             }
-                            
-                            .btn-success{
-                                padding: 2px 3px;
-                                position: absolute;
-                                top: 14px;
-                                right: 8px;
-                            }
-                            
                         }
-                    }
 
-                    .poup-futuro{
-                        .float-config(right,20%);
-                        background-color:#8694ff;
-                    }
+                        .saldo-dia{
+                            .float-config(left,20%);
+                            position: fixed;
+                            margin-left: 555px;
+                            padding:8px 5px 3px 5px;
+                            color:@black-2;
+                            background-color: @white-10;
 
-                    .menu-competencias{
-                        .float-config(right,10%);
-                    }
+                            p{
+                                float: left;
+                                padding-top: 3px;
+                            }
 
-                    .negativo{color: #9f0000; }
-                    .positivo{color: #00cb27; }
+                            input{
+                                width: 40px;
+                                float: left;
+                                margin: 0 1% 0 2%;
+                                text-align: center;
+                            }
+
+                            span{
+                                float: left;
+                                margin-left: 12px;
+                                margin-top: 3px;
+
+                            }
+
+                            span.positivo{
+                                color: #14a614;
+                            }
+
+                            span.negativo{
+                                color: #cb0000;
+                            }
+                        }
+
+                        .saldo-futuro,.poup-futuro{
+                            .float-config(right,20%);
+                            background-color:yellow;
+                            position: relative;
+                            
+                            span{
+                                display: block;
+                                float: left;
+                            }
+
+                            span.alteracao_manual{
+                                cursor: pointer;
+                            }
+
+                            span.valor_span{
+                                width: 100px;
+                                float: right;
+                            }
+                        
+                            form.alteracao_manual{
+
+                                input.input-SaldoFinal{
+                                    width: 120px;
+                                    position: absolute;
+                                    right: 3px;
+                                    top: 10px;
+                                    padding: 2px;
+                                }
+                                
+                                .btn-success{
+                                    padding: 2px 3px;
+                                    position: absolute;
+                                    top: 14px;
+                                    right: 8px;
+                                }
+                                
+                            }
+                        }
+
+                        .poup-futuro{
+                            .float-config(right,20%);
+                            background-color:#8694ff;
+                        }
+
+                        .menu-competencias{
+                            .float-config(right,10%);
+                        }
+
+                        .negativo{color: #9f0000; }
+                        .positivo{color: #00cb27; }
+
+                    }
                 }
 
                 .ativa-categoria{

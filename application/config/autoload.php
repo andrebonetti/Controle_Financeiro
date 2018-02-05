@@ -65,9 +65,12 @@ $autoload['language'] = array();
 $autoload['model'] = array(
     'transacoes_model'
     ,'usuarios_model'
-    ,'cartao_model'
+    ,'cartao_de_credito_model'
     ,'cartoes_model'
     ,"geral_model"
     ,"categoria_model"
     ,"subCategoria_model"
+    ,"contas_model"
+    ,"contas_saldo_model"
+    ,"bancos_model"
 );
