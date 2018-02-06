@@ -5,7 +5,7 @@
         // ----- INSERT TRANSACAO -----
         public function transacao_insert(){
 
-            $config = config_base(array());//array("rollback" => true,"retorno" => false));      
+            $config = config_base(array("rollback" => false,"retorno" => true));//array("rollback" => true,"retorno" => false));      
             valida_usuario();
 			  
             /* -- DATA -- */
@@ -15,81 +15,86 @@
             {
                 $this->db->trans_begin();
 
-                // DATA INCLUSAO
-                date_default_timezone_set('America/Sao_Paulo');
-                $data["DataInclusao"] = date('Y-m-d H:i:s');
-                unset($data["espelhar-proximas"]);
-                
-                if($data["Valor"] > 0){$tipo = 1;}
-                else{$tipo = 2;}
-                
-                echo "IdTipoTransacao: ". $data["IdTipoTransacao"]."<br>";    
+                if($data["IsTransferencia"] == true){
 
-                // -- TYPE 1 = Transação Recorrente -- 
-                if($data["IdTipoTransacao"] == 1){
-
-                    $data["AnoFim"] = 2050;
-                    $data["MesFim"] = 12;
-                    
-                    // -- BD INSERT -- 
-                    $this->transacoes_model->Incluir($data);
-
-                    // -- SALDO GERAL --
-                    geral_UpdateSaldo($data,$tipo);
+                    echo "IsTransferencia <br>";                    
 
                 }
+                else{
 
-                // -- TYPE 2 = Transação Parcelada -- 
-                if($data["IdTipoTransacao"] == 2){	
+                    echo "Não é Transferencia <br>";   
 
-                    $anoParcela = $data["Ano"];
-                    $mesParcela = $data["Mes"];
+                    if($data["Valor"] > 0){$tipo = 1;}
+                    else{$tipo = 2;}
+                    
+                    echo "IdTipoTransacao: ". $data["IdTipoTransacao"]."<br>";    
 
-                    $ultimoCodigoTransacao  = $this->transacoes_model->bucarUltimoCodigoTransacao();
-                    $proximo                = $ultimoCodigoTransacao["CodigoTransacao"] + 1;
-                    echo "Proximo Codigo Transacao: ".$proximo ;
+                    // -- TYPE 1 = Transação Recorrente -- 
+                    if($data["IdTipoTransacao"] == 1){
 
-                    for($n = 1;$n <= $data["TotalParcelas"] ; $n++){
-
-                        $dataParcela = $data;
-
-                        $dataParcela["Ano"]		        = $anoParcela;	
-                        $dataParcela["Mes"]		        = $mesParcela;										
-                        $dataParcela["NumeroParcela"]   = $n;
-                        $dataParcela["CodigoTransacao"] = $proximo;
-
+                        $data["AnoFim"] = 2050;
+                        $data["MesFim"] = 12;
+                        
                         // -- BD INSERT -- 
-                        $this->transacoes_model->Incluir($dataParcela);
+                        $this->transacoes_model->Incluir($data);
 
                         // -- SALDO GERAL --
-                        geral_UpdateSaldo($dataParcela,$tipo);
+                        geral_UpdateSaldo($data,$tipo);
 
-                        $mesParcela++;
-                        if($mesParcela > 12){
-                            $anoParcela++;
-                            $mesParcela = 1;
-                        }				
+                    }
+
+                    // -- TYPE 2 = Transação Parcelada -- 
+                    if($data["IdTipoTransacao"] == 2){	
+
+                        $anoParcela = $data["Ano"];
+                        $mesParcela = $data["Mes"];
+
+                        $ultimoCodigoTransacao  = $this->transacoes_model->bucarUltimoCodigoTransacao();
+                        $proximo                = $ultimoCodigoTransacao["CodigoTransacao"] + 1;
+                        echo "Proximo Codigo Transacao: ".$proximo ;
+
+                        for($n = 1;$n <= $data["TotalParcelas"] ; $n++){
+
+                            $dataParcela = $data;
+
+                            $dataParcela["Ano"]		        = $anoParcela;	
+                            $dataParcela["Mes"]		        = $mesParcela;										
+                            $dataParcela["NumeroParcela"]   = $n;
+                            $dataParcela["CodigoTransacao"] = $proximo;
+
+                            // -- BD INSERT -- 
+                            $this->transacoes_model->Incluir($dataParcela);
+
+                            // -- SALDO GERAL --
+                            geral_UpdateSaldo($dataParcela,$tipo);
+
+                            $mesParcela++;
+                            if($mesParcela > 12){
+                                $anoParcela++;
+                                $mesParcela = 1;
+                            }				
+                        }
+
+                    }
+                    // -- TYPE 3 = Transação Simples -- 
+                    if($data["IdTipoTransacao"] == 3){	
+
+                        // -- BD INSERT -- 
+                        $this->transacoes_model->Incluir($data);
+                        
+                        // -- SALDO GERAL --
+                        geral_UpdateSaldo($data,$tipo);
+
+                    }
+
+                    if(isset($data["IdCartao"]) &&  $data["IdCartao"] > 0){
+
+                        // -- SALDO GERAL CARTAO
+                        geral_UpdateSaldoMesCartao($data,$tipo);
+
                     }
 
                 }
-                // -- TYPE 3 = Transação Simples -- 
-                if($data["IdTipoTransacao"] == 3){	
-
-                    // -- BD INSERT -- 
-                    $this->transacoes_model->Incluir($data);
-
-                    // -- SALDO GERAL --
-                    geral_UpdateSaldo($data,$tipo);
-
-                }
-
-                if(isset($data["IdCartao"]) &&  $data["IdCartao"] > 0){
-
-                    // -- SALDO GERAL CARTAO
-                    geral_UpdateSaldoMesCartao($data,$tipo);
-
-                }
-
                 config_finalTransaction($config);
                 $this->session->set_flashdata('msg-success',"Transação adicionada com sucesso!");
             }
@@ -102,25 +107,22 @@
         // ----- UPDATE TRANSACAO -----
 		public function transacao_update($ano,$mes,$id,$pIsExclusao = null){
 				
-			$config = config_base(array());//array("rollback" => true,"retorno" => false));
+			$config = config_base(array("rollback" => false,"retorno" => true));//array("rollback" => true,"retorno" => false));
             valida_usuario();
             
             $data                    = transacao_getPosts();
             
             if($pIsExclusao == 1){$data["Valor"] = 0;}
+            $data["Id"] = $id;
             
-            $dataBusca["Id"]         = $data["Id"];
-			$transacaoAtual          = $this->transacoes_model->Buscar($dataBusca);
+            $paramBusca["Id"]         = $data["Id"];
+			$transacaoAtual          = $this->transacoes_model->Buscar($paramBusca);
                       
-            if( (ValidaEntidadeTransacao($data) == true) || ($pIsExclusao == 1) )
+            if(ValidaEntidadeTransacao($data) == true)
             {
 
                 $this->db->trans_begin();
 
-                // DATA ALTERACAO
-                date_default_timezone_set('America/Sao_Paulo');
-                $data["DataAlteracao"] = date('Y-m-d H:i:s');
-                
                 $hasAlteracaoValor = false;
 
                 // -- ALTERACAO VALOR --
@@ -240,10 +242,10 @@
 
                                 echo "Espelhar Alteracao <br>";      
 
-                                $dataBuscaParcela["CodigoTransacao"] = $data["CodigoTransacao"];
-                                $dataBuscaParcela["NumeroParcela >="] = $data["NumeroParcela"];
+                                $paramBuscaParcela["CodigoTransacao"] = $data["CodigoTransacao"];
+                                $paramBuscaParcela["NumeroParcela >="] = $data["NumeroParcela"];
                                 
-                                $dataParcelas = $this->transacoes_model->Listar($dataBuscaParcela);
+                                $dataParcelas = $this->transacoes_model->Listar($paramBuscaParcela);
 
                                 foreach($dataParcelas as $parcela){
 
@@ -608,11 +610,11 @@
                     
         //             if($data["IdTipoTransacao"] == 2){
 
-        //                 $dataBusca["PeriodoDe"]  = true;
-        //                 $dataBusca["Descricao"]  = $data["Descricao"];
-        //                 $dataBusca["Ano"]        = $data["Ano"];
-        //                 $dataBusca["Mes"]        = $data["Mes"];
-        //                 $cartaoAtual             = $this->cartao_model->Listar($dataBusca);
+        //                 $paramBusca["PeriodoDe"]  = true;
+        //                 $paramBusca["Descricao"]  = $data["Descricao"];
+        //                 $paramBusca["Ano"]        = $data["Ano"];
+        //                 $paramBusca["Mes"]        = $data["Mes"];
+        //                 $cartaoAtual             = $this->cartao_model->Listar($paramBusca);
 
         //                 foreach($cartaoAtual as $itemContent){
 

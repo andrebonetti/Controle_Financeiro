@@ -2,6 +2,8 @@
 
     function config_info(){
 
+        date_default_timezone_set('America/Sao_Paulo');
+
         $info["servidor"] = "LOCAL";
         $info["showTemplate"] = true;
         $info["rollback"] = false;

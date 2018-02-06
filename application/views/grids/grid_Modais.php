@@ -15,46 +15,76 @@
                 <input type="hidden" name="mes" value="<?=$mes?>">
                 <input type="hidden" class="idCartao" name="idCartao" value="">
 
-                <!-- DIA -->
-                <div class="dia">
-                    <label>Dia</label>
-                    <input type="number" name="dia" class="dia-add form-control" placeholder="Dia">
-                    <span class="mes">/ <?=$mes?></span>
-                    <span class="ano">/ <?=$ano?></span>
-                </div>  
+                <div class="new-line">
 
-                <!-- DATA COMPRA -->
-                <div class="dataCompra">
-                    <label>Data Compra</label>
-                    <input type="text" name="dataCompra" class="dataCompra-add form-control" placeholder="DD/MM/AAAA">
-                </div>      
+                    <!-- DIA -->
+                    <div class="dia">
+                        <label>Dia</label>
+                        <input type="number" name="dia" class="dia-add form-control" placeholder="Dia">
+                        <span class="mes">/ <?=$mes?></span>
+                        <span class="ano">/ <?=$ano?></span>
+                    </div>  
 
-                <!-- CATEGORIA -->
-                <div class="categoria">
-                    <label>Categoria</label>
-                    <select name="categoria" class="categoria_modal form-control">       
-                        <option value="0">Escolha a Categoria</option>
-                        <?php foreach($categorias as $categoria){?>
-                            <option value="<?=$categoria["IdCategoria"]?>"><?=$categoria["DescricaoCategoria"]?></option>
-                        <?php } ?>
-                        <option value="nova-categoria">Adicionar Categoria</option>
-                    </select>
-                </div>    
+                    <!-- DATA COMPRA -->
+                    <div class="dataCompra">
+                        <label>Data Compra</label>
+                        <input type="text" name="dataCompra" class="dataCompra-add form-control" placeholder="DD/MM/AAAA">
+                    </div>      
 
-                <!-- SUB_CATEGORIA -->
-                <div class="sub-categoria">
-                    <label>Sub-Categoria</label>
-                    <select name="sub_categoria" class="subcategoria_modal form-control">
-                        <option value="0">Escolha a Sub Categoria</option>
-                        <?php foreach($all_sub_categorias as $sub_categoria){?>
-                            <option value="<?=$sub_categoria["IdSubCategoria"]?>" class="option_SubCategoria" name="<?=$sub_categoria["IdCategoria"]?>"><?=$sub_categoria["DescricaoSubCategoria"]?></option>
-                        <?php } ?>
-                        <option value="nova-sub_categoria">Adicionar Sub_categoria</option>
-                    </select>
-                </div>    
+                    <!-- CATEGORIA -->
+                    <div class="categoria">
+                        <label>Categoria</label>
+                        <select name="categoria" class="categoria_modal form-control">       
+                            <option value="0">Escolha a Categoria</option>
+                            <?php foreach($categorias as $categoria){?>
+                                <option value="<?=$categoria["IdCategoria"]?>"><?=$categoria["DescricaoCategoria"]?></option>
+                            <?php } ?>
+                            <option value="transferencia_conta">Transferência entre Contas</option>
+                            <option value="nova-categoria">Adicionar Categoria</option>
+                        </select>
+                    </div>    
+
+                    <!-- SUB_CATEGORIA -->
+                    <div class="sub-categoria">
+                        <label>Sub-Categoria</label>
+                        <select name="sub_categoria" class="subcategoria_modal form-control">
+                            <option value="0">Escolha a Sub Categoria</option>
+                            <?php foreach($all_sub_categorias as $sub_categoria){?>
+                                <option value="<?=$sub_categoria["IdSubCategoria"]?>" class="option_SubCategoria" name="<?=$sub_categoria["IdCategoria"]?>"><?=$sub_categoria["DescricaoSubCategoria"]?></option>
+                            <?php } ?>
+                            <option value="nova-sub_categoria">Adicionar Sub_categoria</option>
+                        </select>
+                    </div>  
+
+                </div> 
+
+                <!-- TRANSFERENCIA CONTAS -->
+                <div class="transferencia-contas new-line">
+
+                    <div class="transf-origem">
+                        <label>Conta Origem</label>
+                        <select class="conta-origem form-control" name="origem">
+                            <option value="">Escolha a Conta</option>
+                            <?php foreach($lcontaUsuario as $key => $itemConta){ ?>
+                                <option value="<?=$itemConta["Id"]?>"><?=$itemConta["Descricao"]?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+
+                    <div class="transf-destino">
+                        <label>Conta Origem</label>
+                        <select class="conta-destino form-control" name="destino" disabled="disabled">
+                            <option value="">Escolha a Conta</option>
+                            <?php foreach($lcontaUsuario as $key => $itemConta){ ?>
+                                <option value="<?=$itemConta["Id"]?>"><?=$itemConta["Descricao"]?></option>
+                            <?php } ?>
+                        </select>
+                    </div> 
+
+                </div>
 
                 <!-- ADD CATEGORIA -->
-                <div class="adiciona-categoria">
+                <div class="adiciona-categoria new-line">
                     <label>Adiconar Categoria</label>
                     <input type="text" name="adiciona-categoria" class="input_adiciona-categoria form-control" Placeholder="Nome da Nova Categoria:">
                     <input type="text" name="adiciona-subcategoria" class="input_adiciona-subcategoria form-control" Placeholder="Nome da Nova Sub Categoria:">
@@ -62,35 +92,53 @@
                 </div>
                 
                 <!-- ADD SUB_CATEGORIA -->
-                <div class="adiciona-sub_categoria">
+                <div class="adiciona-sub_categoria new-line">
                     <label>Adiconar Sub Categoria</label>
                     <input type="text" name="adiciona-sub_categoria" class="form-control input_adiciona-subcategoria">
                     <span class="cancelar_nova_subcategoria btn btn-danger">Cancelar</span>
                 </div>    
+
+                <div class="new-line">
                 
-                <!-- DESCRIÇÃO -->
-                <div class="descricao">
-                    <label>Descrição</label>
-                    <input type="text"   name="descricao" class="form-control">
-                </div>    
-            
-                <!-- VALOR -->
-                <div class="valor"> 
-                    <label>Valor</label>
-                    <input type="text" name="valor" class="form-control" placeholder="Valor">
+                    <!-- DESCRIÇÃO -->
+                    <div class="descricao">
+                        <label>Descrição</label>
+                        <input type="text"   name="descricao" class="form-control">
+                    </div>    
+                
+                    <!-- VALOR -->
+                    <div class="valor"> 
+                        <label>Valor</label>
+                        <input type="text" name="valor" class="form-control" placeholder="Valor">
+                    </div>
+                
+                    <!-- PARCELAS -->
+                    <div class="transacao-parcelada">
+                        <label>Numero de Parcelas</label>
+                        <input type="number" class="p-total form-control" name="totalParcelas" value="0" placeholder="Número de Parcelas"/>
+                    </div>
+
                 </div>
-            
-                <!-- PARCELAS -->
-                <div class="transacao-parcelada">
-                    <label>Numero de Parcelas</label>
-                    <input type="number" class="p-total form-control" name="totalParcelas" value="0" placeholder="Número de Parcelas"/>
-                </div>
-            
-                <!-- TRANSAÇÃO RECORRENTE -->
-                <div class="transacao-recorrente">
-                    <label>Transação Recorrente ?</label>
-                    <input type="radio" name="isRecorrente" class="RecorrenteSim" value="1"><span class="RecorrenteSim">Sim</span>
-                    <input type="radio" name="isRecorrente" class="RecorrenteNao" value="0" checked><span class="RecorrenteNao">Não</span>
+
+                <div class="new-line">
+
+                    <!-- CONTA -->
+                    <div class="conta">
+                        <label>Conta</label>
+                        <select class="conta-origem form-control" name="conta">
+                            <?php foreach($lcontaUsuario as $key => $itemConta){ ?>
+                                <option value="<?=$itemConta["Id"]?>"><?=$itemConta["Descricao"]?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                
+                    <!-- TRANSAÇÃO RECORRENTE -->
+                    <div class="transacao-recorrente">
+                        <label>Transação Recorrente ?</label>
+                        <input type="radio" name="isRecorrente" class="RecorrenteSim" value="1"><span class="RecorrenteSim">Sim</span>
+                        <input type="radio" name="isRecorrente" class="RecorrenteNao" value="0" checked><span class="RecorrenteNao">Não</span>
+                    </div>
+
                 </div>
 
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>

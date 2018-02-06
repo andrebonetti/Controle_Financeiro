@@ -14,41 +14,58 @@
         $data["NumeroParcela"]      = $ci->input->post("numero-parcela");
         
         // ----- CATEGORIA -----
-        
+
             // -- NOVA CATEGORIA
-            if($ci->input->post("categoria") == "nova-categoria"){
-                
-                $novaCategoria["DescricaoCategoria"]	= $ci->input->post("adiciona-categoria");
-                $ci->categoria_model->Incluir($novaCategoria);
-                
-                $novaCategoria = $ci->categoria_model->Buscar($novaCategoria);
+            if($ci->input->post("categoria") == "transferencia_conta"){
 
-                $novaSubCategoria["DescricaoSubCategoria"] = $ci->input->post("adiciona-subcategoria");
-                $novaSubCategoria["IdCategoria"] = $novaCategoria["IdCategoria"];
-                $ci->subCategoria_model->Incluir($novaSubCategoria); 
+                $data["IsTransferencia"] = true;
 
-                $novaSubCategoria = $ci->subCategoria_model->Buscar($novaSubCategoria);
-
-                $data["IdCategoria"]    = $novaCategoria["IdCategoria"];  
-                $data["IdSubCategoria"] = $novaSubCategoria["IdSubCategoria"];
             }
-            // -- CATEGORIA SELECIONADA
-            else{ 
-                $data["IdCategoria"] = $ci->input->post("categoria");
-                
-                // ----- SUB-CATEGORIA -----
-                if($ci->input->post("sub_categoria") == "nova-sub_categoria"){
+            else{
+                $data["IsTransferencia"] = false;
 
-                    $novaSubCategoria["DescricaoSubCategoria"]  = $ci->input->post("adiciona-sub_categoria");
-                    $novaSubCategoria["IdCategoria"]            = $ci->input->post("categoria");
+                // -- NOVA CATEGORIA
+                if($ci->input->post("categoria") == "nova-categoria"){
+                    
+                    $novaCategoria["DescricaoCategoria"]	= $ci->input->post("adiciona-categoria");
+                    $ci->categoria_model->Incluir($novaCategoria);
+                    
+                    $novaCategoria = $ci->categoria_model->Buscar($novaCategoria);
+
+                    $novaSubCategoria["DescricaoSubCategoria"] = $ci->input->post("adiciona-subcategoria");
+                    $novaSubCategoria["IdCategoria"] = $novaCategoria["IdCategoria"];
                     $ci->subCategoria_model->Incluir($novaSubCategoria); 
 
                     $novaSubCategoria = $ci->subCategoria_model->Buscar($novaSubCategoria);
 
+                    $data["IdCategoria"]    = $novaCategoria["IdCategoria"];  
                     $data["IdSubCategoria"] = $novaSubCategoria["IdSubCategoria"];
+
                 }
+                // -- CATEGORIA SELECIONADA
                 else{ 
-                    $data["IdSubCategoria"] = $ci->input->post("sub_categoria");
+                    $data["IdCategoria"] = $ci->input->post("categoria");
+                    
+                    if($data["IdCategoria"] == "transferencia_conta"){
+                        $data["origem"]  = $ci->input->post("origem");
+                        $data["destino"] = $ci->input->post("destino");
+                    }
+                    else{
+                        // ----- SUB-CATEGORIA -----
+                        if($ci->input->post("sub_categoria") == "nova-sub_categoria"){
+
+                            $novaSubCategoria["DescricaoSubCategoria"]  = $ci->input->post("adiciona-sub_categoria");
+                            $novaSubCategoria["IdCategoria"]            = $ci->input->post("categoria");
+                            $ci->subCategoria_model->Incluir($novaSubCategoria); 
+
+                            $novaSubCategoria = $ci->subCategoria_model->Buscar($novaSubCategoria);
+
+                            $data["IdSubCategoria"] = $novaSubCategoria["IdSubCategoria"];
+                        }
+                        else{ 
+                            $data["IdSubCategoria"] = $ci->input->post("sub_categoria");
+                        }
+                    }
                 }
             }
          
@@ -76,7 +93,7 @@
                 $data["espelhar-proximas"] = $ci->input->post("espelhar-proximas");
             }
             else{
-                //Parcelada 
+                //Parcelada
                 if($ci->input->post("totalParcelas") > 0)
                 {
                     $data["IdTipoTransacao"]    = 2;
@@ -85,6 +102,11 @@
                     $data["espelhar-proximas"] = $ci->input->post("espelhar-proximas");
                 }
             }
+        }
+
+        //-- Cartao --    
+        if($ci->input->post("conta") != ""){
+            $data["IdConta"] = $ci->input->post("conta");
         }
 
         //-- Cartao --    
@@ -97,49 +119,102 @@
     }
 
     function ValidaEntidadeTransacao($data){
-        
-        if(
-            (
-                (isset($data["Dia"]))&&(($data["Dia"] > 0)&&($data["Dia"] <= 31 ))
-                ||
-                (isset($data["DataCompra"]))
-            )
-            &&
-            (isset($data["Descricao"]))&&($data["Descricao"] != "")
-            &&
-            (isset($data["Valor"]))&&($data["Valor"] != 0)	
-            &&	
-            (isset($data["IdTipoTransacao"]))&&($data["IdTipoTransacao"] > 0)
-            &&
-            (   
-                ($data["IdTipoTransacao"] == 1)
-                ||
-                (
-                    (isset($data["Ano"]))&&($data["Ano"] > 1900)
-                    &&
-                    (isset($data["Mes"]))&&(($data["Mes"] >= 1)&&($data["Mes"] <= 12))
-                )
-            )
-            &&
-            (isset($data["IdCategoria"]))&&($data["IdCategoria"] > 0)
-            &&
-            (isset($data["IdSubCategoria"]))&&($data["IdSubCategoria"] > 0)
-            &&
-            (isset($data["IdUsuario"]))&&($data["IdUsuario"] > 0)
-            &&
-            (isset($data["IdTipoTransacao"]))&&($data["IdTipoTransacao"] > 0)
-        )
-        {
-            return true;
+
+        $isValidado = true;
+
+        if(!isset($data["Valor"])){
+            echo "- Valor <br>";
+            $isValidado = false;
         }
         else{
 
+            if($data["Valor"] <> 0){
+
+                if( (!isset($data["IdUsuario"])) || ($data["IdUsuario"] == "")){
+                    echo "- IdUsuario <br>";
+                    $isValidado = false;
+                }
+                
+                if( (!isset($data["Dia"])) || ($data["Dia"] == "")){
+                    if((!isset($data["DataCompra"])) || ($data["DataCompra"] == "")){
+                        echo "- Dia / DataCompra <br>";
+                        $isValidado = false;
+                    }
+                }
+
+                if( (!isset($data["Descricao"])) || ($data["Descricao"] == "")){
+                    echo "- Descricao <br>";
+                    $isValidado = false;
+                }
+
+                if( (!isset($data["Ano"])) || ($data["Ano"] == "")){
+                    echo "- Ano <br>";
+                    $isValidado = false;
+                }
+
+                if( (!isset($data["Mes"])) || ($data["Mes"] == "")){
+                    echo "- Mes <br>";
+                    $isValidado = false;
+                }
+
+                if( (!isset($data["IdTipoTransacao"])) || ($data["IdTipoTransacao"] == "")){
+                    echo "- IdTipoTransacao <br>";
+                    $isValidado = false;
+                }
+
+                if( (!isset($data["IdConta"])) || ($data["IdConta"] == "")){
+                    echo "- IdConta <br>";
+                    $isValidado = false;
+                }
+
+                if( (!isset($data["IdCategoria"])) || ($data["IdCategoria"] == "")){
+                    echo "- IdCategoria <br>";
+                    $isValidado = false;
+                }
+                else{
+
+                    if($data["IdCategoria"] == "transferencia_conta"){
+
+                        if( (!isset($data["origem"])) || ($data["origem"] == "")){
+                            echo "- origem <br>";
+                            $isValidado = false;
+                        }
+
+                        if( (!isset($data["destino"])) || ($data["destino"] == "")){
+                            echo "- destino <br>";
+                            $isValidado = false;
+                        }
+                    }
+                    else{
+
+                        if( (!isset($data["IdSubCategoria"])) || ($data["IdSubCategoria"] == "")){
+                            echo "- IdSubCategoria <br>";
+                            $isValidado = false;
+                        }
+
+                    }
+                }
+
+            }
+            else{
+
+                if( (!isset($data["Id"])) || ($data["Id"] == "")){
+                    echo "- Id <br>";
+                    $isValidado = false;
+                }
+
+            }
+
+        }
+
+        if($isValidado == false){
             echo "Existem campos obrigatórios não preenchidos";
+            var_dump($data);
             $ci = get_instance();
             $ci->session->set_flashdata('msg-error',"Existem campos obrigatórios não preenchidos");
-
-            return false;
         }
+
+        return $isValidado;
         
     }
 

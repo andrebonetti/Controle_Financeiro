@@ -118,7 +118,7 @@
                 $diaNDiaMes++;
             }
 
-            $competenciaAtual = geral_verificarConsistencia($competenciaAnterior,$competenciaAtual,$totalReceita,$totalDespesas,$saldoFinalDia);
+            //$competenciaAtual = geral_verificarConsistencia($competenciaAnterior,$competenciaAtual,$totalReceita,$totalDespesas,$saldoFinalDia);
 
             // -- CARTAO --
             $data_cartao = array();

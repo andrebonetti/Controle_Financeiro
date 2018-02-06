@@ -108,12 +108,18 @@
               
         // -- INSERT --
         function Incluir($pData){
+
+            unset($pData["espelhar-proximas"]);
+            $pData["DataInclusao"] = date('Y-m-d H:i:s');
             $pData["Id"] = null;
 			$this->db->insert("transacoes", $pData);
 		}
         
         // -- UPDATE --
         function Atualizar($pData){
+ 
+            $pData["DataAlteracao"] = date('Y-m-d H:i:s');
+
 			$this->db->where 	('Id', $pData["Id"]);
 			$this->db->update	("transacoes", $pData);
 		}

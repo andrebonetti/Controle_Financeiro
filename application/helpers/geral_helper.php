@@ -4,26 +4,33 @@
         
         $ci = get_instance();
         
-        $pData["PeriodoDe"] = true;
+        //$pData["PeriodoDe"] = true;
         $pData["Id"] = null;
         $lGeral = $ci->geral_model->Listar($pData);
    
         $cont = 1;
         foreach($lGeral as $itemGeral){		                    
 
-            $dataGeral["Mes"]   = $itemGeral["Mes"]; 
-            $dataGeral["Ano"]   = $itemGeral["Ano"];
-            $dataGeral["Valor"] = $pData["Valor"];
-
+            $paramMes["Mes"]        = $itemGeral["Mes"]; 
+            $paramMes["Ano"]        = $itemGeral["Ano"];
+            $paramMes["Valor"]      = $pData["Valor"];
+            $paramMes["IdConta"]    = $pData["IdConta"];
+            
             if(($cont == 1)or($pData["IdTipoTransacao"] == 1)){
-                geral_UpdateSaldoMes($dataGeral);
+                geral_UpdateSaldoMes($paramMes);
             }
             
+            $paramGeral["Valor"]         = $pData["Valor"];
             if($pData["IdTipoTransacao"] == 1){
-                $dataGeral["Valor"] = $pData["Valor"] * $cont;
+                $paramGeral["Valor"] = $pData["Valor"] * $cont;
             }
-                        
-            geral_UpdateSaldoFinal($dataGeral,$pTipo);
+
+            $paramGeral["Mes"]           = $itemGeral["Mes"]; 
+            $paramGeral["Ano"]           = $itemGeral["Ano"];
+            $paramGeral["IdConta"]       = $pData["IdConta"];
+            $paramGeral["PeriodoDe"]     = true;
+
+            geral_UpdateSaldoFinal($paramGeral,$pTipo);
             $cont++;
         }
     }
@@ -65,13 +72,16 @@
 		$ci = get_instance();
         
 		// ------ MES ------	
-        $dataGeralMes              = $ci->geral_model->Buscar($pData);	
+        $dataGeralMes              = $ci->geral_model->Buscar($pData);
+        $dataContaSaldoMes         = $ci->contas_saldo_model->Buscar($pData);		
 
-        $dataGeralMes["SaldoMes"] += $pData["Valor"];
+        // ------ SOMA -------
+        $dataGeralMes["SaldoMes"]       += $pData["Valor"];
+        $dataContaSaldoMes["SaldoMes"]  += $pData["Valor"];
 		
         // -- BD UPDATE --
 		$ci->geral_model->Atualizar($dataGeralMes);
-         
+        $ci->contas_saldo_model->Atualizar($dataContaSaldoMes);
 	}
 
     function geral_UpdateSaldoMesCartao($pData,$pTipo){
@@ -91,28 +101,39 @@
         }
     }
 
-    function geral_UpdateSaldoFinal($pData,$pTipo){
+    function geral_UpdateSaldoFinal($pParamGeral,$pTipo){
         
 		$ci = get_instance();
+
+        // ---- TOTAL SALDO ----		
+        $lsaldoConta = $ci->contas_saldo_model->Listar($pParamGeral);
+		foreach($lsaldoConta as $itemSaldoConta){	
+            
+            $dataSaldoFinal                = $itemSaldoConta;
+			$dataSaldoFinal["SaldoFinal"] += $pParamGeral["Valor"];
+            
+            // -- BD UPDATE --
+            $ci->contas_saldo_model->Atualizar($dataSaldoFinal);	
+		}
               
         // ---- TOTAL GERAL ----		
-        $lGeral = $ci->geral_model->Listar($pData);
+        $lGeral = $ci->geral_model->Listar($pParamGeral);
 		foreach($lGeral as $itemGeral){	
             
             $dataGeralFinal                = $itemGeral;
-			$dataGeralFinal["SaldoFinal"] += $pData["Valor"];
+			$dataGeralFinal["SaldoFinal"] += $pParamGeral["Valor"];
             
             //echo "var_dump = geral_UpdateSaldoMes Antes";
 
-            if($pTipo == 1){$dataGeralFinal["Receita"] += $pData["Valor"];}        
-            if($pTipo == 2){$dataGeralFinal["Despesas"] += $pData["Valor"]*(-1);}
+            if($pTipo == 1){$dataGeralFinal["Receita"] += $pParamGeral["Valor"];}        
+            if($pTipo == 2){$dataGeralFinal["Despesas"] += $pParamGeral["Valor"]*(-1);}
             
             //echo "var_dump = geral_UpdateSaldoMes";
 
             // -- BD UPDATE --
             $ci->geral_model->Atualizar($dataGeralFinal);	
 		}
-         
+    
 	}
 
     function geral_UpdateCartaoMes($pData){

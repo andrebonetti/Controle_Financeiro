@@ -14,21 +14,15 @@
             
             if(isset($pParam["Usuario"]["Id"])){$this->db->where("contas.IdUsuario",$pParam["Usuario"]["Id"]);} 
 
-            $this->db->from("contas");   
+            $this->db->order_by("Ordem");
 
             if( (!isset($pParam["HasInnerJoin"])) || ($pParam["HasInnerJoin"] == false) ){
-                return $this->db->get()->result_array();    
+                return $this->db->get("contas")->result_array();    
             }else{
-                $data = $this->db->get()->result_array();
+                $data = $this->db->get("contas")->result_array();
 
                 $ci = get_instance();
                 $cont = 0;
-
-                // foreach($data as $item){
-
-                //     $data[$cont]["Banco"] = $ci->bancos_model->Buscar(array("Id"=>$item["IdBanco"])); 
-                //     $cont ++;
-                // }
 
                 $data = $ci->bancos_model->ListarBancosContas($data);
                 $data = $ci->contas_saldo_model->ListarSaldosContas($pParam,$data);

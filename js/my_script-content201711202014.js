@@ -128,6 +128,7 @@ $(".categoria_modal").change(function(){
 
     var dom_categoria_selecionada = $(this);
     var categoria_selecionada = dom_categoria_selecionada.val();
+    $(".transferencia-contas").hide();
     
     if(categoria_selecionada == "nova-categoria"){
 
@@ -143,8 +144,14 @@ $(".categoria_modal").change(function(){
         }
 
     }
+    else if(categoria_selecionada == "transferencia_conta"){
+        $(".sub-categoria").hide();
+        $(".transferencia-contas").show();
+    }
     else
     {
+        $(".sub-categoria").show();
+        $(".transferencia-contas").hide();
         $(".option_SubCategoria").each(function() {
     
             var id_categoria = $(this).attr("name");
@@ -188,7 +195,38 @@ $(".cancelar_nova_subcategoria").click(function(){
         $(".adiciona-sub_categoria").slideUp();
         $("input_adiciona-subcategoria").val("");
         
-    });
+});
+
+$(document).on("change",".conta-origem",function(){
+
+    var var_DomContaOrigem = $(this);
+    var var_DomContaDestino = $(".conta-destino");
+
+    var id_conta = var_DomContaOrigem.val();
+
+    if(id_conta != ""){
+
+        var_DomContaDestino.prop("disabled",false);
+
+        var_DomContaDestino.find("option").show();
+
+        var_DomContaDestino.find("option").each(function() {
+        
+            var_DomOption = $(this);
+
+            if( (var_DomOption.val() == id_conta) && (var_DomOption.val() != "") ){
+                var_DomOption.hide();
+            }
+
+        });
+
+    }
+    else{
+        var_DomContaDestino.prop("disabled",true);
+        var_DomContaDestino.find("option").show();
+    }
+
+});
 
 // -------------------------------- PREENCHE MODAL - EDICAO TRANSACAO -----------------------------
 $(".content-day").click(function(){

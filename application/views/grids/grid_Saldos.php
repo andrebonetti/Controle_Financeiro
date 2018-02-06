@@ -2,7 +2,7 @@
 
     <?php foreach($lSaldoMes as $key => $itemSaldo){ ?>
 
-        <div class="SaldoConta" id="saldo-conta-<?=$key?>" style="<?php if($key != "Total"){echo "display:none;";} ?>">
+        <div class="SaldoConta" id="saldo-conta-<?=$key?>" style="<?php /*if($key != "Total"){echo "display:none;";}  */?>">
 
             <div class="saldo-anterior" value="<?=$itemSaldo["SaldoAnterior"]?>">               
                 Saldo Anterior: <span><?=numeroEmReais2($itemSaldo["SaldoAnterior"])?></span> 

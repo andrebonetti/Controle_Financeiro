@@ -740,6 +740,19 @@
                          .float-config(left,40%);
                       }
 
+                      .transferencia-contas:extend(.full-container){
+                          display: none;
+                    
+                        .transf-origem{
+                            .float-config(left,49%); 
+                        }
+
+                        .transf-destino{
+                            .float-config(right,49%); 
+                        }
+
+                      }
+
                        .descricao{
                            .float-config(left,52%);
                        }
@@ -752,6 +765,10 @@
 
                        .transacao-parcelada{
                            .float-config(right,30%);
+                       }
+
+                       .conta{
+                           .float-config(left,40%);
                        }
 
                        .campoCheckboxModalTransacao{
@@ -774,8 +791,9 @@
                        }
 
                        .transacao-recorrente{
-                           .float-config(left,70%);
+                           .float-config(left,40%);
                            position: relative;
+                           margin-top: 30px;
 
                            label{
                             width: 138px;
