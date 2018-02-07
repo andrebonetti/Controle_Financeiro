@@ -75,7 +75,7 @@
         } 
 
         /*-- FOREACH DIAS MES --*/
-        foreach($dataMes as $dataDia) {?>
+        foreach($dataMes as $keyDay => $dataDia) {?>
 
             <?php 
                 $classeDia = "";
@@ -99,48 +99,44 @@
                 </tr>
 
                 <!-- CONTEUDO DIA -->
-                <?php foreach($dataDia as $dataTransacao){
-                               
-                    if(!isset($dataTransacao["IsResumo"])){
+                <?php foreach($dataDia["lTransacoes"] as $KeyTransacao =>  $itemTransacao){?> 
 
-                ?> 
-                
-                    <tr class="content-day IdSubCategoria-<?=$dataTransacao["IdSubCategoria"]?> IsContabilizado-<?=$dataTransacao["IsContabilizado"]?>" data-toggle="modal" data-target="#edit-transacao">  
+                    <tr class="content-day IdSubCategoria-<?=$itemTransacao["IdSubCategoria"]?> IsContabilizado-<?=$itemTransacao["IsContabilizado"]?>" data-toggle="modal" data-target="#edit-transacao">  
                         
                         <td class="info-content no-view "
-                                data-id="<?=$dataTransacao["Id"]?>"
-                                data-dia="<?=$dataTransacao["Dia"]?>"
-                                data-valor="<?=$dataTransacao["Valor"]?>"
-                                data-type="<?=$dataTransacao["IdTipoTransacao"]?>"
-                                data-p-atual="<?=$dataTransacao["NumeroParcela"]?>"
-                                data-p-total-atual="<?=$dataTransacao["TotalParcelas"]?>"
-                                data-categoria-id="<?=$dataTransacao["IdCategoria"]?>"
-                                data-categoria-descricao="<?=trim($dataTransacao["DescricaoCategoria"])?>"
-                                data-subcategoria-id="<?=trim($dataTransacao["IdSubCategoria"])?>"
-                                data-subcategoria-descricao="<?=trim(valida_sub($dataTransacao["DescricaoCategoria"],$dataTransacao["DescricaoSubCategoria"]))?>"
-                                data-descricao="<?=trim($dataTransacao["Descricao"])?>"
-                                data-codigo-transacao="<?=trim($dataTransacao["CodigoTransacao"])?>"
-                                data-iscontabilizado="<?=$dataTransacao["IsContabilizado"]?>"
+                                data-id="<?=$itemTransacao["Id"]?>"
+                                data-dia="<?=$itemTransacao["Dia"]?>"
+                                data-valor="<?=$itemTransacao["Valor"]?>"
+                                data-type="<?=$itemTransacao["IdTipoTransacao"]?>"
+                                data-p-atual="<?=$itemTransacao["NumeroParcela"]?>"
+                                data-p-total-atual="<?=$itemTransacao["TotalParcelas"]?>"
+                                data-categoria-id="<?=$itemTransacao["IdCategoria"]?>"
+                                data-categoria-descricao="<?=trim($itemTransacao["DescricaoCategoria"])?>"
+                                data-subcategoria-id="<?=trim($itemTransacao["IdSubCategoria"])?>"
+                                data-subcategoria-descricao="<?=trim(valida_sub($itemTransacao["DescricaoCategoria"],$itemTransacao["DescricaoSubCategoria"]))?>"
+                                data-descricao="<?=trim($itemTransacao["Descricao"])?>"
+                                data-codigo-transacao="<?=trim($itemTransacao["CodigoTransacao"])?>"
+                                data-iscontabilizado="<?=$itemTransacao["IsContabilizado"]?>"
                                 >
                         </td>
                         
-                        <td class="descricao" data-toggle="tooltip" data-placement="top" title="<?=trim($dataTransacao["DescricaoCategoria"])." - ".trim(valida_sub($dataTransacao["DescricaoCategoria"],$dataTransacao["DescricaoSubCategoria"]))?>">
+                        <td class="descricao" data-toggle="tooltip" data-placement="top" title="<?=trim($itemTransacao["DescricaoCategoria"])." - ".trim(valida_sub($itemTransacao["DescricaoCategoria"],$itemTransacao["DescricaoSubCategoria"]))?>">
 
-                            <?php if($dataTransacao["Descricao"] == NULL){?>
-                                <?=trim($dataTransacao["DescricaoSubCategoria"])?>
+                            <?php if($itemTransacao["Descricao"] == NULL){?>
+                                <?=trim($itemTransacao["DescricaoSubCategoria"])?>
                             <?php } else{ ?>
-                                <?=trim($dataTransacao["Descricao"])?>
-                                <?php if($dataTransacao["IdTipoTransacao"] == "2"){?>
-                                    - <?=$dataTransacao["NumeroParcela"]?>/<?= $dataTransacao["TotalParcelas"] ?>	
+                                <?=trim($itemTransacao["Descricao"])?>
+                                <?php if($itemTransacao["IdTipoTransacao"] == "2"){?>
+                                    - <?=$itemTransacao["NumeroParcela"]?>/<?= $itemTransacao["TotalParcelas"] ?>	
                             <?php }} ?>
 
                         </td>
                         
-                        <td class="valor <?=sinal_valor($dataTransacao["Valor"])?>"><?=numeroEmReais2($dataTransacao["Valor"])?></td>
+                        <td class="valor <?=sinal_valor($itemTransacao["Valor"])?>"><?=numeroEmReais2($itemTransacao["Valor"])?></td>
                         
                     </tr>
                 
-                <?php }} ?>
+                <?php } ?>
                 
                 <!-- RESUMO DIA -->
 
@@ -151,18 +147,20 @@
                     </tr>
                 <?php } ?>
                 
-                <?php if(isset($dataDia["ResumoDia"]["HasSaldo"]) && $dataDia["ResumoDia"]["HasSaldo"] == true){ ?>
-                
+                <?php if(isset($dataDia["ResumoDia"])){ echo "tem"; foreach($dataDia["ResumoDia"] as $KeyResumo =>  $itemResumo){?> 
+
                     <tr class="data-total_saldoDia">
-                        <td class="titulo">Saldo Dia</td>
-                        <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["SaldoDia"])?></td>
+                        <th class="conta"><?=$KeyResumo?></th>
+                        <th class="titulo">Saldo Dia</th>
+                        <td class="valorSaldo"><?=numeroEmReais2($itemResumo["SaldoDia"])?></td>
                     </tr>
-                        <tr class="data-total_saldoFinal">
-                        <td class="titulo">Saldo Final</td>
-                        <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["SaldoFinal"])?></td>
+                    <tr class="data-total_saldoFinal">
+                        <th class="conta"><?=$KeyResumo?></th>
+                        <th class="titulo">Saldo Final</th>
+                        <td class="valorSaldo"><?=numeroEmReais2($itemResumo["SaldoFinal"])?></td>
                     </tr>
 
-                <?php } ?>
+                <?php }} ?>
                 
             </table>
             

@@ -317,17 +317,17 @@
         return $pDataGeral;
     }
 
-    function geral_BuscarCompetenciaAnterior($pAno,$pMes){
+    function geral_BuscarCompetenciaAnterior($pParam){
 
         $ci = get_instance();
 
-        if($pMes == 1){
+        if($pParam["Mes"] == 1){
             $competenciaAnterior["Mes"] = 12;
-            $competenciaAnterior["Ano"] = $pAno-1;
+            $competenciaAnterior["Ano"] = $pParam["Ano"]-1;
         }
         else{
-            $competenciaAnterior["Mes"] = $pMes-1;;
-            $competenciaAnterior["Ano"] = $pAno;
+            $competenciaAnterior["Mes"] = $pParam["Mes"]-1;;
+            $competenciaAnterior["Ano"] = $pParam["Ano"];
         }	
 
         return $ci->geral_model->Buscar($competenciaAnterior);
@@ -381,4 +381,18 @@
         }
 
         return $newDataCompetenciaAtual;
+    }
+
+    function geral_competenciaAtualTemplate($pParamBusca){//TEMP
+
+        $ci = get_instance();
+
+        $competenciaAtual   	         = $ci->geral_model       ->Buscar($pParamBusca);
+        if(empty($competenciaAtual)){
+            geral_CriarCompetencia($pParamBusca);
+            $competenciaAtual = $ci->geral_model->Buscar($pParamBusca);
+        }
+
+        return $competenciaAtual;
+
     }

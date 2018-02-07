@@ -13,33 +13,19 @@
         // -- SALDO --
         $paramBusca["Mes"]               = $pMes;
         $paramBusca["Ano"]               = $pAno;
-        $paramBusca["isListaPorTipo"]    = true;
-        $paramBusca["HasInnerJoin"]      = true;
-
-        $competenciaAtual   	         = $this->geral_model       ->Buscar($paramBusca);
-        $lcontaUsuario   	             = $this->contas_model      ->Listar($paramBusca);
         
-        $lSaldoMes["Total"]["SaldoAnterior"] = 0;   
-        $lSaldoMes["Total"]["SaldoMes"] = 0;  
-        $lSaldoMes["Total"]["SaldoFinal"] = 0;                  
-        foreach($lcontaUsuario as $itemConta){
-            $lSaldoMes[$itemConta["Id"]]         =  $itemConta["Saldo"];
-            $lSaldoMes["Total"]["SaldoAnterior"] += $itemConta["Saldo"]["SaldoAnterior"];
-            $lSaldoMes["Total"]["SaldoMes"]      += $itemConta["Saldo"]["SaldoMes"];
-            $lSaldoMes["Total"]["SaldoFinal"]    += $itemConta["Saldo"]["SaldoFinal"];
-        }                  
-
-        if(empty($competenciaAtual)){
-            geral_CriarCompetencia($paramBusca);
-            $competenciaAtual = $this->geral_model->Buscar($paramBusca);
-        }
-           
-        $competenciaAnterior = geral_BuscarCompetenciaAnterior($pAno,$pMes);
         
+        $competenciaAtual   	         = geral_competenciaAtualTemplate($paramBusca);//TEMP
+        $lcontaUsuario   	             = contas_BuscarContasCompleto($paramBusca);
+        $lSaldoMes                       = contas_saldo_GerarSaldoMes($paramBusca,$lcontaUsuario,$competenciaAtual);
+        
+        
+                 
 		// -- DATA --
-		$qtdeDiasMes 	=  days_in_month($pMes);
-		$primeiroDiaMes =  date("w", mktime(0,0,0,$pMes,1,$pAno)); 
-        $DiaAtual       =  mdate("%d");  
+		$qtdeDiasMes 	                 =  days_in_month($pMes);
+		$primeiroDiaMes                  =  date("w", mktime(0,0,0,$pMes,1,$pAno)); 
+        $DiaAtual                        =  mdate("%d"); 
+        $paramBusca["isListaPorTipo"]    =  true; 
                 
         $modeloCalendario = 1;
 
@@ -52,67 +38,79 @@
             // -- DIAS --    
             for ($diaN = 1; $diaN <= $qtdeDiasMes ;$diaN++){
                 
-                $dataMes[$diaN]                        = array();
+                $dataMes[$diaN]                         = array();
+                $dataMes[$diaN]["lTransacoes"]          = array();
                 $paramBusca["Dia"]                      = $diaN;
                 $paramBusca["Mes"]                      = $pMes;
                 $paramBusca["Ano"]                      = $pAno;
                 $paramBusca["PreencherEntidadesFilhas"] = true;
                 
-                foreach(buscarTransacoesPorTipo(1,$paramBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
-                foreach(buscarTransacoesPorTipo(2,$paramBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
-                foreach(buscarTransacoesPorTipo(3,$paramBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]],$transacao);}
+                foreach(buscarTransacoesPorTipo(1,$paramBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]]["lTransacoes"],$transacao);}
+                foreach(buscarTransacoesPorTipo(2,$paramBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]]["lTransacoes"],$transacao);}
+                foreach(buscarTransacoesPorTipo(3,$paramBusca) as $transacao){array_push($dataMes[$transacao["DiaCalendario"]]["lTransacoes"],$transacao);}
                 
             }
-           
+
+            // -- COMPETENCIAS --
+            $lCompetencias = $this->geral_model->Listar(); 
+       
             /* -- CALCULO SALDO -- */
             $diaNDiaMes = 1;
-            $saldoFinalDia = $competenciaAnterior["SaldoFinal"];
+
+            foreach($lSaldoMes as $keySaldo => $itemSaldo){
+                $dataMes[1]["ResumoDia"][$keySaldo]["SaldoFinal"] = $itemSaldo["SaldoAnterior"];
+            }
+
             $totalReceita = 0;
             $totalDespesas = 0;
             foreach($dataMes as $dataDia){
                 
                 $diaSemana            = date("w", mktime(0,0,0,$pMes,$diaNDiaMes,$pAno)); 
-                $diaNDiaMesTransacoes = 0;
-                $dataMes[$diaNDiaMes]["ResumoDia"]["IsResumo"] = true; 
-                $dataMes[$diaNDiaMes]["ResumoDia"]["HasSaldo"] = false; 
+
+                foreach($lSaldoMes as $keySaldo => $itemSaldo){
+
+                    $dataMes[$diaNDiaMes]["ResumoDia"][$keySaldo]["SaldoDia"]    = 0;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoDia"]     = 0;                   
+
+                    if($diaNDiaMes > 1){
+                        $dataMes[$diaNDiaMes]["ResumoDia"][$keySaldo]["SaldoFinal"]  = $dataMes[$diaNDiaMes-1]["ResumoDia"][$keySaldo]["SaldoFinal"];                   
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoFinal"]   = $dataMes[$diaNDiaMes-1]["ResumoDia"]["Total"]["SaldoFinal"]; 
+                    }
+
+                }
 
                 if( (($diaNDiaMes == 9)&&( ($diaSemana != 6)&&($diaSemana != 0) )) || ($diaNDiaMes == 10 && $diaSemana == 1) || ($diaNDiaMes == 11 && $diaSemana == 1) ){
                     
-                    $saldoFinalDia += $competenciaAtual["Cartao"]*-1;
-                    
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"] = $competenciaAtual["Cartao"]*-1;
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoFinal"] = $saldoFinalDia;
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["HasSaldo"] = true; 
+                    $dataMes[$diaNDiaMes]["ResumoDia"][1]["SaldoDia"]           += $competenciaAtual["Cartao"]*-1;
+                    $dataMes[$diaNDiaMes]["ResumoDia"][1]["SaldoFinal"]         += $dataMes[$diaNDiaMes]["ResumoDia"][1]["SaldoFinal"];
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoDia"]     += $competenciaAtual["Cartao"]*-1;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoFinal"]   += $competenciaAtual["Cartao"]*-1;
+
                     $totalDespesas += $competenciaAtual["Cartao"];
-                        
-                    $diaNDiaMesTransacoes ++;  
-                    
+                                  
                 }
-                foreach($dataDia as $dataTransacao){
-                    
-                    if($dataTransacao["IsContabilizado"] == 1){
 
-                        if($diaNDiaMesTransacoes == 0){
-                            $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"] = 0; 
-                        }
-                        
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoDia"]   += $dataTransacao["Valor"];
-                        
-                        $saldoFinalDia                       += $dataTransacao["Valor"];
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["SaldoFinal"] = $saldoFinalDia;
+                foreach($dataDia["lTransacoes"] as $KeyTransacao =>  $itemTransacao){
 
-                        if($dataTransacao["Valor"] >= 0){
-                            $totalReceita += $dataTransacao["Valor"];
+                    if($itemTransacao["IsContabilizado"] == 1){
+
+                        $idConta = $itemTransacao["IdConta"];
+
+                        $dataMes[$diaNDiaMes]["ResumoDia"][$idConta]["SaldoDia"]        += $itemTransacao["Valor"]; 
+                        $dataMes[$diaNDiaMes]["ResumoDia"][$idConta]["SaldoFinal"]      += $itemTransacao["Valor"]; 
+
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoDia"]         += $itemTransacao["Valor"];  
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoFinal"]       += $itemTransacao["Valor"];
+
+                        if($itemTransacao["Valor"] >= 0){
+                            $totalReceita += $itemTransacao["Valor"];
                         }
                         else{
-                            $totalDespesas += $dataTransacao["Valor"]*(-1);
+                            $totalDespesas += $itemTransacao["Valor"]*(-1);
                         }
-
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["HasSaldo"] = true; 
 
                     }
                     
-                    $diaNDiaMesTransacoes++;
                 }
                 
                 $diaNDiaMes++;
@@ -173,12 +171,24 @@
             $contCartao++;
         }
 
-        // -- COMPETENCIAS --
-        $lCompetencias = $this->geral_model->Listar(); 
-           
+        // foreach($dataMes as $Keyday => $dataDia) {
+
+        //         echo"<br>-----------------------------------------------------<br>";
+        //         echo "<b>Dia:</b>".$Keyday."<br>";
+
+        //         foreach($dataDia["lTransacoes"] as $KeyTransacao =>  $itemTransacao){
+        //             echo $KeyTransacao." - ". var_dump($itemTransacao)."<br>";
+        //         }
+
+        //         foreach($dataDia["ResumoDia"] as $KeyResumo =>  $itemResumo){
+        //             echo $KeyResumo." - ". var_dump($itemResumo)."<br>";
+        //         }
+
+            
+        //     }
+
 		// --------------------------CONTENT----------------------------------
 		$content = array( 
-		"competenciaAnterior"	=> $competenciaAnterior,
 		"competenciaAtual"		=> $competenciaAtual,       
 		"usuario"		  		=> $paramBusca["Usuario"],
 		"ano"			  		=> $pAno,

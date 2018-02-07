@@ -38,6 +38,8 @@ $autoload['helper'] = array(
     ,"geral_helper"
     ,"usuario_helper"
     ,"config_helper"
+    ,"contas_helper"
+    ,"contas_saldo_helper"
 );
 
 /*

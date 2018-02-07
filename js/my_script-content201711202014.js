@@ -26,12 +26,12 @@ while(semanaAltura<=ultimaSemana){
 
 setTimeout(function(){
 
-    $(".data-total_saldoDia").css("position","absolute");
-    $(".data-total_saldoDia").css("bottom","18px");
-    $(".data-total_saldoDia").show();
-    $(".data-total_saldoFinal").css("position","absolute");
-    $(".data-total_saldoFinal").css("bottom","0");
-    $(".data-total_saldoFinal").show();
+    // $(".data-total_saldoDia").css("position","absolute");
+    // $(".data-total_saldoDia").css("bottom","18px");
+    // $(".data-total_saldoDia").show();
+    // $(".data-total_saldoFinal").css("position","absolute");
+    // $(".data-total_saldoFinal").css("bottom","0");
+    // $(".data-total_saldoFinal").show();
 
 },300);
 
