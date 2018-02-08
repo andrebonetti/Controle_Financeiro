@@ -40,6 +40,7 @@ $autoload['helper'] = array(
     ,"config_helper"
     ,"contas_helper"
     ,"contas_saldo_helper"
+    ,"util_helper.php"
 );
 
 /*

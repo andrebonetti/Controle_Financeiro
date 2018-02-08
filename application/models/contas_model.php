@@ -5,7 +5,6 @@
             
             if(isset($pData["Usuario"]["Id"])){$this->db->where("contas.IdUsuario",$pData["Usuario"]["Id"]);}  
             
-
             $this->db->from("contas");   
             return $this->db->get()->row_array();    
         }
@@ -19,13 +18,13 @@
             if( (!isset($pParam["HasInnerJoin"])) || ($pParam["HasInnerJoin"] == false) ){
                 return $this->db->get("contas")->result_array();    
             }else{
-                $data = $this->db->get("contas")->result_array();
+                $data["Contas_Banco"] = $this->db->get("contas")->result_array();
 
                 $ci = get_instance();
                 $cont = 0;
 
-                $data = $ci->bancos_model->ListarBancosContas($data);
-                $data = $ci->contas_saldo_model->ListarSaldosContas($pParam,$data);
+                $data["Contas_Banco"] = $ci->bancos_model->ListarBancosContas($data["Contas_Banco"]);
+                $data["Contas_Banco"] = $ci->contas_saldo_model->ListarSaldosContas($pParam,$data["Contas_Banco"]);
 
                 return $data;
             }

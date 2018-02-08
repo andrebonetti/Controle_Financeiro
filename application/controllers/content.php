@@ -17,10 +17,8 @@
         
         $competenciaAtual   	         = geral_competenciaAtualTemplate($paramBusca);//TEMP
         $lcontaUsuario   	             = contas_BuscarContasCompleto($paramBusca);
-        $lSaldoMes                       = contas_saldo_GerarSaldoMes($paramBusca,$lcontaUsuario,$competenciaAtual);
+        $lcontaUsuario                   = contas_saldo_GerarSaldoMes($paramBusca,$lcontaUsuario,$competenciaAtual);
         
-        
-                 
 		// -- DATA --
 		$qtdeDiasMes 	                 =  days_in_month($pMes);
 		$primeiroDiaMes                  =  date("w", mktime(0,0,0,$pMes,1,$pAno)); 
@@ -57,9 +55,12 @@
             /* -- CALCULO SALDO -- */
             $diaNDiaMes = 1;
 
-            foreach($lSaldoMes as $keySaldo => $itemSaldo){
-                $dataMes[1]["ResumoDia"][$keySaldo]["SaldoFinal"] = $itemSaldo["SaldoAnterior"];
+            foreach($lcontaUsuario["Contas_Banco"] as $keySaldo => $itemSaldo){
+                $dataMes[1]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoDia"]     = 0;
+                $dataMes[1]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoFinal"]   = $itemSaldo["Saldo"]["SaldoAnterior"];
             }
+            $dataMes[1]["ResumoDia"]["Geral"]["SaldoDia"]           = 0;
+            $dataMes[1]["ResumoDia"]["Geral"]["SaldoFinal"]         = $lcontaUsuario["Geral"]["Saldo"]["SaldoAnterior"];
 
             $totalReceita = 0;
             $totalDespesas = 0;
@@ -67,24 +68,24 @@
                 
                 $diaSemana            = date("w", mktime(0,0,0,$pMes,$diaNDiaMes,$pAno)); 
 
-                foreach($lSaldoMes as $keySaldo => $itemSaldo){
+                foreach($lcontaUsuario["Contas_Banco"] as $keySaldo => $itemSaldo){
 
-                    $dataMes[$diaNDiaMes]["ResumoDia"][$keySaldo]["SaldoDia"]    = 0;
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoDia"]     = 0;                   
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoDia"]    = 0;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoDia"]             = 0;                   
 
                     if($diaNDiaMes > 1){
-                        $dataMes[$diaNDiaMes]["ResumoDia"][$keySaldo]["SaldoFinal"]  = $dataMes[$diaNDiaMes-1]["ResumoDia"][$keySaldo]["SaldoFinal"];                   
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoFinal"]   = $dataMes[$diaNDiaMes-1]["ResumoDia"]["Total"]["SaldoFinal"]; 
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoFinal"]  = $dataMes[$diaNDiaMes-1]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoFinal"];                   
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoFinal"]                           = $dataMes[$diaNDiaMes-1]["ResumoDia"]["Geral"]["SaldoFinal"]; 
                     }
 
                 }
 
                 if( (($diaNDiaMes == 9)&&( ($diaSemana != 6)&&($diaSemana != 0) )) || ($diaNDiaMes == 10 && $diaSemana == 1) || ($diaNDiaMes == 11 && $diaSemana == 1) ){
                     
-                    $dataMes[$diaNDiaMes]["ResumoDia"][1]["SaldoDia"]           += $competenciaAtual["Cartao"]*-1;
-                    $dataMes[$diaNDiaMes]["ResumoDia"][1]["SaldoFinal"]         += $dataMes[$diaNDiaMes]["ResumoDia"][1]["SaldoFinal"];
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoDia"]     += $competenciaAtual["Cartao"]*-1;
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoFinal"]   += $competenciaAtual["Cartao"]*-1;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][1]["SaldoDia"]           += $competenciaAtual["Cartao"]*-1;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][1]["SaldoFinal"]         += $competenciaAtual["Cartao"]*-1;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoDia"]     += $competenciaAtual["Cartao"]*-1;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoFinal"]   += $competenciaAtual["Cartao"]*-1;
 
                     $totalDespesas += $competenciaAtual["Cartao"];
                                   
@@ -94,13 +95,11 @@
 
                     if($itemTransacao["IsContabilizado"] == 1){
 
-                        $idConta = $itemTransacao["IdConta"];
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoDia"]        += $itemTransacao["Valor"]; 
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoFinal"]      += $itemTransacao["Valor"]; 
 
-                        $dataMes[$diaNDiaMes]["ResumoDia"][$idConta]["SaldoDia"]        += $itemTransacao["Valor"]; 
-                        $dataMes[$diaNDiaMes]["ResumoDia"][$idConta]["SaldoFinal"]      += $itemTransacao["Valor"]; 
-
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoDia"]         += $itemTransacao["Valor"];  
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["Total"]["SaldoFinal"]       += $itemTransacao["Valor"];
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoDia"]                                          += $itemTransacao["Valor"];  
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoFinal"]                                        += $itemTransacao["Valor"];
 
                         if($itemTransacao["Valor"] >= 0){
                             $totalReceita += $itemTransacao["Valor"];
@@ -171,21 +170,7 @@
             $contCartao++;
         }
 
-        // foreach($dataMes as $Keyday => $dataDia) {
-
-        //         echo"<br>-----------------------------------------------------<br>";
-        //         echo "<b>Dia:</b>".$Keyday."<br>";
-
-        //         foreach($dataDia["lTransacoes"] as $KeyTransacao =>  $itemTransacao){
-        //             echo $KeyTransacao." - ". var_dump($itemTransacao)."<br>";
-        //         }
-
-        //         foreach($dataDia["ResumoDia"] as $KeyResumo =>  $itemResumo){
-        //             echo $KeyResumo." - ". var_dump($itemResumo)."<br>";
-        //         }
-
-            
-        //     }
+        util_printArray($lcontaUsuario);
 
 		// --------------------------CONTENT----------------------------------
 		$content = array( 
@@ -202,8 +187,7 @@
         "primeiroDiaMes"       	=> $primeiroDiaMes,  
         "lCompetencias"         => $lCompetencias,
 		"dataMes"      		    => $dataMes,
-        "lcontaUsuario"      	=> $lcontaUsuario,
-        "lSaldoMes"      		=> $lSaldoMes);
+        "lcontaUsuario"      	=> $lcontaUsuario);
 		
         if($config["showTemplate"]){
             // -- VIEW --

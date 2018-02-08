@@ -2,26 +2,25 @@
 
     function contas_saldo_GerarSaldoMes($pParamBusca,$plcontaUsuario,$pCompetenciaAtual){
 
-        $lSaldoMes["Total"]["SaldoAnterior"] = 0;
-        $lSaldoMes["Total"]["SaldoMes"] = 0;  
-        $lSaldoMes["Total"]["SaldoFinal"] = 0;     
-        $num_ContasComSaldo = 0;             
-        foreach($plcontaUsuario as $itemConta){
-            if(count($itemConta["Saldo"]) > 0){
-                $lSaldoMes[$itemConta["Id"]]         =  $itemConta["Saldo"];
-                $lSaldoMes["Total"]["SaldoAnterior"] += $itemConta["Saldo"]["SaldoAnterior"];
-                $lSaldoMes["Total"]["SaldoMes"]      += $itemConta["Saldo"]["SaldoMes"];
-                $lSaldoMes["Total"]["SaldoFinal"]    += $itemConta["Saldo"]["SaldoFinal"];
-                $num_ContasComSaldo++;
-            }
+        $plcontaUsuario["Geral"]["Saldo"]["SaldoAnterior"]      = 0;
+        $plcontaUsuario["Geral"]["Saldo"]["SaldoMes"]           = 0;  
+        $plcontaUsuario["Geral"]["Saldo"]["SaldoFinal"]         = 0;     
+
+        foreach($plcontaUsuario["Contas_Banco"] as $keyConta => $itemConta){
+            $plcontaUsuario[$keyConta]["Saldo"]                 = $itemConta["Saldo"];
+            $plcontaUsuario["Geral"]["Saldo"]["SaldoAnterior"]  += $itemConta["Saldo"]["SaldoAnterior"];
+            $plcontaUsuario["Geral"]["Saldo"]["SaldoMes"]       += $itemConta["Saldo"]["SaldoMes"];
+            $plcontaUsuario["Geral"]["Saldo"]["SaldoFinal"]     += $itemConta["Saldo"]["SaldoFinal"];
         } 
-        if($num_ContasComSaldo < 1){
+
+        if(count($plcontaUsuario["Contas_Banco"]) < 1){
             $competenciaAnterior = geral_BuscarCompetenciaAnterior($pParamBusca);
 
-            $lSaldoMes["Total"]["SaldoAnterior"] = $competenciaAnterior["SaldoFinal"];
-            $lSaldoMes["Total"]["SaldoMes"] = $pCompetenciaAtual["SaldoMes"];  
-            $lSaldoMes["Total"]["SaldoFinal"] = $pCompetenciaAtual["SaldoFinal"];  
+            $plcontaUsuario["Geral"]["Saldo"]["SaldoAnterior"]  = $competenciaAnterior["SaldoFinal"];
+            $plcontaUsuario["Geral"]["Saldo"]["SaldoMes"]       = $pCompetenciaAtual["SaldoMes"];  
+            $plcontaUsuario["Geral"]["Saldo"]["SaldoFinal"]     = $pCompetenciaAtual["SaldoFinal"];  
         }
 
-        return $lSaldoMes;
+
+        return $plcontaUsuario;
     }

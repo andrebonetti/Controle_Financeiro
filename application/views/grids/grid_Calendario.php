@@ -147,7 +147,7 @@
                     </tr>
                 <?php } ?>
                 
-                <?php if(isset($dataDia["ResumoDia"])){ echo "tem"; foreach($dataDia["ResumoDia"] as $KeyResumo =>  $itemResumo){?> 
+                <?php foreach($dataDia["ResumoDia"]["Contas_Banco"] as $KeyResumo =>  $itemResumo){?> 
 
                     <tr class="data-total_saldoDia">
                         <th class="conta"><?=$KeyResumo?></th>
@@ -160,7 +160,18 @@
                         <td class="valorSaldo"><?=numeroEmReais2($itemResumo["SaldoFinal"])?></td>
                     </tr>
 
-                <?php }} ?>
+                <?php } ?>
+
+                <tr class="data-total_saldoDia">
+                    <th class="conta">Total</th>
+                    <th class="titulo">Saldo Dia</th>
+                    <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["Geral"]["SaldoDia"])?></td>
+                </tr>
+                <tr class="data-total_saldoFinal">
+                    <th class="conta">Total</th>
+                    <th class="titulo">Saldo Final</th>
+                    <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["Geral"]["SaldoFinal"])?></td>
+                </tr>
                 
             </table>
             
