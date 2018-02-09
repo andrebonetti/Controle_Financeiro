@@ -17,14 +17,9 @@
 
         function ListarBancosContas($pContas){
 
-            $cont = 0;
-            foreach($pContas as $itemConta){
-                
+            foreach($pContas as $itemConta){               
                 $this->db->where("bancos.Id",$itemConta["IdBanco"]);
-
-                $pContas[$cont]["Banco"] = $this->db->get("bancos")->row_array();  
-
-                $cont ++;
+                $pContas[$itemConta["Id"]]["Banco"] = $this->db->get("bancos")->row_array();  
             }
 
             return $pContas;

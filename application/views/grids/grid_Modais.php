@@ -126,9 +126,9 @@
                     <div class="conta">
                         <label>Conta</label>
                         <select class="conta-origem form-control" name="conta">
-                            <?php foreach($lcontaUsuario as $key => $itemConta){ ?>
-                                <option value="<?=$itemConta["Id"]?>"><?=$itemConta["Descricao"]?></option>
-                            <?php } ?>
+                             <?php foreach($lcontaUsuario["Contas_Banco"] as $key => $itemConta){ ?>
+                                <option value="<?=$key?>"><?=$itemConta["Descricao"]?></option>
+                            <?php }  ?>
                         </select>
                     </div>
                 
@@ -248,6 +248,16 @@
                 <div class="transacao-parcelada">
                     <label>Parcela / Total Parcelas</label>
                     <input type="number" class="p-total-atual form-control" name="total" value="0" placeholder="Número de Parcelas"/>
+                </div>
+
+                <!-- CONTA -->
+                <div class="conta">
+                    <label>Conta</label>
+                    <select class="conta-origem form-control" name="conta">
+                            <?php foreach($lcontaUsuario["Contas_Banco"] as $key => $itemConta){ ?>
+                            <option value="<?=$key?>"><?=$itemConta["Descricao"]?></option>
+                        <?php }  ?>
+                    </select>
                 </div>
 
                 <div class="campoCheckboxModalTransacao opcoes-transacao-isContabilizado">

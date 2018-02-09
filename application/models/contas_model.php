@@ -12,16 +12,35 @@
         function Listar($pParam){ 
             
             if(isset($pParam["Usuario"]["Id"])){$this->db->where("contas.IdUsuario",$pParam["Usuario"]["Id"]);} 
+            if( (isset($pParam["Ano"])) && isset($pParam["Mes"]) ) {
+                $this->db->where("contas.MesInicio <=",$pParam["Mes"]);
+                $this->db->where("contas.AnoInicio >=",$pParam["Ano"]);
+
+                $WhereData = 
+                "(
+                    (
+                        `AnoInicio` =  ".$pParam["Ano"]."
+                        AND `MesInicio` <= ".$pParam["Mes"]."
+
+                    )
+                    OR 
+                    (`AnoInicio` < ".$pParam["Ano"].")
+                )";
+                
+                $this->db->where($WhereData); 
+                
+            } 
 
             $this->db->order_by("Ordem");
 
             if( (!isset($pParam["HasInnerJoin"])) || ($pParam["HasInnerJoin"] == false) ){
                 return $this->db->get("contas")->result_array();    
             }else{
-                $data["Contas_Banco"] = $this->db->get("contas")->result_array();
 
                 $ci = get_instance();
-                $cont = 0;
+                $contas = $this->db->get("contas")->result_array();
+
+                $data["Contas_Banco"] = util_gerarIndiceArray($contas,"Id");
 
                 $data["Contas_Banco"] = $ci->bancos_model->ListarBancosContas($data["Contas_Banco"]);
                 $data["Contas_Banco"] = $ci->contas_saldo_model->ListarSaldosContas($pParam,$data["Contas_Banco"]);

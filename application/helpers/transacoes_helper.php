@@ -147,19 +147,28 @@
                     $isValidado = false;
                 }
 
-                if( (!isset($data["Ano"])) || ($data["Ano"] == "")){
-                    echo "- Ano <br>";
-                    $isValidado = false;
-                }
-
-                if( (!isset($data["Mes"])) || ($data["Mes"] == "")){
-                    echo "- Mes <br>";
-                    $isValidado = false;
-                }
+                
 
                 if( (!isset($data["IdTipoTransacao"])) || ($data["IdTipoTransacao"] == "")){
                     echo "- IdTipoTransacao <br>";
                     $isValidado = false;
+                }
+                else{
+
+                    if($data["IdTipoTransacao"] != 1){
+
+                        if( (!isset($data["Ano"])) || ($data["Ano"] == "")){
+                            echo "- Ano <br>";
+                            $isValidado = false;
+                        }
+
+                        if( (!isset($data["Mes"])) || ($data["Mes"] == "")){
+                            echo "- Mes <br>";
+                            $isValidado = false;
+                        }
+
+                    }
+
                 }
 
                 if( (!isset($data["IdConta"])) || ($data["IdConta"] == "")){
@@ -209,7 +218,7 @@
 
         if($isValidado == false){
             echo "Existem campos obrigatórios não preenchidos";
-            var_dump($data);
+            util_printArray($data);
             $ci = get_instance();
             $ci->session->set_flashdata('msg-error',"Existem campos obrigatórios não preenchidos");
         }

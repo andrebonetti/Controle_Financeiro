@@ -247,6 +247,7 @@ $(".content-day").click(function(){
     var totalParcelas           = info_content.data("p-total-atual");
     var codigoTransacao         = info_content.data("codigo-transacao");
     var iscontabilizado         = info_content.data("iscontabilizado");
+    var idconta                 = info_content.data("idconta");
 
     //Preenche Inputs
     var_DomModalEdita = $(".modal-edita");
@@ -285,6 +286,7 @@ $(".content-day").click(function(){
     var_DomModalEdita.find(".p-total-atual").attr("value",parcelaAtual +"/"+ totalParcelas);
     var_DomModalEdita.find(".link-update").attr("action",base_url+"adm_crud/transacao_update/"+ano+"/"+mes+"/"+id);
     var_DomModalEdita.find(".id-tipo-transacao").attr("value",type);
+    var_DomModalEdita.find(".conta").val(idconta).change();
     
 	$('.p-total-atual').attr("disabled", true);
     $('.p-total-atual').css("background-color", "#cccccc"); 

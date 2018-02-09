@@ -7,37 +7,12 @@
                 <span class="alteracao_manual" name="despesas" title="Alterar" value="0">Despesas:</span>
                 <span class="valor_span"><?=numeroEmReais2($competenciaAtual["Despesas"])?></span>
             </p>
-
-            
-            <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-despesas"))?>
-            
-                <input type="hidden" name="tipo_alteracao" value="Despesas">
-                <input type="hidden" name="ano" value="<?=$ano?>">
-                <input type="hidden" name="mes" value="<?=$mes?>">
-            
-                <input type="text" class="form-control input-despesas" name="valor" value="<?=numeroEmReais2($competenciaAtual["Despesas"])?>">
-                
-                    <input type="submit" class="btn btn-success" value="Ok"> 
-            
-            <?= form_close()?>
-            
         </div> 
         <div class="receita">
             <p> 
                 <span class="alteracao_manual" name="receita" value="0">Receita:</span>
                 <span class="valor_span"><?=numeroEmReais2($competenciaAtual["Receita"])?></span>
             </p>
-            <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-receita"))?>
-            
-                <input type="hidden" name="tipo_alteracao" value="Receita">
-                <input type="hidden" name="ano" value="<?=$ano?>">
-                <input type="hidden" name="mes" value="<?=$mes?>">
-            
-                <input type="text" class="form-control input-receita" name="valor" value="<?=numeroEmReais2($competenciaAtual["Receita"])?>">
-                
-                    <input type="submit" class="btn btn-success" value="Ok"> 
-            
-            <?= form_close()?>
         </div> 
         
     </div>
@@ -117,6 +92,7 @@
                                 data-descricao="<?=trim($itemTransacao["Descricao"])?>"
                                 data-codigo-transacao="<?=trim($itemTransacao["CodigoTransacao"])?>"
                                 data-iscontabilizado="<?=$itemTransacao["IsContabilizado"]?>"
+                                data-idconta="<?=$itemTransacao["IdConta"]?>"
                                 >
                         </td>
                         
@@ -147,7 +123,7 @@
                     </tr>
                 <?php } ?>
                 
-                <?php foreach($dataDia["ResumoDia"]["Contas_Banco"] as $KeyResumo =>  $itemResumo){?> 
+                <?php if(isset($dataDia["ResumoDia"]["Contas_Banco"])){ foreach($dataDia["ResumoDia"]["Contas_Banco"] as $KeyResumo =>  $itemResumo){?> 
 
                     <tr class="data-total_saldoDia">
                         <th class="conta"><?=$KeyResumo?></th>
@@ -160,7 +136,7 @@
                         <td class="valorSaldo"><?=numeroEmReais2($itemResumo["SaldoFinal"])?></td>
                     </tr>
 
-                <?php } ?>
+                <?php }} ?>
 
                 <tr class="data-total_saldoDia">
                     <th class="conta">Total</th>

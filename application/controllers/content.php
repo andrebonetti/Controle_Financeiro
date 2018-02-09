@@ -5,7 +5,7 @@
        public function month_content($pAno,$pMes){
 			
         // -- CONFIG    
-		$config = config_base(array("showTemplate" => true));//array("rollback" => true,"retorno" => false)); 
+		$config = config_base(array("showTemplate" => true,"rollback" => false));//array("rollback" => true,"retorno" => false)); 
 
         // -- USUARIO --
         $paramBusca["Usuario"]          = valida_acessoUsuario();
@@ -13,12 +13,12 @@
         // -- SALDO --
         $paramBusca["Mes"]               = $pMes;
         $paramBusca["Ano"]               = $pAno;
-        
-        
+
+        $this->db->trans_begin();
+          
         $competenciaAtual   	         = geral_competenciaAtualTemplate($paramBusca);//TEMP
-        $lcontaUsuario   	             = contas_BuscarContasCompleto($paramBusca);
-        $lcontaUsuario                   = contas_saldo_GerarSaldoMes($paramBusca,$lcontaUsuario,$competenciaAtual);
-        
+        $lcontaUsuario   	             = contas_BuscarContasCompleto($paramBusca,$competenciaAtual);
+
 		// -- DATA --
 		$qtdeDiasMes 	                 =  days_in_month($pMes);
 		$primeiroDiaMes                  =  date("w", mktime(0,0,0,$pMes,1,$pAno)); 
@@ -69,21 +69,23 @@
                 $diaSemana            = date("w", mktime(0,0,0,$pMes,$diaNDiaMes,$pAno)); 
 
                 foreach($lcontaUsuario["Contas_Banco"] as $keySaldo => $itemSaldo){
-
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoDia"]    = 0;
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoDia"]             = 0;                   
-
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoDia"]    = 0;                               
                     if($diaNDiaMes > 1){
                         $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoFinal"]  = $dataMes[$diaNDiaMes-1]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoFinal"];                   
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoFinal"]                           = $dataMes[$diaNDiaMes-1]["ResumoDia"]["Geral"]["SaldoFinal"]; 
                     }
-
                 }
+
+                $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoDia"]             = 0;    
+                if($diaNDiaMes > 1){
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoFinal"]       = $dataMes[$diaNDiaMes-1]["ResumoDia"]["Geral"]["SaldoFinal"];
+                } 
 
                 if( (($diaNDiaMes == 9)&&( ($diaSemana != 6)&&($diaSemana != 0) )) || ($diaNDiaMes == 10 && $diaSemana == 1) || ($diaNDiaMes == 11 && $diaSemana == 1) ){
                     
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][1]["SaldoDia"]           += $competenciaAtual["Cartao"]*-1;
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][1]["SaldoFinal"]         += $competenciaAtual["Cartao"]*-1;
+                    if(isset($dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][1])){
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][1]["SaldoDia"]           += $competenciaAtual["Cartao"]*-1;
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][1]["SaldoFinal"]         += $competenciaAtual["Cartao"]*-1;
+                    }
                     $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoDia"]     += $competenciaAtual["Cartao"]*-1;
                     $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoFinal"]   += $competenciaAtual["Cartao"]*-1;
 
@@ -95,11 +97,13 @@
 
                     if($itemTransacao["IsContabilizado"] == 1){
 
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoDia"]        += $itemTransacao["Valor"]; 
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoFinal"]      += $itemTransacao["Valor"]; 
+                        if(isset($dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]])){
+                            $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoDia"]       += $itemTransacao["Valor"]; 
+                            $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoFinal"]     += $itemTransacao["Valor"]; 
+                        }
 
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoDia"]                                          += $itemTransacao["Valor"];  
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoFinal"]                                        += $itemTransacao["Valor"];
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoDia"]                                             += $itemTransacao["Valor"];  
+                        $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoFinal"]                                           += $itemTransacao["Valor"];
 
                         if($itemTransacao["Valor"] >= 0){
                             $totalReceita += $itemTransacao["Valor"];
@@ -115,6 +119,7 @@
                 $diaNDiaMes++;
             }
 
+            $lcontaUsuario  = contas_saldo_validarConsistencia($lcontaUsuario,$dataMes[$qtdeDiasMes]["ResumoDia"]);
             //$competenciaAtual = geral_verificarConsistencia($competenciaAnterior,$competenciaAtual,$totalReceita,$totalDespesas,$saldoFinalDia);
 
             // -- CARTAO --
@@ -170,7 +175,7 @@
             $contCartao++;
         }
 
-        util_printArray($lcontaUsuario);
+        config_finalTransaction($config);
 
 		// --------------------------CONTENT----------------------------------
 		$content = array( 

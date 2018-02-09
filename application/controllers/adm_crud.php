@@ -40,6 +40,7 @@
 
                         // -- SALDO GERAL --
                         geral_UpdateSaldo($data,$tipo);
+                        contas_saldo_UpdateSaldo($data);
 
                     }
 
@@ -67,6 +68,7 @@
 
                             // -- SALDO GERAL --
                             geral_UpdateSaldo($dataParcela,$tipo);
+                            contas_saldo_UpdateSaldo($data);
 
                             $mesParcela++;
                             if($mesParcela > 12){
@@ -84,6 +86,7 @@
                         
                         // -- SALDO GERAL --
                         geral_UpdateSaldo($data,$tipo);
+                        contas_saldo_UpdateSaldo($data);
 
                     }
 
@@ -155,6 +158,7 @@
                     $dataParcela["Mes"] = $transacaoAtual["Mes"];
                     $dataParcela["IdTipoTransacao"] = 3;
 
+                    contas_saldo_UpdateSaldo($dataParcela);
                     geral_UpdateSaldo($dataParcela);
 
                 }
@@ -288,12 +292,14 @@
                         $transacaoAtual["Mes"] = $mes;
                         
                         // -- SALDO GERAL --
+                        contas_saldo_UpdateSaldo($transacaoAtual);
                         geral_UpdateSaldo($transacaoAtual,$tipo);
 
                         if(isset($data["IdCartao"]) && $data["IdCartao"] > 0){    
                             echo "IdCartao: ".$data["IdCartao"]."<br>";
 
                             // -- SALDO GERAL CARTAO
+                            //contas_saldo_UpdateSaldo($data);
                             geral_UpdateSaldoMesCartao($transacaoAtual,$tipo);
                         }
                     }
