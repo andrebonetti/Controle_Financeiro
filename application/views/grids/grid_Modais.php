@@ -65,9 +65,9 @@
                         <label>Conta Origem</label>
                         <select class="conta-origem form-control" name="origem">
                             <option value="">Escolha a Conta</option>
-                            <?php foreach($lcontaUsuario as $key => $itemConta){ ?>
-                                <option value="<?=$itemConta["Id"]?>"><?=$itemConta["Descricao"]?></option>
-                            <?php } ?>
+                            <?php foreach($lcontaUsuario["Contas_Banco"] as $key => $itemConta){ ?>
+                                <option value="<?=$key?>"><?=$itemConta["Descricao"]?></option>
+                            <?php }  ?>
                         </select>
                     </div>
 
@@ -75,9 +75,9 @@
                         <label>Conta Origem</label>
                         <select class="conta-destino form-control" name="destino" disabled="disabled">
                             <option value="">Escolha a Conta</option>
-                            <?php foreach($lcontaUsuario as $key => $itemConta){ ?>
-                                <option value="<?=$itemConta["Id"]?>"><?=$itemConta["Descricao"]?></option>
-                            <?php } ?>
+                            <?php foreach($lcontaUsuario["Contas_Banco"] as $key => $itemConta){ ?>
+                                <option value="<?=$key?>"><?=$itemConta["Descricao"]?></option>
+                            <?php }  ?>
                         </select>
                     </div> 
 

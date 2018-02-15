@@ -113,8 +113,6 @@
                     </tr>
                 
                 <?php } ?>
-                
-                <!-- RESUMO DIA -->
 
                 <?php if( (($diaMes == 9)&&($primeiroDiaMes < 6)) || ($diaMes == 10 && $primeiroDiaMes == 1) || ($diaMes == 11 && $primeiroDiaMes == 1) ) {?>
                     <tr class="cartao" data-toggle="modal" data-target="#cartao_de_credito">
@@ -122,36 +120,39 @@
                         <td class='valor-fatura valor' value="<?=-$competenciaAtual["Cartao"]?>"><?=numeroEmReais2(-$competenciaAtual["Cartao"])?></td>
                     </tr>
                 <?php } ?>
-                
+
+            </table>  
+
+            <table class="ResumoDia">
+
+                <!-- RESUMO DIA -->
                 <?php if(isset($dataDia["ResumoDia"]["Contas_Banco"])){ foreach($dataDia["ResumoDia"]["Contas_Banco"] as $KeyResumo =>  $itemResumo){?> 
 
-                    <tr class="data-total_saldoDia">
-                        <th class="conta"><?=$KeyResumo?></th>
-                        <th class="titulo">Saldo Dia</th>
+                    <tr class="saldoDia_conta saldoDia_conta-<?=$KeyResumo?>">
+                        <td class="conta"><?=$KeyResumo?></td>
+                        <td class="titulo">Saldo Dia</td>
                         <td class="valorSaldo"><?=numeroEmReais2($itemResumo["SaldoDia"])?></td>
                     </tr>
-                    <tr class="data-total_saldoFinal">
-                        <th class="conta"><?=$KeyResumo?></th>
-                        <th class="titulo">Saldo Final</th>
+                    <tr class="saldoFinal_conta saldoFinal_conta-<?=$KeyResumo?>">
+                        <td class="conta"><?=$KeyResumo?></td>
+                        <td class="titulo">Saldo Final</td>
                         <td class="valorSaldo"><?=numeroEmReais2($itemResumo["SaldoFinal"])?></td>
                     </tr>
 
                 <?php }} ?>
 
-                <tr class="data-total_saldoDia">
-                    <th class="conta">Total</th>
-                    <th class="titulo">Saldo Dia</th>
+                <tr class="saldoDia_geral">
+                    <td class="conta">Total</td>
+                    <td class="titulo">Saldo Dia</td>
                     <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["Geral"]["SaldoDia"])?></td>
                 </tr>
-                <tr class="data-total_saldoFinal">
-                    <th class="conta">Total</th>
-                    <th class="titulo">Saldo Final</th>
+                <tr class="saldoFinal_geral">
+                    <td class="conta">Total</td>
+                    <td class="titulo">Saldo Final</td>
                     <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["Geral"]["SaldoFinal"])?></td>
                 </tr>
                 
             </table>
-            
-            <div class="valor-total"></div>
 
         </div> 
         

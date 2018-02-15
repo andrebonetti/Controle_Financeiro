@@ -20,9 +20,10 @@
 
                 $data["IsTransferencia"] = true;
 
+                $data["origem"] = $ci->input->post("origem");
+                $data["destino"] = $ci->input->post("destino");
             }
             else{
-                $data["IsTransferencia"] = false;
 
                 // -- NOVA CATEGORIA
                 if($ci->input->post("categoria") == "nova-categoria"){
@@ -74,37 +75,42 @@
         if($ci->input->post("usuario") > 0){$data["IdUsuario"] = $ci->input->post("usuario");}
         
         // ----- TYPE -----
-        if($ci->input->post("id-tipo-transacao")){
-            $data["IdTipoTransacao"] = $ci->input->post("id-tipo-transacao");
+        if(!isset($data["IdTipoTransacao"])){
 
-            if($data["IdTipoTransacao"] != 3){
-                $data["espelhar-proximas"] = $ci->input->post("espelhar-proximas");
-            }
-        }
-        else{
+            if($ci->input->post("id-tipo-transacao")){
 
-            $data["IdTipoTransacao"] = 3;
+                
+                $data["IdTipoTransacao"] = $ci->input->post("id-tipo-transacao");
 
-            //Recorrente
-            if($ci->input->post("isRecorrente") == 1)
-            {
-                $data["IdTipoTransacao"] = 1;
-
-                $data["espelhar-proximas"] = $ci->input->post("espelhar-proximas");
-            }
-            else{
-                //Parcelada
-                if($ci->input->post("totalParcelas") > 0)
-                {
-                    $data["IdTipoTransacao"]    = 2;
-                    $data["TotalParcelas"] = $ci->input->post("totalParcelas");
-
+                if($data["IdTipoTransacao"] != 3){
                     $data["espelhar-proximas"] = $ci->input->post("espelhar-proximas");
                 }
             }
-        }
+            else{
 
-        //-- Cartao --    
+                $data["IdTipoTransacao"] = 3;
+
+                //Recorrente
+                if($ci->input->post("isRecorrente") == 1)
+                {
+                    $data["IdTipoTransacao"] = 1;
+
+                    $data["espelhar-proximas"] = $ci->input->post("espelhar-proximas");
+                }
+                else{
+                    //Parcelada
+                    if($ci->input->post("totalParcelas") > 0)
+                    {
+                        $data["IdTipoTransacao"]    = 2;
+                        $data["TotalParcelas"] = $ci->input->post("totalParcelas");
+
+                        $data["espelhar-proximas"] = $ci->input->post("espelhar-proximas");
+                    }
+                }
+            }
+
+        }
+ 
         if($ci->input->post("conta") != ""){
             $data["IdConta"] = $ci->input->post("conta");
         }
@@ -168,42 +174,41 @@
                         }
 
                     }
+                }
+
+                if(isset($data["IsTransferencia"]) && $data["IsTransferencia"] == true){
+
+                    if( (!isset($data["origem"])) || ($data["origem"] == "")){
+                        echo "- origem <br>";
+                        $isValidado = false;
+                    }
+
+                    if( (!isset($data["destino"])) || ($data["destino"] == "")){
+                        echo "- destino <br>";
+                        $isValidado = false;
+                    }
 
                 }
+                else{
+
+                    if( (!isset($data["IdCategoria"])) || ($data["IdCategoria"] == "")){
+                        echo "- IdCategoria <br>";
+                        $isValidado = false;
+                    }
+
+                    if( (!isset($data["IdSubCategoria"])) || ($data["IdSubCategoria"] == "")){
+                        echo "- IdSubCategoria <br>";
+                        $isValidado = false;
+                    }
+
+                }
+                
 
                 if( (!isset($data["IdConta"])) || ($data["IdConta"] == "")){
                     echo "- IdConta <br>";
                     $isValidado = false;
                 }
-
-                if( (!isset($data["IdCategoria"])) || ($data["IdCategoria"] == "")){
-                    echo "- IdCategoria <br>";
-                    $isValidado = false;
-                }
-                else{
-
-                    if($data["IdCategoria"] == "transferencia_conta"){
-
-                        if( (!isset($data["origem"])) || ($data["origem"] == "")){
-                            echo "- origem <br>";
-                            $isValidado = false;
-                        }
-
-                        if( (!isset($data["destino"])) || ($data["destino"] == "")){
-                            echo "- destino <br>";
-                            $isValidado = false;
-                        }
-                    }
-                    else{
-
-                        if( (!isset($data["IdSubCategoria"])) || ($data["IdSubCategoria"] == "")){
-                            echo "- IdSubCategoria <br>";
-                            $isValidado = false;
-                        }
-
-                    }
-                }
-
+               
             }
             else{
 

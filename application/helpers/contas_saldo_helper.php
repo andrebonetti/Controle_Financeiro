@@ -8,16 +8,22 @@
         $plcontaUsuario["Geral"]["Saldo"]["SaldoFinal"]         = 0; 
 
         foreach($plcontaUsuario["Contas_Banco"] as $keyConta => $itemConta){
-            $plcontaUsuario["Contas_Banco"][$keyConta]["Saldo"]                 =  $itemConta["Saldo"];
-            $plcontaUsuario["Geral"]["Saldo"]["SaldoAnterior"]  += $itemConta["Saldo"]["SaldoAnterior"];
+
+            $pCompetenciaAtual["IdConta"] = $keyConta;
+            $competenciaAnterior_Conta = contas_saldo_BuscarCompetenciaAnterior($itemConta);
+
+            $plcontaUsuario["Contas_Banco"][$keyConta]["Saldo"]                  =  $itemConta["Saldo"];
+            $plcontaUsuario["Contas_Banco"][$keyConta]["Saldo"]["SaldoAnterior"] = $competenciaAnterior_Conta["SaldoFinal"];
+            
+            $plcontaUsuario["Geral"]["Saldo"]["SaldoAnterior"]  += $competenciaAnterior_Conta["SaldoFinal"];
             $plcontaUsuario["Geral"]["Saldo"]["SaldoMes"]       += $itemConta["Saldo"]["SaldoMes"];
             $plcontaUsuario["Geral"]["Saldo"]["SaldoFinal"]     += $itemConta["Saldo"]["SaldoFinal"];
         } 
 
         if(count($plcontaUsuario["Contas_Banco"]) < 1){
-            $competenciaAnterior = geral_BuscarCompetenciaAnterior($pParamBusca);
+            $competenciaAnterior_Geral = geral_BuscarCompetenciaAnterior($pParamBusca);
 
-            $plcontaUsuario["Geral"]["Saldo"]["SaldoAnterior"]  = $competenciaAnterior["SaldoFinal"];
+            $plcontaUsuario["Geral"]["Saldo"]["SaldoAnterior"]  = $competenciaAnterior_Geral["SaldoFinal"];
             $plcontaUsuario["Geral"]["Saldo"]["SaldoMes"]       = $pCompetenciaAtual["SaldoMes"];  
             $plcontaUsuario["Geral"]["Saldo"]["SaldoFinal"]     = $pCompetenciaAtual["SaldoFinal"];  
         }
@@ -173,9 +179,9 @@
             }
             
             $paramGeral["Valor"]         = $pData["Valor"];
-            if($pData["IdTipoTransacao"] == 1){
-                $paramGeral["Valor"] = $pData["Valor"] * $cont;
-            }
+            // if($pData["IdTipoTransacao"] == 1){
+            //     $paramGeral["Valor"] = $pData["Valor"] * $cont;
+            // }
 
             $paramGeral["Mes"]           = $itemSaldo["Mes"]; 
             $paramGeral["Ano"]           = $itemSaldo["Ano"];
@@ -213,16 +219,56 @@
         $lsaldoConta = $ci->contas_saldo_model->Listar($pParamGeral);
 		foreach($lsaldoConta as $itemSaldoConta){	
             
-            $dataSaldoFinal                = $itemSaldoConta;
+            $dataSaldoFinal               = $itemSaldoConta;
 			$dataSaldoFinal["SaldoFinal"] += $pParamGeral["Valor"];
 
-            if(isset($pParamGeral["IsVerificacao"])){
-                $dataSaldoFinal["SaldoMes"] += $dataSaldoFinal["SaldoFinal"] - $dataSaldoFinal["SaldoAnterior"];
-            }
+            // if(isset($pParamGeral["IsVerificacao"])){
+            //     $dataSaldoFinal["SaldoMes"] += $dataSaldoFinal["SaldoFinal"] - $dataSaldoFinal["SaldoAnterior"];
+            // }
 
             // -- BD UPDATE --
             $ci->contas_saldo_model->Atualizar($dataSaldoFinal);	
 		}
                 
 	}
+
+    function contas_saldo_transferirValores($pData){
+
+        $ci = get_instance();
+
+        $param["Ano"]               = $pData["Ano"];
+        $param["Mes"]               = $pData["Mes"];
+        $param["IdTipoTransacao"]   = $pData["IdTipoTransacao"];
+
+        $param["IdConta"] = $pData["origem"];
+        $param["Valor"]   = $pData["Valor"]*(-1);
+
+        contas_saldo_UpdateSaldo($param);
+
+        $param["IdConta"] = $pData["destino"];
+        $param["Valor"]   = $pData["Valor"];
+
+        contas_saldo_UpdateSaldo($param);
+    }
+
+    function contas_saldo_BuscarCompetenciaAnterior($pContaSaldoMes){
+
+        $ci = get_instance();
+
+        $param["Ano"] = $pContaSaldoMes["Saldo"]["Ano"];
+        $param["Mes"] = $pContaSaldoMes["Saldo"]["Mes"];
+
+        $param = util_AlterarMes($param,-1,true);
+
+        $param["IdConta"] = $pContaSaldoMes["Id"];
+
+        $saldoAnterior = $ci->contas_saldo_model->Buscar($param);
+
+        if(count($saldoAnterior) < 1){         
+             $saldoAnterior["SaldoFinal"] = $pContaSaldoMes["ValorInicio"];
+        }
+
+        return $saldoAnterior;
+        
+    }
 

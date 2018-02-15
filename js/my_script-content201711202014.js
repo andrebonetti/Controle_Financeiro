@@ -3,7 +3,8 @@ var base_url = $(".base_url").attr("href");
 // --------------------- VIEW ------------------- 
 var ultimaSemana = $(".dia-calendario").last().data("semana");
 var semanaAltura=1;
-   
+
+// -- SALDOS --
 while(semanaAltura<=ultimaSemana){
 
     var altura = 0;

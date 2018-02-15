@@ -54,7 +54,6 @@
        
             /* -- CALCULO SALDO -- */
             $diaNDiaMes = 1;
-
             foreach($lcontaUsuario["Contas_Banco"] as $keySaldo => $itemSaldo){
                 $dataMes[1]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoDia"]     = 0;
                 $dataMes[1]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoFinal"]   = $itemSaldo["Saldo"]["SaldoAnterior"];
