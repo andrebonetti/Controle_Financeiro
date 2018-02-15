@@ -5,7 +5,7 @@
        public function month_content($pAno,$pMes){
 			
         // -- CONFIG    
-		$config = config_base(array("showTemplate" => true,"rollback" => false));//array("rollback" => true,"retorno" => false)); 
+		$config = config_base(array("showTemplate" => true,"rollback" => true));//array("rollback" => true,"retorno" => false)); 
 
         // -- USUARIO --
         $paramBusca["Usuario"]          = valida_acessoUsuario();
@@ -68,7 +68,9 @@
                 $diaSemana            = date("w", mktime(0,0,0,$pMes,$diaNDiaMes,$pAno)); 
 
                 foreach($lcontaUsuario["Contas_Banco"] as $keySaldo => $itemSaldo){
-                    $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoDia"]    = 0;                               
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoDia"]    = 0;
+                    $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["CSS"]         =  $lcontaUsuario["Contas_Banco"][$itemSaldo["Id"]]["CSS"]; 
+                               
                     if($diaNDiaMes > 1){
                         $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoFinal"]  = $dataMes[$diaNDiaMes-1]["ResumoDia"]["Contas_Banco"][$itemSaldo["Id"]]["SaldoFinal"];                   
                     }
@@ -96,19 +98,31 @@
 
                     if($itemTransacao["IsContabilizado"] == 1){
 
-                        if(isset($dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]])){
-                            $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoDia"]       += $itemTransacao["Valor"]; 
-                            $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoFinal"]     += $itemTransacao["Valor"]; 
-                        }
+                        $dataMes[$diaNDiaMes]["lTransacoes"][$KeyTransacao]["Conta"]                                            =  $lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]];
+                        
+                        if($itemTransacao["IsTransferencia"] == 1){
 
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoDia"]                                             += $itemTransacao["Valor"];  
-                        $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoFinal"]                                           += $itemTransacao["Valor"];
+                            $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoDia"]           += $itemTransacao["Valor"]; 
+                            $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoFinal"]         += $itemTransacao["Valor"]; 
 
-                        if($itemTransacao["Valor"] >= 0){
-                            $totalReceita += $itemTransacao["Valor"];
-                        }
-                        else{
-                            $totalDespesas += $itemTransacao["Valor"]*(-1);
+                            $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdContaOrigem"]]["SaldoDia"]     -= $itemTransacao["Valor"]; 
+                            $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdContaOrigem"]]["SaldoFinal"]   -= $itemTransacao["Valor"]; 
+
+                        }else{
+                            if(isset($dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]])){
+                                $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoDia"]       += $itemTransacao["Valor"]; 
+                                $dataMes[$diaNDiaMes]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoFinal"]     += $itemTransacao["Valor"]; 
+                            }
+
+                            $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoDia"]                                             += $itemTransacao["Valor"];  
+                            $dataMes[$diaNDiaMes]["ResumoDia"]["Geral"]["SaldoFinal"]                                           += $itemTransacao["Valor"];
+
+                            if($itemTransacao["Valor"] >= 0){
+                                $totalReceita += $itemTransacao["Valor"];
+                            }
+                            else{
+                                $totalDespesas += $itemTransacao["Valor"]*(-1);
+                            }
                         }
 
                     }
@@ -175,6 +189,8 @@
         }
 
         config_finalTransaction($config);
+
+        //util_printArray($dataMes,"DataMes");
 
 		// --------------------------CONTENT----------------------------------
 		$content = array( 

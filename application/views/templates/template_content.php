@@ -5,13 +5,13 @@
         <?php
 
         //-- S / MSG - Session -->
-        $this->view('sniplets/msg_Session.php'); 
+        $this->view('sniplets/msg_Session.php');
+
+        //-- G / Filtros -->        
+        $this->view('grids/grid_Filtros.php');  
 		        
         //-- G / Saldos -->        
         $this->view('grids/grid_Saldos.php'); 
-
-        //-- G / Filtros -->        
-        $this->view('grids/grid_Filtros.php'); 
 
         //-- G / Calendario -->
         $this->view('grids/grid_Calendario.php'); 

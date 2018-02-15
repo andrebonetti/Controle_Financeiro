@@ -39,6 +39,20 @@
 
             .myContainer{
 
+                .filtros:extend(.full-container){
+
+                    .menu-contas_usuario{
+                        .float-config(left,20%);
+                        margin-right: 1%;
+                    }
+
+                    .menu-competencias{
+                        .float-config(left,20%);
+                        margin-right: 1%;
+                    }
+
+                }
+
                 .saldos,.poupanca_content{
                     .float-config(right,100%);
                     display: table;
@@ -46,7 +60,8 @@
 
                     .SaldoConta{
                         width: 100%;
-                        display: table;
+                        display: none;
+                        margin: 3px 0 3px 0;
 
                         div{
                             padding: 1%;
@@ -112,7 +127,7 @@
                             background-color: @white-2;
                                 
                             span{
-                                color: #f2f200;
+                                color: lightyellow;
                             }
                         }
 
@@ -154,7 +169,7 @@
 
                         .saldo-futuro,.poup-futuro{
                             .float-config(right,20%);
-                            background-color:yellow;
+                            background-color: lightyellow;
                             position: relative;
                             
                             span{
@@ -207,6 +222,7 @@
 
                     .SaldoOrdem-1{
                         display: table;
+                        width: 100%;                       
                     }
                 }
 
@@ -391,6 +407,13 @@
                                     font-size:0.9em; 
                                     cursor: pointer;
 
+                                    td.css_transacao{
+                                        width: 2px;
+                                        border:solid 1px white;
+                                        border-width: 1px 0 1px 0;
+                                        padding: 0;
+                                    }
+
                                     td{
                                         padding:1% 2% 1% 2%;
                                     }
@@ -424,31 +447,61 @@
                                 tr.dizimo{td.dizimo-valor{color: #d1d100;}}
                                 tr.cartao{td.valor-fatura{color: #e88f00;}}    
                                 tr.poupanca{td.poupanca-valor{color: #0054a7;}}
+
+                                .IsTransferencia-1{
+                                    background-color: lightyellow;
+
+                                    td.valor{
+                                        color:@black-8;
+                                    }
+                                }
+
+                                tr.content-day{
+                                    display: none;
+                                }
+                                tr.transacao_conta-1{
+                                    display: table;
+                                    width: 100%;
+                                }
                             }
 
                             table.ResumoDia{
-                                // position: absolute;
-                                // bottom: 0;
+                                position: absolute;
+                                bottom: 0;
 
                                 tbody{
                                     width: 100%;
 
-                                tr.saldoDia_conta
-                                ,tr.saldoFinal_conta
-                                ,tr.saldoDia_geral
-                                ,tr.saldoFinal_geral{
-                                    // display: none;
-                                    width: 100%;
+                                    tr.saldoDia_conta
+                                    ,tr.saldoFinal_conta
+                                    ,tr.saldoDia_geral
+                                    ,tr.saldoFinal_geral{
+                                        display: none;
+                                        width: 100%;
+                                        color: @black-8;
+                                        opacity: 0.8;
 
-                                    td.valorSaldo{
-                                        text-align: right;
-                                        padding-right: 3px;
+                                        td.valorSaldo{
+                                            text-align: right;
+                                            padding-right: 3px;
+                                        }
                                     }
-                                }
 
-                                tr.saldoDia_conta-1,tr.saldoFinal_conta-1{
-                                    //display: table;
-                                }
+                                    tr.saldoDia_conta-1,tr.saldoFinal_conta-1{
+                                        display: table;
+                                        width: 100%;
+                                    }
+
+                                    td.css_resumo,td.css_resumoGeral{
+                                        width: 2px;
+                                        border:solid 1px white;
+                                        border-width: 1px 0 1px 0;
+                                        opacity: 0.4;
+                                    }
+
+                                    td.css_resumoGeral{
+                                        background-color: @black-9;
+                                    }
 
                                 }
 
@@ -997,6 +1050,7 @@
                     td.valor{
                         border: none;
                     }
+
                 }  
 
                 .categoria-content{

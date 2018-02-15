@@ -29,20 +29,9 @@
 
                     $data["IdCategoria"]    = 27;
                     $data["IdSubCategoria"] = 134;
-                    $data["IdConta"]        = $origem;
-                    $data["Valor"]          = $data["Valor"]*(-1);
-
-                    if($data["IdTipoTransacao"] == 1){
-                        $data["AnoFim"] = 2050;
-                        $data["MesFim"] = 12;
-                    }
-
-                    $this->transacoes_model->Incluir($data);
-
-                    $data["IdCategoria"]    = 27;
-                    $data["IdSubCategoria"] = 134;
                     $data["IdConta"]        = $destino;
-                    $data["Valor"]          = $data["Valor"]*(-1);
+                    $data["Valor"]          = $data["Valor"];
+                    $data["IdContaOrigem"]  = $origem;
 
                     if($data["IdTipoTransacao"] == 1){
                         $data["AnoFim"] = 2050;
@@ -50,6 +39,18 @@
                     }
 
                     $this->transacoes_model->Incluir($data);
+
+                    // $data["IdCategoria"]    = 27;
+                    // $data["IdSubCategoria"] = 134;
+                    // $data["IdConta"]        = $destino;
+                    // $data["Valor"]          = $data["Valor"]*(-1);
+
+                    // if($data["IdTipoTransacao"] == 1){
+                    //     $data["AnoFim"] = 2050;
+                    //     $data["MesFim"] = 12;
+                    // }
+
+                    // $this->transacoes_model->Incluir($data);
 
                 }
                 else{

@@ -2,7 +2,7 @@
 
     function util_printArray($pArray,$pNomeArray = ""){
 
-        echo "<br>-----------------------------------------------------------util_printArray--------------------------------------------------------------------------<br>";
+        echo "<br>------------------------------------------------------------------util_printArray----------------------------------------------------------------------------------<br>";
         if($pNomeArray != ""){
             echo "<h3>".$pNomeArray."</h3>";
         }
@@ -35,7 +35,45 @@
                             if(is_array($itemSubArray)){
                                 foreach($itemSubArray as $keyItemSub2Array=> $itemSub2Array){
 
-                                    echo "<br>------------ <b>[".$keyItemSub2Array."]</b> => ".$itemSub2Array;
+                                    echo "<br>------------ <b>[".$keyItemSub2Array."]</b> => ";
+
+                                    if(!is_array($itemSub2Array)){
+                                        echo $itemSub2Array;
+                                    }
+
+                                    if(is_array($itemSub2Array)){
+                        
+                                        foreach($itemSub2Array as $keyItemSub3Array=> $itemSub3Array){
+
+                                            echo "<br>------------------------ <b>[".$keyItemSub3Array."]</b> => ";
+
+                                            if(!is_array($itemSub3Array)){
+                                                echo $itemSub3Array;
+                                            }
+
+                                            if(is_array($itemSub3Array)){
+                                                foreach($itemSub3Array as $keyItemSub4Array=> $itemSub4Array){
+
+                                                    echo "<br>------------------------------------------------ <b>[".$keyItemSub4Array."]</b> => ";
+
+                                                    if(!is_array($itemSub4Array)){
+                                                        echo $itemSub4Array;
+                                                    }
+
+                                                    if(is_array($itemSub4Array)){
+                                                        foreach($itemSub4Array as $keyItemSub5Array=> $itemSub5Array){
+
+                                                            echo "<br>------------------------------------------------------------------------------------------------ <b>[".$keyItemSub5Array."]</b> => ".print_r($itemSub5Array);
+                                                            
+                                                        }
+                                                    }
+                                                    
+                                                }
+                                            }
+                                            
+                                        }
+                                    }
+
                                 }
                             }
                             

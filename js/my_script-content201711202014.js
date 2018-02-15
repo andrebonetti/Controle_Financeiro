@@ -1,40 +1,71 @@
 var base_url = $(".base_url").attr("href");
 
 // --------------------- VIEW ------------------- 
-var ultimaSemana = $(".dia-calendario").last().data("semana");
-var semanaAltura=1;
+function ajustarTamanhoDiaSemana(){
 
-// -- SALDOS --
-while(semanaAltura<=ultimaSemana){
+    var ultimaSemana = $(".dia-calendario").last().data("semana");
+    var semanaAltura = 1;
+    var alturaResumo = $(".ResumoDia").last().height();
 
-    var altura = 0;
-    var altura_nova = 0;
+    // -- SALDOS --
+    while(semanaAltura<=ultimaSemana){
 
-    $(".semana-mes-"+semanaAltura).each(function() {
+        var altura      = 0;
+        var altura_nova = 0;
 
-        altura_nova = $(this).height();
+        $(".semana-mes-"+semanaAltura).each(function() {
 
-        if(altura_nova > altura){
-            altura = altura_nova;
-        }      
+            var altura_transacoes   = $(this).find(".transacoes").height();
+            var altura_resumo       = $(this).find(".ResumoDia").height();
 
-    });
+            var altura_nova         = altura_transacoes + altura_resumo + 20
 
-    $(".semana-mes-"+semanaAltura).css("height",(altura + 60)+"px");  
+            if(altura_nova > altura){
+                altura = altura_nova;
+            }      
 
-    semanaAltura++;  
+        });
+
+        $(".semana-mes-"+semanaAltura).css("height",(altura)+"px");  
+
+        semanaAltura++;  
+    }
+
 }
 
-setTimeout(function(){
+ajustarTamanhoDiaSemana();
 
-    // $(".data-total_saldoDia").css("position","absolute");
-    // $(".data-total_saldoDia").css("bottom","18px");
-    // $(".data-total_saldoDia").show();
-    // $(".data-total_saldoFinal").css("position","absolute");
-    // $(".data-total_saldoFinal").css("bottom","0");
-    // $(".data-total_saldoFinal").show();
+$(".menu-contas_usuario").on("change",function(){
 
-},300);
+    IdConta = $(this).val();
+
+    $(".SaldoConta").hide();
+    $("tr.content-day").hide();
+    $("tr.saldoDia_conta").hide();
+    $("tr.saldoFinal_conta").hide();
+    $("tr.saldoDia_geral").hide();
+    $("tr.saldoFinal_geral").hide();
+
+    if(IdConta == "Geral"){
+
+        $(".SaldoConta").css({"display":"table","width":"100%"});
+        $("tr.content-day").css({"display":"table","width":"100%"});
+        $("tr.saldoDia_conta").css({"display":"table","width":"100%"});
+        $("tr.saldoFinal_conta").css({"display":"table","width":"100%"});
+        $("tr.saldoDia_geral").css({"display":"table","width":"100%"});
+        $("tr.saldoFinal_geral").css({"display":"table","width":"100%"});
+
+    }
+    else{
+        $(".SaldoOrdem-"+IdConta).css({"display":"table","width":"100%"});
+        $("tr.transacao_idconta-"+IdConta).css({"display":"table","width":"100%"});
+        $("tr.saldoDia_conta-"+IdConta).css({"display":"table","width":"100%"});
+        $("tr.saldoFinal_conta-"+IdConta).css({"display":"table","width":"100%"});
+    }
+
+    ajustarTamanhoDiaSemana();
+
+})
 
 // --------------------- PREENCHE E CALCULA CATEGORIAS E SUB-CATEGORIAS --------------------- 
 $(".categoria-resumo").each(function() {
