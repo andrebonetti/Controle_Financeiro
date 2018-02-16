@@ -191,20 +191,22 @@
         config_finalTransaction($config);
 
         //util_printArray($dataMes,"DataMes");
+        //util_printArray($lcontaUsuario,"lcontaUsuario");
+
+        $dataAtual["Ano"] = $pAno;
+        $dataAtual["Mes"] = $pMes;
+        $dataAtual["Dia"] = $DiaAtual;
+        $dataAtual["PrimeiroDiaMes"] = $primeiroDiaMes;
 
 		// --------------------------CONTENT----------------------------------
-		$content = array( 
-		"competenciaAtual"		=> $competenciaAtual,       
+		$content = array(     
 		"usuario"		  		=> $paramBusca["Usuario"],
-		"ano"			  		=> $pAno,
-		"mes"			  		=> $pMes,
-        "hoje"                  => $DiaAtual,
+        "dataAtual"             => $dataAtual,
         "lCartao"               => $lCartoes,
 		"categorias"	  		=> $lCategorias,
-		"all_sub_categorias"  	=> $lSubCategoriasTotal,
         "fatura_cartao"   		=> $data_cartao,
+        "all_sub_categorias"  	=> $lSubCategoriasTotal,
         "sub_categorias"  		=> $lCategoriasFinal,      
-        "primeiroDiaMes"       	=> $primeiroDiaMes,  
         "lCompetencias"         => $lCompetencias,
 		"dataMes"      		    => $dataMes,
         "lcontaUsuario"      	=> $lcontaUsuario);

@@ -353,7 +353,7 @@
                             //height: 175px;
                             //overflow: hidden;
 
-                            table{
+                            table.transacoes{
                                 width: 100%;
                                 
                                 tr.data-day{
@@ -479,7 +479,8 @@
                                         display: none;
                                         width: 100%;
                                         color: @black-8;
-                                        opacity: 0.8;
+                                        opacity: 0.75;
+                                        font-size: 0.85em;
 
                                         td.valorSaldo{
                                             text-align: right;
@@ -519,6 +520,10 @@
                             background-color: #f0f0f0;
                             .border(0,#eaeaea);
                             border-width:0.5%;
+                        }
+
+                        .diaAtual{
+                            background-color: lightblue;
                         }
 
                     }

@@ -1,17 +1,17 @@
 <div class="calendario">
             
     <div class="header-calendario">
-        <h1><?=nome_mes($mes)?> - <?=$ano?></h1>
+        <h1><?=nome_mes($dataAtual["Mes"])?> - <?=$dataAtual["Ano"]?></h1>
         <div class="despesas">
             <p> 
                 <span class="alteracao_manual" name="despesas" title="Alterar" value="0">Despesas:</span>
-                <span class="valor_span"><?=numeroEmReais2($competenciaAtual["Despesas"])?></span>
+                <span class="valor_span"><?=numeroEmReais2($lcontaUsuario["Geral"]["Despesas"])?></span>
             </p>
         </div> 
         <div class="receita">
             <p> 
                 <span class="alteracao_manual" name="receita" value="0">Receita:</span>
-                <span class="valor_span"><?=numeroEmReais2($competenciaAtual["Receita"])?></span>
+                <span class="valor_span"><?=numeroEmReais2($lcontaUsuario["Geral"]["Receita"])?></span>
             </p>
         </div> 
         
@@ -39,10 +39,9 @@
         // Inicial
          $numSemana = 1; 
          $diaSemana = 1;
-         $diaMes = 1;
 
         /*-- INSERE DIAS MES ANTERIOR --*/
-        for($pre=1;$pre <= $primeiroDiaMes;$pre++){ 
+        for($pre=1;$pre <= $dataAtual["PrimeiroDiaMes"];$pre++){ 
 
             echo "<div class='dia pre-nulo semana-mes-1'></div>";
             $diaSemana++; 
@@ -55,13 +54,17 @@
             <?php 
                 $classeDia = "";
                 if($diaSemana == 6 || $diaSemana ==7){
-                    $classeDia = "final-de-semana";
+                    $classeDia = $classeDia." final-de-semana";
+                }
+
+                if($keyDay == $dataAtual["Dia"]){
+                    $classeDia = $classeDia." diaAtual";
                 }
             ?>
         
             <div 
-                class="dia dia-calendario dia-<?=$diaMes?> semana-mes-<?=$numSemana?> <?=$classeDia?>" id="dia-<?=$diaMes?>"
-                data-dia-mes="<?=$diaMes?>"
+                class="dia dia-calendario dia-<?=$keyDay?> semana-mes-<?=$numSemana?> <?=$classeDia?>" id="dia-<?=$keyDay?>"
+                data-dia-mes="<?=$keyDay?>"
                 data-dia-semana="<?=$diaSemana?>"
                 data-semana="<?=$numSemana?>"
             >
@@ -70,7 +73,7 @@
                 
                 <!-- INFO DIA -->
                 <tr class="data-day" data-toggle="modal" data-target="#add-transacao">
-                    <th colspan="2" class="dia_mes"><?=$diaMes?></th>
+                    <th colspan="2" class="dia_mes"><?=$keyDay?></th>
                 </tr>
 
                 <!-- CONTEUDO DIA -->
@@ -113,11 +116,11 @@
                 
                 <?php } ?>
 
-                <?php if( (($diaMes == 9)&&($primeiroDiaMes < 6)) || ($diaMes == 10 && $primeiroDiaMes == 1) || ($diaMes == 11 && $primeiroDiaMes == 1) ) {?>
+                <?php if( (($keyDay == 9)&&($dataAtual["PrimeiroDiaMes"] < 6)) || ($keyDay == 10 && $dataAtual["PrimeiroDiaMes"] == 1) || ($keyDay == 11 && $dataAtual["PrimeiroDiaMes"] == 1) ) {?>
                     <tr class="content-day transacao_conta-1 transacao_idconta-1" data-idcartao="1" data-toggle="modal" data-target="#cartao_de_credito">
                         <td class="css_transacao" style="">
                         <td class='cartao'>Cartão</td>
-                        <td class='valor-fatura valor' value="<?=-$competenciaAtual["Cartao"]?>"><?=numeroEmReais2(-$competenciaAtual["Cartao"])?></td>
+                        <td class='valor-fatura valor' value="<?=-$lcontaUsuario["Geral"]["Cartao"]?>"><?=numeroEmReais2(-$lcontaUsuario["Geral"]["Cartao"])?></td>
                     </tr>
                 <?php } ?>
 
@@ -126,9 +129,9 @@
             <table class="ResumoDia">
 
                 <!-- RESUMO DIA -->
-                <?php if(isset($dataDia["ResumoDia"]["Contas_Banco"])){ foreach($dataDia["ResumoDia"]["Contas_Banco"] as $KeyResumo =>  $itemResumo){?> 
+                <?php if( (count($dataDia["lTransacoes"]) > 0) && (isset($dataDia["ResumoDia"]["Contas_Banco"])) ){ foreach($dataDia["ResumoDia"]["Contas_Banco"] as $KeyResumo =>  $itemResumo){?> 
 
-                    <tr class="saldoDia_conta saldoDia_conta-<?=$KeyResumo?>">
+                    <tr class="saldoDia_conta saldoDia_conta-<?=$KeyResumo?> $itemResumo["SaldoDia"]">
                         <td class="css_resumo" style="<?=$itemResumo["CSS"]?>"></td>
                         <td class="titulo">Saldo Dia</td>
                         <td class="valorSaldo"><?=numeroEmReais2($itemResumo["SaldoDia"])?></td>
@@ -157,7 +160,7 @@
         </div> 
         
     <?php
-        $diaMes++;  
+ 
         $diaSemana ++;
         if($diaSemana > 7){
             $diaSemana = 1;
