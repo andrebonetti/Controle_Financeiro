@@ -11,8 +11,8 @@
             <?= form_open("adm_crud/transacao_insert")?>
 
                 <input type="hidden" name="usuario" value="<?=$usuario['Id']?>">
-                <input type="hidden" name="ano" value="<?=$ano?>">
-                <input type="hidden" name="mes" value="<?=$mes?>">
+                <input type="hidden" name="ano" value="<?=$dataAtual["Ano"]?>">
+                <input type="hidden" name="mes" value="<?=$dataAtual["Mes"]?>">
                 <input type="hidden" class="idCartao" name="idCartao" value="">
 
                 <div class="new-line">
@@ -21,8 +21,8 @@
                     <div class="dia">
                         <label>Dia</label>
                         <input type="number" name="dia" class="dia-add form-control" placeholder="Dia">
-                        <span class="mes">/ <?=$mes?></span>
-                        <span class="ano">/ <?=$ano?></span>
+                        <span class="mes">/ <?=$dataAtual["Mes"]?></span>
+                        <span class="ano">/ <?=$dataAtual["Ano"]?></span>
                     </div>  
 
                     <!-- DATA COMPRA -->
@@ -168,6 +168,7 @@
                 <input type="hidden" class="p-total" name="parcela-total" value="">
                 <input type="hidden" class="id-tipo-transacao" name="id-tipo-transacao" value="">
                 <input type="hidden" class="idCartao" name="idCartao" value="">
+                <input type="hidden" class="isTransferencia" name="is-transferencia" value="">
 
                 <!-- DIA -->
                 <div class="dia dia-edit">
@@ -176,11 +177,11 @@
                 </div>    
                 <div class="mes">
                     <label>Mês</label>
-                    <input type="number" class="mes-edit form-control" name="mes" value="<?=$mes?>">/
+                    <input type="number" class="mes-edit form-control" name="mes" value="<?=$dataAtual["Mes"]?>">/
                 </div>    
                 <div class="ano">
                     <label>Ano</label>
-                    <input type="number" class="ano-edit form-control" name="ano" value="<?=$ano?>">
+                    <input type="number" class="ano-edit form-control" name="ano" value="<?=$dataAtual["Ano"]?>">
                 </div>   
 
                 <!-- DATA COMPRA -->
@@ -231,6 +232,31 @@
                     </select>
                     <input type="text" name="adiciona-sub_categoria" class="form-control">
                 </div>    
+
+                <!-- TRANSFERENCIA CONTAS -->
+                <div class="transferencia-contas new-line">
+
+                    <div class="transf-origem">
+                        <label>Conta Origem</label>
+                        <select class="conta-origem form-control" name="origem">
+                            <option value="">Escolha a Conta</option>
+                            <?php foreach($lcontaUsuario["Contas_Banco"] as $key => $itemConta){ ?>
+                                <option value="<?=$key?>"><?=$itemConta["Descricao"]?></option>
+                            <?php }  ?>
+                        </select>
+                    </div>
+
+                    <div class="transf-destino">
+                        <label>Conta Origem</label>
+                        <select class="conta-destino form-control" name="destino" disabled="disabled">
+                            <option value="">Escolha a Conta</option>
+                            <?php foreach($lcontaUsuario["Contas_Banco"] as $key => $itemConta){ ?>
+                                <option value="<?=$key?>"><?=$itemConta["Descricao"]?></option>
+                            <?php }  ?>
+                        </select>
+                    </div> 
+
+                </div>
                 
                 <!-- DESCRIÇÃO -->
                 <div class="descricao">
@@ -359,22 +385,24 @@
                                 <div class="total_cartao">
 
                                     <span class="alteracao_manual valor-total" name="Cartao" title="Alterar" value="0">Alterar</span>
-                                    <span class="valor_span"><?=numeroEmReais2(-$competenciaAtual["Cartao"])?></span> 
+                                    <span class="valor_span"><?=numeroEmReais2(-$lcontaUsuario["Geral"]["Cartao"])?></span> 
 
-                                    <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-Cartao"))?>
+                                    <?php
+                                    /* form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-Cartao"))?>
 
                                         <input type="hidden" name="tipo_alteracao" value="Cartao">
-                                        <input type="hidden" name="ano" value="<?=$ano?>">
-                                        <input type="hidden" name="mes" value="<?=$mes?>">
-                                        <input type="hidden" name="ValorAnterior" value="<?=$competenciaAtual["Cartao"]?>">
-                                        <input type="hidden" name="SaldoMes" value="<?=$competenciaAtual["SaldoMes"]?>">
-                                        <input type="hidden" name="SaldoFinal" value="<?=$competenciaAtual["SaldoFinal"]?>">
+                                        <input type="hidden" name="ano" value="<?=$dataAtual["Ano"]?>">
+                                        <input type="hidden" name="mes" value="<?=$dataAtual["Mes"]?>">
+                                        <input type="hidden" name="ValorAnterior" value="<?=$lcontaUsuario["Geral"]["Cartao"]["Cartao"]?>">
+                                        <input type="hidden" name="SaldoMes" value="<?=$lcontaUsuario["Geral"]["Cartao"]["SaldoMes"]?>">
+                                        <input type="hidden" name="SaldoFinal" value="<?=$lcontaUsuario["Geral"]["Cartao"]["SaldoFinal"]?>">
 
                                         <input type="text" class="form-control input-Cartao" name="valor" value="<?=numeroEmReais2($competenciaAtual["Cartao"])?>">
 
                                         <input type="submit" class="btn btn-success" value="Ok"> 
 
-                                    <?= form_close()?>
+                                    <?= form_close()*/?>
+                                    
 
                                 </div>
 

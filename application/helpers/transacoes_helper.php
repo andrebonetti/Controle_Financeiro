@@ -16,12 +16,13 @@
         // ----- CATEGORIA -----
 
             // -- NOVA CATEGORIA
-            if($ci->input->post("categoria") == "transferencia_conta"){
+            if( ($ci->input->post("categoria") == "transferencia_conta") || ($ci->input->post("is-transferencia") == "1") ){
 
                 $data["IsTransferencia"] = true;
 
                 $data["origem"] = $ci->input->post("origem");
                 $data["destino"] = $ci->input->post("destino");
+                $data["IdConta"] = $ci->input->post("destino");
             }
             else{
 
@@ -111,7 +112,7 @@
 
         }
  
-        if($ci->input->post("conta") != ""){
+        if( ($ci->input->post("conta") != "")&&(!isset($data["IdConta"])) ){
             $data["IdConta"] = $ci->input->post("conta");
         }
 
@@ -223,7 +224,7 @@
 
         if($isValidado == false){
             echo "Existem campos obrigatórios não preenchidos";
-            util_printArray($data);
+            util_print($data);
             $ci = get_instance();
             $ci->session->set_flashdata('msg-error',"Existem campos obrigatórios não preenchidos");
         }
@@ -232,13 +233,14 @@
         
     }
 
-    function buscarTransacoesPorTipo($pTipo,$pParam){
+    function buscarTransacoes($pTipo,$pParam){
 
         $ci = get_instance();
         if(isset($pParam["Dia"])){$diaParam = $pParam["Dia"];}
 
-        $pParam["IdTipoTransacao"]    = $pTipo;
-        if($pTipo == 3){
+
+        $pParam["IdTipoTransacao"] = $pTipo;
+        if($pParam["IdTipoTransacao"] == 3){
 
             $dataDia     = array();
 
@@ -248,7 +250,7 @@
             }
 
         }
-        if($pTipo == 1 || $pTipo == 2 || $pTipo == 4){
+        if($pParam["IdTipoTransacao"] == 1 || $pParam["IdTipoTransacao"] == 2)  {
 
             $dataDia     = array();
             if(isset($pParam["Dia"])){

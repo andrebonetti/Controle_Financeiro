@@ -1,95 +1,116 @@
 <?php
 
-    function util_printArray($pArray,$pNomeArray = ""){
+    function util_print($pConteudo,$pTitulo = ""){
 
         echo "<br>------------------------------------------------------------------util_printArray----------------------------------------------------------------------------------<br>";
-        if($pNomeArray != ""){
-            echo "<h3>".$pNomeArray."</h3>";
+        if($pTitulo != ""){
+            echo "<h3>".$pTitulo."</h3>";
         }
 
-        foreach($pArray as $keyArray => $itemArray){
+        if(!is_array($pConteudo)){
+            echo "<b>String => </b>".$pConteudo."<br>";
+        }
 
-            if(is_array($itemArray)){
+        if(is_array($pConteudo)){
 
-                 echo "<br>---------------------------------------<br>";
-                 echo "<b><i>Key/Index => ".$keyArray."</i></b><br><br>";
+            foreach($pConteudo as $keyArray => $itemArray){
 
-                foreach($itemArray as $keyItemArray => $itemArray){
+                if(!is_array($itemArray)){
+                    echo "<b>[".$keyArray."]</b> => ".$itemArray."<br>";
+                }
 
-                    echo "----<b>[".$keyItemArray."]</b> => ";
+                if(is_array($itemArray)){
 
-                    if(!is_array($itemArray)){
-                        echo $itemArray;
-                    }
+                    echo "<br>---------------------------------------<br>";
+                    echo "<b><i>Key/Index => ".$keyArray."</i></b> | (".count($itemArray).")<br><br>";
 
-                    if(is_array($itemArray)){
-                        
-                        foreach($itemArray as $keyItemSubArray=> $itemSubArray){
+                    foreach($itemArray as $keyItemSub2Array=> $itemSub2Array){
 
-                            echo "<br>-------- <b>[".$keyItemSubArray."]</b> => ";
+                        echo "----<b>[".$keyItemSub2Array."]</b> => ";
 
-                            if(!is_array($itemSubArray)){
-                                echo $itemSubArray;
-                            }
-
-                            if(is_array($itemSubArray)){
-                                foreach($itemSubArray as $keyItemSub2Array=> $itemSub2Array){
-
-                                    echo "<br>------------ <b>[".$keyItemSub2Array."]</b> => ";
-
-                                    if(!is_array($itemSub2Array)){
-                                        echo $itemSub2Array;
-                                    }
-
-                                    if(is_array($itemSub2Array)){
-                        
-                                        foreach($itemSub2Array as $keyItemSub3Array=> $itemSub3Array){
-
-                                            echo "<br>------------------------ <b>[".$keyItemSub3Array."]</b> => ";
-
-                                            if(!is_array($itemSub3Array)){
-                                                echo $itemSub3Array;
-                                            }
-
-                                            if(is_array($itemSub3Array)){
-                                                foreach($itemSub3Array as $keyItemSub4Array=> $itemSub4Array){
-
-                                                    echo "<br>------------------------------------------------ <b>[".$keyItemSub4Array."]</b> => ";
-
-                                                    if(!is_array($itemSub4Array)){
-                                                        echo $itemSub4Array;
-                                                    }
-
-                                                    if(is_array($itemSub4Array)){
-                                                        foreach($itemSub4Array as $keyItemSub5Array=> $itemSub5Array){
-
-                                                            echo "<br>------------------------------------------------------------------------------------------------ <b>[".$keyItemSub5Array."]</b> => ".print_r($itemSub5Array);
-                                                            
-                                                        }
-                                                    }
-                                                    
-                                                }
-                                            }
-                                            
-                                        }
-                                    }
-
-                                }
-                            }
-                            
+                        if(!is_array($itemSub2Array)){
+                            echo $itemSub2Array;
                         }
+
+                        if(is_array($itemSub2Array)){
+
+                            echo "| (".count($itemSub2Array).")";
+                            
+                            foreach($itemSub2Array as $keyItemSub3Array=> $itemSub3Array){
+
+                                echo "<br>-------- <b>[".$keyItemSub3Array."]</b> => ";
+
+                                if(!is_array($itemSub3Array)){
+                                    echo $itemSub3Array;
+                                }
+
+                                if(is_array($itemSub3Array)){
+
+                                    echo "| (".count($itemSub3Array).")";
+
+                                    foreach($itemSub3Array as $keyItemSub4Array=> $itemSub4Array){
+
+                                        echo "<br>------------ <b>[".$keyItemSub4Array."]</b> => ";
+
+                                        if(!is_array($itemSub4Array)){
+                                            echo $itemSub4Array;
+                                        }
+
+                                        if(is_array($itemSub4Array)){
+
+                                            echo "| (".count($itemSub4Array).")";
+                            
+                                            foreach($itemSub4Array as $keyItemSub5Array=> $itemSub5Array){
+
+                                                echo "<br>------------------------ <b>[".$keyItemSub5Array."]</b> => ";
+
+                                                if(!is_array($itemSub5Array)){
+                                                    echo $itemSub5Array;
+                                                }
+
+                                                if(is_array($itemSub5Array)){
+
+                                                    echo "| (".count($itemSub5Array).")";
+
+                                                    foreach($itemSub5Array as $keyItemSub6Array=> $itemSub6Array){
+
+                                                        echo "<br>------------------------------------------------ <b>[".$keyItemSub6Array."]</b> => ";
+
+                                                        if(!is_array($itemSub6Array)){
+                                                            echo $itemSub6Array;
+                                                        }
+
+                                                        if(is_array($itemSub6Array)){
+
+                                                            echo "| (".count($itemSub6Array).")";
+
+                                                            foreach($itemSub6Array as $keyItemSub7Array=> $itemSub7Array){
+
+                                                                echo "<br>------------------------------------------------------------------------------------------------ <b>[".$keyItemSub7Array."]</b> => ".print_r($itemSub7Array);
+                                                                
+                                                            }
+                                                        }
+                                                        
+                                                    }
+                                                }
+                                                
+                                            }
+                                        }
+
+                                    }
+                                }
+                                
+                            }
+                        }
+
+                        echo "<br>";
+
                     }
 
                     echo "<br>";
-
                 }
-
-                 echo "<br>";
+                
             }
-            else{
-                 echo "<b>[".$keyArray."]</b> => ".$itemArray."<br>";
-            }
-
         }
 
     }
@@ -163,3 +184,20 @@
         }
 
     }
+
+    function util_transforamaIdEmChave($pArray,$pParametro,$resultado = null){
+
+		$retorno = array();
+
+		foreach($pArray as $keyIten => $item){
+
+			if($resultado != null){
+				$retorno[$item[$pParametro]] = $item[$resultado];
+			}else{
+				$retorno[$item[$pParametro]] = $item;
+			}
+		}
+
+		return $retorno;
+
+	}

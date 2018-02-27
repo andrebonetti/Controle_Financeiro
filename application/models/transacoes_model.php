@@ -74,6 +74,98 @@
             $this->db->from("transacoes");
             return $this->db->get()->result_array();
         }
+
+        function ListarPorRegraTipo($pData = null,$pOrderBy = null){
+            
+            //if(isset($pData["Id"])){$this->db->where("transacoes.Id",$pData["id"]);}  
+            //if(isset($pData["IdUsuario"])){$this->db->where("transacoes.IdUsuario",$pData["IdUsuario"]);}
+
+            $this->db->from("transacoes");
+
+            if(isset($pData["Ano"]) and isset($pData["Mes"])){
+
+                $wherePorTipo =  "(
+                            Valor <> 0
+                            AND Dia = {$pData["Dia"]}
+                            AND
+                            (
+                                (
+                                    IdTipoTransacao = 1
+                                    AND
+                                    (
+                                        (
+                                            `Ano` =  {$pData["Ano"]}
+                                            AND `Mes` <= {$pData["Mes"]}
+
+                                        )
+                                        OR 
+                                        (`Ano` < {$pData["Ano"]})
+                                    )
+                                    AND
+                                    (
+                                        AnoFim >= {$pData["Ano"]}
+                                        AND MesFim >= {$pData["Mes"]}
+                                    )
+                                )
+                                OR
+                                (
+                                    IdTipoTransacao != 1
+                                    AND
+                                    (
+                                        Ano = {$pData["Ano"]}
+                                        AND Mes = {$pData["Mes"]}
+                                    )
+                                )
+                            )
+                        )";
+                // "
+                //                     (
+                //                         IdTipoTransacao = 1
+                //                         AND
+                //                         (
+                //                             (
+                //                                 Ano =  {$pData["Ano"]}
+                //                                 AND Mes <= {$pData["Mes"]}
+
+                //                             )
+                //                             OR 
+                //                             (Ano < {$pData["Ano"]})
+                //                             )
+                //                         )
+                //                         AND
+                //                         (
+                //                             AnoFim >={$pData["Ano"]}
+                //                             AND MesFim >={$pData["Mes"]}
+                //                         )
+                //                     )
+                                   
+                //              ";
+
+                            //   OR
+                            //         (
+                            //             IdTipoTransacao != 1
+                            //             AND
+                            //             (
+                            //                 Ano = {$pData["Ano"]}
+                            //                 AND Mes = {$pData["Mes"]}
+                            //                 AND Dia = {$pData["Mes"]}
+                            //             )
+                            //         )
+
+
+                $this->db->where($wherePorTipo);
+
+            }
+
+            if(isset($pData["PreencherEntidadesFilhas"])){
+                if($pData["PreencherEntidadesFilhas"] == true){
+                    $this->db->join("categoria", "categoria.IdCategoria = transacoes.IdCategoria");
+                    $this->db->join("sub_categoria", "sub_categoria.IdSubCategoria = transacoes.IdSubCategoria");
+                }
+            }
+
+            return $this->db->get()->result_array();
+        }
         
         function Buscar($pData){ 
             

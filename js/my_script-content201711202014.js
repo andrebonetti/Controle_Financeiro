@@ -278,8 +278,10 @@ $(".content-day").click(function(){
     var parcelaAtual            = info_content.data("p-atual");
     var totalParcelas           = info_content.data("p-total-atual");
     var codigoTransacao         = info_content.data("codigo-transacao");
-    var iscontabilizado         = info_content.data("iscontabilizado");
+    var iscontabilizado         = info_content.data("iscontabilizado");   
     var idconta                 = info_content.data("idconta");
+    var istransferencia         = info_content.data("istransferencia");
+    var conta_origem            = info_content.data("contaorigem");
 
     //Preenche Inputs
     var_DomModalEdita = $(".modal-edita");
@@ -319,6 +321,7 @@ $(".content-day").click(function(){
     var_DomModalEdita.find(".link-update").attr("action",base_url+"adm_crud/transacao_update/"+ano+"/"+mes+"/"+id);
     var_DomModalEdita.find(".id-tipo-transacao").attr("value",type);
     var_DomModalEdita.find(".conta").val(idconta).change();
+    var_DomModalEdita.find(".isTransferencia").attr("value",istransferencia);
     
 	$('.p-total-atual').attr("disabled", true);
     $('.p-total-atual').css("background-color", "#cccccc"); 
@@ -333,6 +336,27 @@ $(".content-day").click(function(){
         var_DomModalEdita.find(".isContabilizado").closest("p").removeClass("alert-success");
         var_DomModalEdita.find(".isContabilizado").closest("p").addClass("alert-danger");    
     }
+
+    var msg_istransf = "";
+    if(istransferencia == "1"){
+        msg_istransf = " (Transferência)";
+        var_DomModalEdita.find(".conta").hide();
+
+        var_DomModalEdita.find(".categoria-atual").attr("disabled", true);
+        var_DomModalEdita.find(".sub_categoria-atual").attr("disabled", true);
+
+        $(".transferencia-contas").show();
+
+        var_DomModalEdita.find(".conta-origem").val(conta_origem).change();
+        var_DomModalEdita.find(".conta-destino").val(idconta).change();
+    }
+    else{
+        var_DomModalEdita.find(".conta").show();
+
+        var_DomModalEdita.find(".categoria-atual").attr("disabled", false);
+        var_DomModalEdita.find(".sub_categoria-atual").attr("disabled", false);
+        $(".transferencia-contas").hide();
+    }
     
     if(type == "1")
     {
@@ -340,7 +364,7 @@ $(".content-day").click(function(){
         var_DomModalEdita.find(".ano-edit").attr("disabled", true);
         $(".opcoes-transacao-repeticao").removeClass("no-view");
 
-        $(".tipo-transacao").text("Transação Recorrente");
+        $(".tipo-transacao").text("Transação Recorrente"+msg_istransf);
     }
     else{
         var_DomModalEdita.find(".mes-edit").attr("disabled", false);
@@ -348,11 +372,11 @@ $(".content-day").click(function(){
     }
 
     if(type == "2"){
-        $(".tipo-transacao").text("Transação Parcelada");
+        $(".tipo-transacao").text("Transação Parcelada" + msg_istransf);
         $(".opcoes-transacao-repeticao").removeClass("no-view");
     }
     if(type == "3"){
-        $(".tipo-transacao").text("Transação Comum");
+        $(".tipo-transacao").text("Transação Comum" + msg_istransf);
         $(".opcoes-transacao-repeticao").addClass("no-view");
     }
 

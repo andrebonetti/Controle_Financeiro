@@ -147,13 +147,12 @@
             
             if($pIsExclusao == 1){$data["Valor"] = 0;}
             $data["Id"] = $id;
+
+            $paramGet["Ano"] = 
             
             $paramBusca["Id"]         = $data["Id"];
 			$transacaoAtual          = $this->transacoes_model->Buscar($paramBusca);
-
-            // util_printArray($transacaoAtual,"Atual");
-            // util_printArray($data,"Update");
-                      
+             
             if(ValidaEntidadeTransacao($data) == true)
             {
 
@@ -182,6 +181,8 @@
                 if(((float)$data["Valor"] != (float)$transacaoAtual["Valor"])){
 
                     $hasAlteracaoValor = true;
+
+                    echo "<b>Tem Diferença Valor</b> <br>";
                     
                     echo "valor atual: ".$transacaoAtual["Valor"]."<br>";
                     echo "valor atualizado: ".$data["Valor"]."<br>";
@@ -189,7 +190,11 @@
                     $valorDiferenca = $data["Valor"] - $transacaoAtual["Valor"];
                     $valorDiferenca = round($valorDiferenca, 2);
                         
-                    echo "- Alteração Valor: ".$valorDiferenca."<br>";
+                    echo "=> Diferença: ".$valorDiferenca."<br>";
+
+                    if($transacaoAtual["IsTransferencia"]){
+                        $hasAlteracaoValorTransferencia = true;
+                    }
                 }
                 else{
                     echo "Sem Alteração Valor <br>";
@@ -198,7 +203,7 @@
                 // -- ALTERACAO MÊS --
                 if(((int)$data["Mes"] != (int)$transacaoAtual["Mes"])&&($data["IdTipoTransacao"] != 1)){
                     
-                    echo "Alteração Mês: de ".$transacaoAtual["Mes"]." para ".$data["Mes"]."<br>";
+                    echo "<b>Alteração Mês:</b> de ".$transacaoAtual["Mes"]." para ".$data["Mes"]."<br>";
                     unset($data["espelhar-proximas"]);
                     
                     $this->transacoes_model->Atualizar($data);
@@ -215,7 +220,7 @@
                 }
                 else{
                     // -- SEM ALTERAÇÃO MÊS
-                    echo "Sem Alteração Mês <br>";
+                    echo "<b>Sem Alteração Mês</b> <br>";
                     
                     //Transacao Recorrente
                     if($transacaoAtual["IdTipoTransacao"] == 1){
@@ -252,7 +257,7 @@
                             //EXCEÇÃO
                             else{
 
-                                echo "sem espelhar";
+                                echo "sem espelhar <br>";
                                 //Transacao Igual - Recorrente Proximo Mes
                                 $dataComptencia = calcularCompetencia($ano,$mes,1);     
                                 $transacaoAtual["Ano"]    = $dataComptencia["Ano"];        
@@ -262,12 +267,13 @@
 
                                 //Transacao Unica
                                 $transacaoAtual["IdTipoTransacao"] = 3;
-                                $transacaoAtual["Dia"] = $data["Dia"];
-                                $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
-                                $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
-                                $transacaoAtual["Descricao"] = $data["Descricao"];
-                                $transacaoAtual["Valor"] = $data["Valor"];
-                                $transacaoAtual["IdConta"] = $data["IdConta"];
+                                if(isset($data["Dia"])){$transacaoAtual["Dia"] = $data["Dia"];}
+                                if(isset($data["IdCategoria"])){$transacaoAtual["IdCategoria"] = $data["IdCategoria"];}
+                                if(isset($data["IdSubCategoria"])){$transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];}
+                                if(isset($data["Descricao"])){$transacaoAtual["Descricao"] = $data["Descricao"];}
+                                if(isset($data["Valor"])){$transacaoAtual["Valor"] = $data["Valor"];}
+                                if(isset($data["IdConta"])){$transacaoAtual["IdConta"] = $data["IdConta"];}
+
                                 $transacaoAtual["Ano"] = $ano;
                                 $transacaoAtual["Mes"] = $mes;
 
@@ -284,11 +290,11 @@
                             $transacaoAtual["Dia"] = $data["Dia"];
                         }
 
-                        $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
-                        $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
-                        $transacaoAtual["Descricao"] = $data["Descricao"];
-                        $transacaoAtual["Valor"] = $data["Valor"];
-                        $transacaoAtual["IdConta"] = $data["IdConta"];
+                        if(isset($data["IdCategoria"])){$transacaoAtual["IdCategoria"] = $data["IdCategoria"];}
+                        if(isset($data["IdSubCategoria"])){$transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];}
+                        if(isset($data["Descricao"])){$transacaoAtual["Descricao"] = $data["Descricao"];}
+                        if(isset($data["Valor"])){$transacaoAtual["Valor"] = $data["Valor"];}
+                        if(isset($data["IdConta"])){$transacaoAtual["IdConta"] = $data["IdConta"];}
                         
                         //Transacao Parcelada 
                         if($transacaoAtual["IdTipoTransacao"] == 2){
@@ -333,26 +339,57 @@
                     {
                         echo "hasAlteracaoValor <br>";
 
-                        unset($transacaoAtual["Id"]);
-                        $transacaoAtual["Valor"] = $valorDiferenca; 
-                        
-                        if($transacaoAtual["Valor"] > 0){$tipo = 1;}
-                        else{$tipo = 2;}
-                        
-                        $transacaoAtual["Ano"] = $ano;
-                        $transacaoAtual["Mes"] = $mes;
-                        
-                        // -- SALDO GERAL --
-                        contas_saldo_UpdateSaldo($transacaoAtual);
-                        geral_UpdateSaldo($transacaoAtual,$tipo);
-
-                        if(isset($data["IdCartao"]) && $data["IdCartao"] > 0){    
-                            echo "IdCartao: ".$data["IdCartao"]."<br>";
-
-                            // -- SALDO GERAL CARTAO
-                            //contas_saldo_UpdateSaldo($data);
-                            geral_UpdateSaldoMesCartao($transacaoAtual,$tipo);
+                        if( (!isset($data["espelhar-proximas"])||($data["espelhar-proximas"] == false)) ){
+                            $data["IdTipoTransacao"] = 3;
                         }
+
+                        if($hasAlteracaoValorTransferencia == true)
+                        {
+                            echo "Alteração Transferencia <br>";
+
+                            $data["origem"]  = $transacaoAtual["IdContaOrigem"];
+                            $data["destino"] = $transacaoAtual["IdConta"];
+
+                            $data["Ano"]     = $transacaoAtual["Ano"];
+                            $data["Mes"]     = $transacaoAtual["Mes"];
+
+                            $data["Valor"]   = $valorDiferenca; 
+
+                            util_print($data);
+
+                            contas_saldo_transferirValores($data);
+                        }
+                        else{
+
+                            echo "Alteração Transacao  <br>";
+
+                            unset($transacaoAtual["Id"]);
+                            $transacaoAtual["Valor"] = $valorDiferenca; 
+                            
+                            if($transacaoAtual["Valor"] > 0){$tipo = 1;}
+                            else{$tipo = 2;}
+                            
+                            $transacaoAtual["Ano"] = $ano;
+                            $transacaoAtual["Mes"] = $mes;
+                            
+                            // -- SALDO GERAL --
+                            contas_saldo_UpdateSaldo($transacaoAtual);
+
+                            if($hasAlteracaoConta != true){
+                                geral_UpdateSaldo($transacaoAtual,$tipo);
+                            }
+
+                            
+                            if(isset($data["IdCartao"]) && $data["IdCartao"] > 0){    
+                                echo "IdCartao: ".$data["IdCartao"]."<br>";
+
+                                // -- SALDO GERAL CARTAO
+                                //contas_saldo_UpdateSaldo($data);
+                                geral_UpdateSaldoMesCartao($transacaoAtual,$tipo);
+                            }
+
+                        }
+                        
                     }
 
                 }

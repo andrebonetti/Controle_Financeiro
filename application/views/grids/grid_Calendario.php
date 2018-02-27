@@ -79,9 +79,15 @@
                 <!-- CONTEUDO DIA -->
                 <?php foreach($dataDia["lTransacoes"] as $KeyTransacao =>  $itemTransacao){?> 
 
-                    <tr class="content-day transacao_idconta-<?=$itemTransacao["IdConta"]?> transacao_idconta-<?=$itemTransacao["IdContaOrigem"]?> transacao_conta-<?=$itemTransacao["Conta"]["Ordem"]?> IdSubCategoria-<?=$itemTransacao["IdSubCategoria"]?> IsContabilizado-<?=$itemTransacao["IsContabilizado"]?> IsTransferencia-<?=$itemTransacao["IsTransferencia"]?>" data-toggle="modal" data-target="#edit-transacao">  
+                    <tr class="content-day  
+                    IdSubCategoria-<?=$itemTransacao["IdSubCategoria"]?> 
+                    IsContabilizado-<?=$itemTransacao["IsContabilizado"]?> 
+                    IsTransferencia-<?=$itemTransacao["IsTransferencia"]?>
+                    transacao_idconta-<?=$itemTransacao["IdConta"]?> transacao_idconta-<?=$itemTransacao["IdContaOrigem"]?>
+                    transacao_conta-<?=$lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["Ordem"]?>" 
+                    data-toggle="modal" data-target="#edit-transacao">  
                         
-                        <td class="info-content css_transacao" style="<?=$itemTransacao["Conta"]["CSS"]?>"
+                        <td class="info-content css_transacao" style="<?=$lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["CSS"]?>"
                                 data-id="<?=$itemTransacao["Id"]?>"
                                 data-dia="<?=$itemTransacao["Dia"]?>"
                                 data-valor="<?=$itemTransacao["Valor"]?>"
@@ -95,7 +101,9 @@
                                 data-descricao="<?=trim($itemTransacao["Descricao"])?>"
                                 data-codigo-transacao="<?=trim($itemTransacao["CodigoTransacao"])?>"
                                 data-iscontabilizado="<?=$itemTransacao["IsContabilizado"]?>"
-                                data-idconta="<?=$itemTransacao["IdConta"]?>">
+                                data-istransferencia="<?=$itemTransacao["IsTransferencia"]?>"
+                                data-contaorigem="<?=$itemTransacao["IdContaOrigem"]?>"
+                                data-idconta="<?=$itemTransacao["IdConta"]?>">        
                         </td>
 
                         <td class="descricao" data-toggle="tooltip" data-placement="top" title="<?=trim($itemTransacao["DescricaoCategoria"])." - ".trim(valida_sub($itemTransacao["DescricaoCategoria"],$itemTransacao["DescricaoSubCategoria"]))?>">
@@ -116,12 +124,22 @@
                 
                 <?php } ?>
 
-                <?php if( (($keyDay == 9)&&($dataAtual["PrimeiroDiaMes"] < 6)) || ($keyDay == 10 && $dataAtual["PrimeiroDiaMes"] == 1) || ($keyDay == 11 && $dataAtual["PrimeiroDiaMes"] == 1) ) {?>
-                    <tr class="content-day transacao_conta-1 transacao_idconta-1" data-idcartao="1" data-toggle="modal" data-target="#cartao_de_credito">
-                        <td class="css_transacao" style="">
-                        <td class='cartao'>Cartão</td>
-                        <td class='valor-fatura valor' value="<?=-$lcontaUsuario["Geral"]["Cartao"]?>"><?=numeroEmReais2(-$lcontaUsuario["Geral"]["Cartao"])?></td>
+                <?php foreach($dataDia["lFaturas"] as $KeyTransacao =>  $itemTransacao){?> 
+
+                    <tr class="content-day
+                    transacao_conta-<?=$lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["Ordem"]?>"
+                    >
+
+                        <td class="info-content css_cartao" style="<?=$lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["CSS"]?>"></td>
+
+                        <td class="descricao" data-toggle="tooltip" data-placement="top">
+                            <?=trim($itemTransacao["Descricao"])?>
+                        </td>
+
+                        <td class="valor <?=sinal_valor($itemTransacao["Valor"])?>"><?=numeroEmReais2($itemTransacao["Valor"])?></td>
+
                     </tr>
+
                 <?php } ?>
 
             </table>  
@@ -129,7 +147,7 @@
             <table class="ResumoDia">
 
                 <!-- RESUMO DIA -->
-                <?php if( (count($dataDia["lTransacoes"]) > 0) && (isset($dataDia["ResumoDia"]["Contas_Banco"])) ){ foreach($dataDia["ResumoDia"]["Contas_Banco"] as $KeyResumo =>  $itemResumo){?> 
+                <?php if( ( (count($dataDia["lTransacoes"]) > 0) || (count($dataDia["lFaturas"]) > 0) )&& (isset($dataDia["ResumoDia"]["Contas_Banco"])) ){ foreach($dataDia["ResumoDia"]["Contas_Banco"] as $KeyResumo =>  $itemResumo){?> 
 
                     <tr class="saldoDia_conta saldoDia_conta-<?=$KeyResumo?> $itemResumo["SaldoDia"]">
                         <td class="css_resumo" style="<?=$itemResumo["CSS"]?>"></td>
