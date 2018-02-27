@@ -120,7 +120,20 @@
         if($ci->input->post("dataCompra") != ""){
             $data["DataCompra"]  		= dataPtBrParaMysql($ci->input->post("dataCompra"));
         }
-        
+
+        //CONTABILIZACAO     
+        if(!empty($ci->input->post("isContabilizado"))){
+            if($ci->input->post("isContabilizado") == "on"){
+                $data["IsContabilizado"] = true;
+            }
+            else{
+                $data["IsContabilizado"] = false;
+            }
+        }
+        else{
+            $data["IsContabilizado"] = false;
+        }
+
 		return $data;	
     
     }

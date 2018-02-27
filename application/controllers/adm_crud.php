@@ -140,31 +140,50 @@
         // ----- UPDATE TRANSACAO -----
 		public function transacao_update($ano,$mes,$id,$pIsExclusao = null){
 				
-			$config = config_base(array("rollback" => false,"retorno" => true));//array("rollback" => true,"retorno" => false));
+			$config = config_base(array("rollback" => true,"retorno" => false));//array("rollback" => true,"retorno" => false));
             valida_usuario();
-            
-            $data                    = transacao_getPosts();
-            
-            if($pIsExclusao == 1){$data["Valor"] = 0;}
-            $data["Id"] = $id;
 
-            $paramGet["Ano"] = 
-            
-            $paramBusca["Id"]         = $data["Id"];
-			$transacaoAtual          = $this->transacoes_model->Buscar($paramBusca);
-             
+            $paramGet["Ano"]    = $ano;
+            $paramGet["Mes"]    = $mes;
+            $paramGet["Id"]     = $id;
+
+            //ATUAL BD
+            $data["Id"]         = $paramGet["Id"];
+            $paramBusca["Id"]   = $data["Id"];
+			$transacaoAtual     = $this->transacoes_model->Buscar($paramBusca);
+
+            //ATUALIZACAO
+            $data               = transacao_getPosts();
+
+            util_print($data);
+
             if(ValidaEntidadeTransacao($data) == true)
             {
 
                 $this->db->trans_begin();
 
+                $hasAlteracaoConta              = false;
+                $hasAlteracaoValor              = false;
+                $hasAlteracaoValorTransferencia = false;
+
+                //EXCLUIR (VALOR = 0)
+                if($pIsExclusao == 1){$data["Valor"] = 0;}
+                if($data["IsContabilizado"] == false){
+                    $valorDiferenca = $transacaoAtual["Valor"]*(-1);
+
+                    $hasAlteracaoValor = true;
+                }
+
+                //ALTERACAO CONTA
                 if($transacaoAtual["IdConta"] != $data["IdConta"]){
-                    $hasAlteracaoConta = true;
-                    $IdContaOriginal = $transacaoAtual["IdConta"];
+                    $hasAlteracaoConta  = true;
+                    $IdContaOriginal    = $transacaoAtual["IdConta"];
+
+                    echo "Alteração Conta <br>";
 
                     if($transacaoAtual["IdTipoTransacao"] == 1){
-                        $AnoOriginal = $ano;
-                        $MesOriginal = $mes;
+                        $AnoOriginal = $paramGet["Ano"];
+                        $MesOriginal = $paramGet["Mes"];
                     }
                     else{
                         $AnoOriginal = $transacaoAtual["Ano"];
@@ -172,12 +191,10 @@
                     }
                 }
                 else{
-                    $hasAlteracaoConta = false;
+                    echo "Sem Alteração Conta <br>";
                 }
                 
-                $hasAlteracaoValor = false;
-
-                // -- ALTERACAO VALOR --
+                //ALTERACAO VALOR
                 if(((float)$data["Valor"] != (float)$transacaoAtual["Valor"])){
 
                     $hasAlteracaoValor = true;
@@ -200,7 +217,7 @@
                     echo "Sem Alteração Valor <br>";
                 }
 
-                // -- ALTERACAO MÊS --
+                //ALTERACAO MÊS
                 if(((int)$data["Mes"] != (int)$transacaoAtual["Mes"])&&($data["IdTipoTransacao"] != 1)){
                     
                     echo "<b>Alteração Mês:</b> de ".$transacaoAtual["Mes"]." para ".$data["Mes"]."<br>";
@@ -219,17 +236,17 @@
 
                 }
                 else{
-                    // -- SEM ALTERAÇÃO MÊS
+                    //SEM ALTERAÇÃO MÊS
                     echo "<b>Sem Alteração Mês</b> <br>";
                     
-                    //Transacao Recorrente
+                    //TANSACAO 1
                     if($transacaoAtual["IdTipoTransacao"] == 1){
                         echo "Transação Tipo: 1 <br>";
                         
                         $dataComptencia = calcularCompetencia($ano,$mes,-1);     
                         $transacaoAtual["AnoFim"]    = $dataComptencia["Ano"];        
                         $transacaoAtual["MesFim"]    = $dataComptencia["Mes"]; 
-
+                        
                         $this->transacoes_model->Atualizar($transacaoAtual);
 
                         if($pIsExclusao != 1)
@@ -241,15 +258,16 @@
                             if(isset($data["espelhar-proximas"]) && $data["espelhar-proximas"] == true ){
 
                                 echo "espelhar-proximas <br>";
-                                $transacaoAtual["Dia"] = $data["Dia"];
-                                $transacaoAtual["IdCategoria"] = $data["IdCategoria"];
-                                $transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];
-                                $transacaoAtual["Descricao"] = $data["Descricao"];
-                                $transacaoAtual["Valor"] = $data["Valor"];
-                                $transacaoAtual["CodigoTransacao"] = $data["CodigoTransacao"];
-                                $transacaoAtual["IdConta"] = $data["IdConta"];
-                                $transacaoAtual["Ano"] = $ano;
-                                $transacaoAtual["Mes"] = $mes;  
+                                if(isset($data["Dia"])){$transacaoAtual["Dia"] = $data["Dia"];}
+                                if(isset($data["IdCategoria"])){$transacaoAtual["IdCategoria"] = $data["IdCategoria"];}
+                                if(isset($data["IdSubCategoria"])){$transacaoAtual["IdSubCategoria"] = $data["IdSubCategoria"];}
+                                if(isset($data["Descricao"])){$transacaoAtual["Descricao"] = $data["Descricao"];}
+                                if(isset($data["Valor"])){$transacaoAtual["Valor"] = $data["Valor"];}
+                                if(isset($data["CodigoTransacao"])){$transacaoAtual["CodigoTransacao"] = $data["CodigoTransacao"];}
+                                if(isset($data["IdConta"])){$transacaoAtual["IdConta"] = $data["IdConta"];}
+                                if(isset($data["IsContabilizado"])){$transacaoAtual["IsContabilizado"] = $data["IsContabilizado"];}
+                                $transacaoAtual["Ano"] = $paramGet["Ano"];
+                                $transacaoAtual["Mes"] = $paramGet["Mes"];  
                                  
                                 $this->transacoes_model->Incluir($transacaoAtual);
 
@@ -284,6 +302,7 @@
                     }
                     else{
 
+                        //TRANSACAO 3
                         if((isset($data["IdCartao"])) && ($data["IdCartao"] > 0)){   
                             $transacaoAtual["DataCompra"] = $data["DataCompra"];
                         }else{
@@ -295,8 +314,9 @@
                         if(isset($data["Descricao"])){$transacaoAtual["Descricao"] = $data["Descricao"];}
                         if(isset($data["Valor"])){$transacaoAtual["Valor"] = $data["Valor"];}
                         if(isset($data["IdConta"])){$transacaoAtual["IdConta"] = $data["IdConta"];}
+                        if(isset($data["IsContabilizado"])){$transacaoAtual["IsContabilizado"] = $data["IsContabilizado"];}
                         
-                        //Transacao Parcelada 
+                        //TRANSACAO 2
                         if($transacaoAtual["IdTipoTransacao"] == 2){
                         
                             echo "Transação Tipo: 2<br>";  
@@ -318,6 +338,7 @@
                                     $parcela["Descricao"] = $data["Descricao"];
                                     $parcela["Valor"] = $data["Valor"];
                                     $parcela["IdConta"] = $data["IdConta"];
+                                    $parcela["IsContabilizado"] = $data["IsContabilizado"];
 
                                     $this->transacoes_model->Atualizar($parcela); 
 
