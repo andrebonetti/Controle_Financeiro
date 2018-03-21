@@ -10,6 +10,7 @@
 			  
             /* -- DATA -- */
             $data = transacao_getPosts();	
+            $data["IsContabilizado"] = true;
 
             if(ValidaEntidadeTransacao($data) == true)
             {
@@ -140,7 +141,7 @@
         // ----- UPDATE TRANSACAO -----
 		public function transacao_update($ano,$mes,$id,$pIsExclusao = null){
 				
-			$config = config_base(array("rollback" => true,"retorno" => false));//array("rollback" => true,"retorno" => false));
+			$config = config_base(array("rollback" => false,"retorno" => true));//array("rollback" => true,"retorno" => false));
             valida_usuario();
 
             $paramGet["Ano"]    = $ano;

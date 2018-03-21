@@ -5,7 +5,7 @@
        public function month_content($pAno,$pMes){
 			
         // -- CONFIG    
-		$config = config_base(array("showTemplate" => true,"rollback" => false));//array("rollback" => true,"retorno" => false)); 
+		$config = config_base(array("showTemplate" => true,"rollback" => true));//array("rollback" => true,"retorno" => false)); 
 
         // -- USUARIO --
         $paramBusca["Usuario"]          = valida_acessoUsuario();
@@ -20,6 +20,8 @@
         $lCompetencias                   = $this->geral_model->Listar();   
         $competenciaAtual   	         = geral_competenciaAtualTemplate($paramBusca);//TEMP
         $lcontaUsuario   	             = contas_BuscarContasCompleto($paramBusca,$competenciaAtual);
+
+        util_print($lcontaUsuario,"lcontas");
 
 		// -- DATA --
 		$qtdeDiasMes 	                 =  days_in_month($pMes);
@@ -51,17 +53,18 @@
                 $dataMes[$diaT]["lTransacoes"]  = array();
                 $dataMes[$diaT]["lFaturas"]      = array();
 
-                //Zera Saldo Inicial Dia
+                //Zera Saldo Inicial Dia          
                 foreach($lcontaUsuario["Contas_Banco"] as $keySaldo => $itemSaldo){
                     $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["SaldoDia"]           = 0;
                     $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["SaldoFinal"]         = $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["SaldoFinal"];
                     $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["CSS"]                = $lcontaUsuario["Contas_Banco"][$itemSaldo["Id"]]["CSS"];                              
                 }
+
             }
             else{
                 $diaT = $qtdeDiasMes;
             }
-
+            
             $paramBusca["Dia"]                      = $dia;
             $paramBusca["Mes"]                      = $pMes;
             $paramBusca["Ano"]                      = $pAno;
@@ -111,6 +114,7 @@
 
             $saldoGeralDia   = 0;
             $saldoGeralFinal = 0;
+
             foreach($dataMes[$diaT]["ResumoDia"]["Contas_Banco"] as $keyConta => $itemConta){
                 $lcontaUsuario["Contas_Banco"][$keyConta]["SaldoTela"]["SaldoFinal"] = $itemConta["SaldoFinal"];
                 
@@ -122,7 +126,7 @@
             $dataMes[$diaT]["ResumoDia"]["Geral"]["SaldoFinal"] = $saldoGeralFinal;
         }
 
-        $lcontaUsuario  = contas_saldo_validarConsistencia($lcontaUsuario,$dataMes[$qtdeDiasMes]["ResumoDia"]);
+        //$lcontaUsuario  = contas_saldo_validarConsistencia($lcontaUsuario,$dataMes[$qtdeDiasMes]["ResumoDia"]);
 
         // -- CARTAO --
         $data_cartao = array();

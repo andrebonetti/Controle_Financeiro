@@ -26,6 +26,8 @@
             }
             else{
 
+                $data["IsTransferencia"] = false;
+
                 // -- NOVA CATEGORIA
                 if($ci->input->post("categoria") == "nova-categoria"){
                     

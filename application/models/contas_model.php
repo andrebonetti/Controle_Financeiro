@@ -3,6 +3,7 @@
 
         function Buscar($pData){ 
             
+            if(isset($pParam["Id"])){$this->db->where("contas.Id",$pParam["Id"]);} 
             if(isset($pData["Usuario"]["Id"])){$this->db->where("contas.IdUsuario",$pData["Usuario"]["Id"]);}  
             
             $this->db->from("contas");   
@@ -11,6 +12,7 @@
 
         function Listar($pParam){ 
             
+            if(isset($pParam["Id"])){$this->db->where("contas.Id",$pParam["Id"]);} 
             if(isset($pParam["Usuario"]["Id"])){$this->db->where("contas.IdUsuario",$pParam["Usuario"]["Id"]);} 
             if( (isset($pParam["Ano"])) && isset($pParam["Mes"]) ) {
                 $this->db->where("contas.MesInicio <=",$pParam["Mes"]);
