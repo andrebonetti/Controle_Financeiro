@@ -76,4 +76,5 @@ $autoload['model'] = array(
     ,"contas_model"
     ,"contas_saldo_model"
     ,"bancos_model"
+    ,"cartoes_fatura_model"
 );

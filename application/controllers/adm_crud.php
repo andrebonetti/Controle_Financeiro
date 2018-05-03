@@ -11,10 +11,12 @@
             /* -- DATA -- */
             $data = transacao_getPosts();	
             $data["IsContabilizado"] = true;
+            $idContaRetorno = 1;
 
             if(ValidaEntidadeTransacao($data) == true)
             {
                 $this->db->trans_begin();
+                $idContaRetorno = $data["IdConta"];
 
                 if($data["IsTransferencia"] == true){
                     
@@ -22,8 +24,9 @@
 
                     contas_saldo_transferirValores($data);
 
-                    $origem  = $data["origem"];
-                    $destino = $data["destino"];
+                    $origem         = $data["origem"];
+                    $destino        = $data["destino"];
+                    $idContaRetorno = $data["destino"];
 
                     unset($data["origem"]);
                     unset($data["destino"]);
@@ -134,7 +137,7 @@
             }
 
             if($config["retorno"] == true){
-                redirect("content/month_content/".$data["Ano"]."/".$data["Mes"]."");
+                redirect("content/month_content/".$data["Ano"]."/".$data["Mes"]."/".$idContaRetorno);
             }
 		} 
  	

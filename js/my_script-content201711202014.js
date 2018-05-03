@@ -35,9 +35,15 @@ function ajustarTamanhoDiaSemana(){
 
 ajustarTamanhoDiaSemana();
 
-$(".menu-contas_usuario").on("change",function(){
+validarTransacoesConta();
 
-    IdConta = $(this).val();
+$(".menu-contas_usuario").on("change",function(){
+    validarTransacoesConta();
+});
+
+function validarTransacoesConta(){
+
+    IdConta = $(".menu-contas_usuario").val();
 
     $(".SaldoConta").hide();
     $("tr.content-day").hide();
@@ -64,8 +70,9 @@ $(".menu-contas_usuario").on("change",function(){
     }
 
     ajustarTamanhoDiaSemana();
+}
 
-})
+
 
 // --------------------- PREENCHE E CALCULA CATEGORIAS E SUB-CATEGORIAS --------------------- 
 $(".categoria-resumo").each(function() {

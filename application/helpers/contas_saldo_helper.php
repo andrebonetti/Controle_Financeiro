@@ -71,6 +71,23 @@
             $saldoFinalBanco    = $itemConta["Saldo"]["SaldoFinal"];
             $saldoFinalTela     = $pSaldUltimoDia["Contas_Banco"][$keyConta]["SaldoFinal"];
 
+            $despesasFinalBanco = $itemConta["Saldo"]["Despesas"];
+            $despesasFinalTela  = $pSaldUltimoDia["Contas_Banco"][$keyConta]["Despesas"];
+
+            $receitaFinalBanco  = $itemConta["Saldo"]["Receita"];
+            $receitaFinalTela   = $pSaldUltimoDia["Contas_Banco"][$keyConta]["Receita"];
+
+            if( (util_diferenca($despesasFinalBanco,$despesasFinalTela,true))
+            ||  (util_diferenca($receitaFinalBanco,$receitaFinalTela,true))
+            ){
+                echo "Despesas Final Diferente: ".$keyConta."<br>";
+                echo "<b>Despesas Final: </b> ".$despesasFinalBanco." != ".$despesasFinalTela."<br>"; 
+
+                echo "Receita Final Diferente: ".$keyConta."<br>";
+                echo "<b>Receita Final: </b> ".$receitaFinalBanco." != ".$receitaFinalTela."<br>"; 
+
+            }
+
             if(util_diferenca($saldoFinalBanco,$saldoFinalTela,true)){
                 
                 echo "Saldo Conta Final Diferente: ".$keyConta."<br>";

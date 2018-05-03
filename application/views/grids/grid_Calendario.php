@@ -126,10 +126,8 @@
 
                 <?php foreach($dataDia["lFaturas"] as $KeyTransacao =>  $itemTransacao){?> 
 
-                    <tr class="content-day
-                    transacao_conta-<?=$lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["Ordem"]?>"
-                    >
-
+                    <tr class="content-day transacao_conta-<?=$itemTransacao["IdConta"]?>" data-toggle="modal" data-target="#cartao_de_credito">
+                    
                         <td class="info-content css_cartao" style="<?=$lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["CSS"]?>"></td>
 
                         <td class="descricao" data-toggle="tooltip" data-placement="top">
