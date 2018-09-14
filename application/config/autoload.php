@@ -41,6 +41,7 @@ $autoload['helper'] = array(
     ,"contas_helper"
     ,"contas_saldo_helper"
     ,"util_helper.php"
+    ,"cartao_helper.php"
 );
 
 /*

@@ -6,11 +6,12 @@
         $pParamBusca["HasInnerJoin"]      = true;
 
         $lcontaUsuario  = $ci->contas_model->Listar($pParamBusca);  
+
         $lcontaUsuario  = contas_saldo_GerarSaldoMes($pParamBusca,$lcontaUsuario,$pCompetenciaAtual);
           
         //LEGADO (ANTES MULTIPLAS CONTAS) 
         if(empty($lcontaUsuario["Contas_Banco"])){
-            util_print($pParamBusca,"ParamBusca");
+            //util_print($pParamBusca,"ParamBusca");
             unset($pParamBusca["Ano"]);
             unset($pParamBusca["Mes"]);
             unset($pParamBusca["HasInnerJoin"]);

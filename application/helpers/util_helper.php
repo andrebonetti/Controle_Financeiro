@@ -2,16 +2,22 @@
 
     function util_print($pConteudo,$pTitulo = ""){
 
+        $titulo = "";
+
         echo "<br>------------------------------------------------------------------util_printArray----------------------------------------------------------------------------------<br>";
         if($pTitulo != ""){
-            echo "<h3>".$pTitulo."</h3>";
+            $titulo = "<h3>".$pTitulo."</h3>";
         }
 
         if(!is_array($pConteudo)){
+            echo $titulo;
             echo "<b>String => </b>".$pConteudo."<br>";
         }
 
         if(is_array($pConteudo)){
+
+            // $titulo .= " => ".count($pConteudo)."<br>";
+            // echo $titulo;
 
             foreach($pConteudo as $keyArray => $itemArray){
 
@@ -86,7 +92,7 @@
 
                                                             foreach($itemSub6Array as $keyItemSub7Array=> $itemSub7Array){
 
-                                                                echo "<br>------------------------------------------------------------------------------------------------ <b>[".$keyItemSub7Array."]</b> => ".print_r($itemSub7Array);
+                                                                echo "<br>------------------------------------------------------------------------------------------------ <b>[".$keyItemSub7Array."]</b> => ".$itemSub7Array;
                                                                 
                                                             }
                                                         }
@@ -112,6 +118,20 @@
                 
             }
         }
+
+    }
+
+    function util_printR($pConteudo,$pTitulo = ""){
+
+        $ci             = get_instance();
+
+        if($pTitulo != ""){
+            echo "<h3>".$pTitulo."</h3>";
+        }
+
+        echo '<pre>';
+        print_r( $pConteudo );
+        echo '</pre>';
 
     }
 

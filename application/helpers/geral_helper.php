@@ -2,16 +2,23 @@
 
     function geral_UpdateSaldo($pData,$pTipo = 0){
         
+        //echo "-------------------------geral_UpdateSaldo----------------------------------<br>";
+
         $ci = get_instance();
 
         if($pData["IdTipoTransacao"] == 1){
             $pData["PeriodoDe"] = true;
         }
         if($pData["IdTipoTransacao"] == 2){
-            $pData["PeriodoAte"] = true;
+            //$pData["PeriodoAte"] = true;
         }
+        
         unset($pData["Id"]);
+
+        //util_print($pData,"param Listar");
         $lGeral = $ci->geral_model->Listar($pData);
+
+        //util_print($lGeral,"lGeral");
 
         $cont = 1;
         foreach($lGeral as $itemGeral){		                    

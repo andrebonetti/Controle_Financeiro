@@ -79,14 +79,25 @@
             
             //if(isset($pData["Id"])){$this->db->where("transacoes.Id",$pData["id"]);}  
             //if(isset($pData["IdUsuario"])){$this->db->where("transacoes.IdUsuario",$pData["IdUsuario"]);}
+            if(isset($pData["Usuario"]["Id"])){$this->db->where("transacoes.IdUsuario",$pData["Usuario"]["Id"]);}  
 
             $this->db->from("transacoes");
 
             if(isset($pData["Ano"]) and isset($pData["Mes"])){
 
+                $WhereDia = "";
+                if(isset($pData["Dia"])){
+                    $WhereDia = "AND Dia = {$pData["Dia"]}";
+                }
+                $WhereIdCartao = "";
+                if(isset($pData["IdCartao"])){
+                    $WhereIdCartao = "AND IdCartao = {$pData["IdCartao"]}";
+                }
+
                 $wherePorTipo =  "(
                             Valor <> 0
-                            AND Dia = {$pData["Dia"]}
+                            {$WhereDia}
+                            {$WhereIdCartao}
                             AND
                             (
                                 (

@@ -319,8 +319,7 @@
             <!-- CATEGORIAS -->
             <div class="cartoes">
 
-                <!-- FATURA CARTAO -->
-                <?php foreach($lCartao as $itemCartao){?>
+                <?php foreach($lCartoes as $itemCartao){?>
 
                     <div class="box">
 
@@ -342,7 +341,7 @@
 
                                     <?php foreach($itemCartao["lTransacao"] as $content){?>
 
-                                        <tr class="content-day IdSubCategoria-<?=$content["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao" data-idcartao="<?=$itemCartao["Id"]?>"> 
+                                        <tr class="content-day transacao_idconta-1 IdSubCategoria-<?=$content["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao" data-idcartao="<?=$itemCartao["Id"]?>"> 
 
                                         <td class="info-content no-view"
                                                 data-id="<?=$content["Id"]?>"
@@ -384,26 +383,8 @@
 
                                 <div class="total_cartao">
 
-                                    <span class="alteracao_manual valor-total" name="Cartao" title="Alterar" value="0">Alterar</span>
-                                    <span class="valor_span"><?=numeroEmReais2(-$lcontaUsuario["Geral"]["Cartao"])?></span> 
-
-                                    <?php
-                                    /* form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-Cartao"))?>
-
-                                        <input type="hidden" name="tipo_alteracao" value="Cartao">
-                                        <input type="hidden" name="ano" value="<?=$dataAtual["Ano"]?>">
-                                        <input type="hidden" name="mes" value="<?=$dataAtual["Mes"]?>">
-                                        <input type="hidden" name="ValorAnterior" value="<?=$lcontaUsuario["Geral"]["Cartao"]["Cartao"]?>">
-                                        <input type="hidden" name="SaldoMes" value="<?=$lcontaUsuario["Geral"]["Cartao"]["SaldoMes"]?>">
-                                        <input type="hidden" name="SaldoFinal" value="<?=$lcontaUsuario["Geral"]["Cartao"]["SaldoFinal"]?>">
-
-                                        <input type="text" class="form-control input-Cartao" name="valor" value="<?=numeroEmReais2($competenciaAtual["Cartao"])?>">
-
-                                        <input type="submit" class="btn btn-success" value="Ok"> 
-
-                                    <?= form_close()*/?>
-                                    
-
+                                    <span class="valor_span"><?=numeroEmReais2($itemCartao["Saldo"])?></span> 
+                             
                                 </div>
 
                             </div>

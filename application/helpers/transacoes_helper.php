@@ -124,7 +124,8 @@
         }
 
         //CONTABILIZACAO     
-        if(!empty($ci->input->post("isContabilizado"))){
+        $post_isContabilizado = $ci->input->post("isContabilizado");
+        if(!empty($post_isContabilizado)){
             if($ci->input->post("isContabilizado") == "on"){
                 $data["IsContabilizado"] = true;
             }
@@ -239,7 +240,7 @@
 
         if($isValidado == false){
             echo "Existem campos obrigatórios não preenchidos";
-            util_print($data);
+            //util_print($data);
             $ci = get_instance();
             $ci->session->set_flashdata('msg-error',"Existem campos obrigatórios não preenchidos");
         }

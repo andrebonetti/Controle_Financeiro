@@ -41,6 +41,7 @@
 		function Buscar($pData){
             
 			if(isset($pData["Id"])){$this->db->where("Id",$pData["Id"]);}  
+            if(isset($pData["Usuario"]["Id"])){$this->db->where("IdUsuario",$pData["Usuario"]["Id"]);}  
             if(isset($pData["Receita"])){$this->db->where("Receita",$pData["Receita"]);}
             if(isset($pData["Despesas"])){$this->db->where("Despesas",$pData["Despesas"]);}
             if(isset($pData["Salario"])){$this->db->where("Salario",$pData["Salario"]);}

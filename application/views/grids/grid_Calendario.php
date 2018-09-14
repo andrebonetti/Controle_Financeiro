@@ -5,13 +5,13 @@
         <div class="despesas">
             <p> 
                 <span class="alteracao_manual" name="despesas" title="Alterar" value="0">Despesas:</span>
-                <span class="valor_span"><?=numeroEmReais2($lcontaUsuario["Geral"]["Despesas"])?></span>
+                <span class="valor_span"><?=numeroEmReais2($lcontaUsuario["Contas_Banco"][$contaPrincipal]["SaldoTela"]["Despesas"])?></span>
             </p>
         </div> 
         <div class="receita">
             <p> 
                 <span class="alteracao_manual" name="receita" value="0">Receita:</span>
-                <span class="valor_span"><?=numeroEmReais2($lcontaUsuario["Geral"]["Receita"])?></span>
+                <span class="valor_span"><?=numeroEmReais2($lcontaUsuario["Contas_Banco"][$contaPrincipal]["SaldoTela"]["Receita"])?></span>
             </p>
         </div> 
         
@@ -126,7 +126,11 @@
 
                 <?php foreach($dataDia["lFaturas"] as $KeyTransacao =>  $itemTransacao){?> 
 
-                    <tr class="content-day transacao_conta-<?=$itemTransacao["IdConta"]?>" data-toggle="modal" data-target="#cartao_de_credito">
+                    <tr class="
+                    content-day 
+                    transacao_conta-<?=$itemTransacao["IdConta"]?>
+                    transacao_idconta-<?=$itemTransacao["IdConta"]?>" 
+                    data-toggle="modal" data-target="#cartao_de_credito">
                     
                         <td class="info-content css_cartao" style="<?=$lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["CSS"]?>"></td>
 

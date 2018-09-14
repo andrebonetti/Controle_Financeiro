@@ -46,7 +46,8 @@ function validarTransacoesConta(){
     IdConta = $(".menu-contas_usuario").val();
 
     $(".SaldoConta").hide();
-    $("tr.content-day").hide();
+
+    $(".transacoes").find("tr.content-day").hide();
     $("tr.saldoDia_conta").hide();
     $("tr.saldoFinal_conta").hide();
     $("tr.saldoDia_geral").hide();
@@ -55,7 +56,7 @@ function validarTransacoesConta(){
     if(IdConta == "Geral"){
 
         $(".SaldoConta").css({"display":"table","width":"100%"});
-        $("tr.content-day").css({"display":"table","width":"100%"});
+        DOM_trans_contentDay.css({"display":"table","width":"100%"});
         $("tr.saldoDia_conta").css({"display":"table","width":"100%"});
         $("tr.saldoFinal_conta").css({"display":"table","width":"100%"});
         $("tr.saldoDia_geral").css({"display":"table","width":"100%"});
@@ -64,7 +65,7 @@ function validarTransacoesConta(){
     }
     else{
         $(".SaldoOrdem-"+IdConta).css({"display":"table","width":"100%"});
-        $("tr.transacao_idconta-"+IdConta).css({"display":"table","width":"100%"});
+        $(".transacoes").find("tr.transacao_idconta-"+IdConta).css({"display":"table","width":"100%"});
         $("tr.saldoDia_conta-"+IdConta).css({"display":"table","width":"100%"});
         $("tr.saldoFinal_conta-"+IdConta).css({"display":"table","width":"100%"});
     }
