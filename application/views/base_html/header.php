@@ -23,9 +23,3 @@
 	<body>
 
         <?=anchor("/","",array("class"=>"no-view base_url"))?>
-        
-        <header> 
-            <div class="myContainer">
-                
-            </div>    
-        </header>

@@ -1,6 +1,15 @@
 var base_url = $(".base_url").attr("href");
 
 // --------------------- VIEW ------------------- 
+
+ajustarTamanhoDiaSemana();
+
+validarTransacoesConta();
+
+$(".menu-contas_usuario").on("change",function(){
+    validarTransacoesConta();
+});
+
 function ajustarTamanhoDiaSemana(){
 
     var ultimaSemana = $(".dia-calendario").last().data("semana");
@@ -33,14 +42,6 @@ function ajustarTamanhoDiaSemana(){
 
 }
 
-ajustarTamanhoDiaSemana();
-
-validarTransacoesConta();
-
-$(".menu-contas_usuario").on("change",function(){
-    validarTransacoesConta();
-});
-
 function validarTransacoesConta(){
 
     IdConta = $(".menu-contas_usuario").val();
@@ -54,17 +55,15 @@ function validarTransacoesConta(){
     $("tr.saldoFinal_geral").hide();
 
     if(IdConta == "Geral"){
-
         $(".SaldoConta").css({"display":"table","width":"100%"});
         DOM_trans_contentDay.css({"display":"table","width":"100%"});
         $("tr.saldoDia_conta").css({"display":"table","width":"100%"});
         $("tr.saldoFinal_conta").css({"display":"table","width":"100%"});
         $("tr.saldoDia_geral").css({"display":"table","width":"100%"});
         $("tr.saldoFinal_geral").css({"display":"table","width":"100%"});
-
     }
     else{
-        $(".SaldoOrdem-"+IdConta).css({"display":"table","width":"100%"});
+        $(".SaldoContaId-"+IdConta).css({"display":"table","width":"100%"});
         $(".transacoes").find("tr.transacao_idconta-"+IdConta).css({"display":"table","width":"100%"});
         $("tr.saldoDia_conta-"+IdConta).css({"display":"table","width":"100%"});
         $("tr.saldoFinal_conta-"+IdConta).css({"display":"table","width":"100%"});

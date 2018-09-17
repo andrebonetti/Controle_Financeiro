@@ -5,7 +5,7 @@
        public function month_content($pAno,$pMes,$pConta = null){
 
         // -- CONFIG    
-		$config = config_base(array("showTemplate" => true,"rollback" => false));//array("rollback" => true,"retorno" => false)); 
+		$config = config_base(array("showTemplate" => true,"rollback" => true));//array("rollback" => true,"retorno" => false)); 
 
         // -- USUARIO --
         $paramBusca["Usuario"]                      = valida_acessoUsuario();

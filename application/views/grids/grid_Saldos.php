@@ -1,8 +1,9 @@
 <div class="saldos">
 
+    <!--LISTA CONTAS-->
     <?php foreach($lcontaUsuario["Contas_Banco"] as $keyConta => $itemConta){ ?>
 
-        <div class="SaldoConta SaldoOrdem-<?=$itemConta["Ordem"]?>" id="saldo-conta-<?=$keyConta?>" style="<?php /*if($key != "Total"){echo "display:none;";}  */?>">
+        <div class="SaldoConta SaldoContaId-<?=$keyConta?>" id="saldo-conta-<?=$keyConta?>" style="<?php /*if($key != "Total"){echo "display:none;";}  */?>">
 
             <div class="saldo-anterior" value="<?=$itemConta["Saldo"]["SaldoAnterior"]?>">               
                 Saldo Anterior: <span><?=numeroEmReais2($itemConta["Saldo"]["SaldoAnterior"])?></span> 
@@ -26,6 +27,7 @@
 
     <?php } ?>
 
+    <!--GERAL-->
     <div class="SaldoConta" id="saldo-conta-Geral" style="<?php /*if($key != "Total"){echo "display:none;";}  */?>">
 
         <div class="saldo-anterior" value="<?=$lcontaUsuario["Geral"]["Saldo"]["SaldoAnterior"]?>">               
