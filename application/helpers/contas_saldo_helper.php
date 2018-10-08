@@ -48,7 +48,6 @@
             $sContaSaldo["IdConta"]         = $dContaSaldo["IdConta"];
             $sContaSaldo["Ano"]             = $novaData["Ano"];
             $sContaSaldo["Mes"]             = $novaData["Mes"];
-            $sContaSaldo["SaldoAnterior"]   = $dContaSaldo["SaldoFinal"];
             $sContaSaldo["SaldoMes"]        = 0;
             $sContaSaldo["SaldoFinal"]      = 0;
 

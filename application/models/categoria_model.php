@@ -6,6 +6,7 @@
         function Listar($pData = null,$pOrderBy = null){
 
             if(isset($pData["Id"])){$this->db->where("Id",$pData["Id"]);}  
+            if(isset($pData["Usuario"]["Id"])){$this->db->where("IdUsuario",$pData["Usuario"]["Id"]);}  
             if(isset($pData["Descricao"])){$this->db->where("Descricao",$pData["Descricao"]);}
 
             $this->db->from("categoria");

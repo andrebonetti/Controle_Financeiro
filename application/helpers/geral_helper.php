@@ -12,21 +12,23 @@
         if($pData["IdTipoTransacao"] == 2){
             //$pData["PeriodoAte"] = true;
         }
+
+        $pData["Usuario"]["Id"] = $pData["IdUsuario"];
         
         unset($pData["Id"]);
 
-        //util_print($pData,"param Listar");
         $lGeral = $ci->geral_model->Listar($pData);
 
-        //util_print($lGeral,"lGeral");
+        util_printR($lGeral,"lGeral");
 
         $cont = 1;
         foreach($lGeral as $itemGeral){		                    
 
-            $paramMes["Mes"]        = $itemGeral["Mes"]; 
-            $paramMes["Ano"]        = $itemGeral["Ano"];
-            $paramMes["Valor"]      = $pData["Valor"];
-            //$paramMes["IdConta"]    = $pData["IdConta"];
+            $paramMes                   = array();
+            $paramMes["Mes"]            = $itemGeral["Mes"]; 
+            $paramMes["Ano"]            = $itemGeral["Ano"];
+            $paramMes["Valor"]          = $pData["Valor"];
+            $paramMes["Usuario"]["Id"]  = $pData["IdUsuario"];
 
             if((($cont == 1)or($pData["IdTipoTransacao"] == 1))&&(!isset($pData["IsVerificacao"]))){
                 geral_UpdateSaldoMes($paramMes);
@@ -39,7 +41,7 @@
 
             $paramGeral["Mes"]           = $itemGeral["Mes"]; 
             $paramGeral["Ano"]           = $itemGeral["Ano"];
-            //$paramGeral["IdConta"]       = $pData["IdConta"];
+            $paramGeral["Usuario"]["Id"] = $pData["IdUsuario"];
             $paramGeral["PeriodoDe"]     = true;
 
             if(isset($pData["IsVerificacao"])){
@@ -60,15 +62,13 @@
         
         $lGeral = $ci->geral_model->Listar($pData);
         
-        //var_dump($lGeral);
-
         $saldoAnterior = 0;
         $cont = 0;
         foreach($lGeral as $itemGeral){		                    
 
             $dataGeral["Mes"]   = $itemGeral["Mes"]; 
             $dataGeral["Ano"]   = $itemGeral["Ano"];
-            $dataGeral["Id"]   = $itemGeral["Id"];
+            $dataGeral["Id"]    = $itemGeral["Id"];
             
             if($cont > 0){
                 

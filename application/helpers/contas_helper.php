@@ -5,8 +5,9 @@
         $ci = get_instance();
         $pParamBusca["HasInnerJoin"]      = true;
 
-        $lcontaUsuario  = $ci->contas_model->Listar($pParamBusca);  
+        util_printR($pParamBusca,"pParamBusca");
 
+        $lcontaUsuario  = $ci->contas_model->Listar($pParamBusca);  
         $lcontaUsuario  = contas_saldo_GerarSaldoMes($pParamBusca,$lcontaUsuario,$pCompetenciaAtual);
           
         //LEGADO (ANTES MULTIPLAS CONTAS) 

@@ -5,7 +5,7 @@
        public function month_content($pAno,$pMes,$pConta = null){
 
         // -- CONFIG    
-		$config = config_base(array("showTemplate" => true,"rollback" => true));//array("rollback" => true,"retorno" => false)); 
+		$config = config_base(array("showTemplate" => true,"rollback" => false));//array("rollback" => true,"retorno" => false)); 
 
         // -- USUARIO --
         $paramBusca["Usuario"]                      = valida_acessoUsuario();
@@ -16,8 +16,12 @@
 
         $this->db->trans_begin();
 
-        // -- COMPETENCIAS --
-        //$lCompetencias                              = $this->geral_model->Listar();  
+        #COMPETENCIAS --
+        $paramListaU["Usuario"]["Id"]               = $paramBusca["Usuario"]["Id"];
+        $lCompetencias                              = $this->geral_model->Listar($paramListaU); 
+        
+        //util_printR($lCompetencias,"lCompetencias");
+        
         #BUSCA/CRIA      
         $competenciaAtual   	                    = geral_competenciaAtualTemplate($paramBusca);//TEMP
 
@@ -247,9 +251,10 @@
         }
             
         // -- CATEGORIAS --
-        $lCategorias         = $this->categoria_model->Listar();	
-        $lSubCategoriasTotal =  $this->subCategoria_model->Listar();	
-        //$lCategoriasFinal    = [];  
+        $paramCat["Usuario"]["Id"]  = $paramBusca["Usuario"]["Id"];
+        $lCategorias                = $this->categoria_model->Listar($paramCat);	
+        $lSubCategoriasTotal        = $this->subCategoria_model->Listar($paramCat);
+        $lCategoriasFinal           = array();	
         foreach($lCategorias as $itemCategoria)
         {
             $pDataSubCategoria["IdCategoria"] = $itemCategoria["IdCategoria"];
@@ -305,10 +310,12 @@
         "fatura_cartao"   		=> $data_cartao,
         "all_sub_categorias"  	=> $lSubCategoriasTotal,
         "sub_categorias"  		=> $lCategoriasFinal,      
-        //"lCompetencias"         => $lCompetencias,
+        "lCompetencias"         => $lCompetencias,
 		"dataMes"      		    => $dataMes,
         "lcontaUsuario"      	=> $lcontaUsuario,
         "contaPrincipal"        => $principal);
+
+        //util_printR($content,"Conteudo Controller");
 		
         if($config["showTemplate"]){
             // -- VIEW --

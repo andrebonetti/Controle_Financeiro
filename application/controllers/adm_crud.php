@@ -5,22 +5,26 @@
         // ----- INSERT TRANSACAO -----
         public function transacao_insert(){
 
-            $config = config_base(array("rollback" => false,"retorno" => true));//array("rollback" => true,"retorno" => false));      
-            valida_usuario();
+            $config                     = config_base(array("rollback" => false,"retorno" => true));//array("rollback" => true,"retorno" => false));      
+            $usuario                    = valida_acessoUsuario();
 			  
             /* -- DATA -- */
-            $data = transacao_getPosts();	
-            $data["IsContabilizado"] = true;
-            $idContaRetorno = 1;
+            $data                       = transacao_getPosts();	
+            util_printR($data,"data POST");
 
-            if(ValidaEntidadeTransacao($data) == true)
+            $data["IsContabilizado"]    = true;
+            $idContaRetorno             = 1;
+
+            if(ValidaEntidadeTransacao($data))
             {
+                echo "<br>transacao Validada";
                 $this->db->trans_begin();
+
                 $idContaRetorno = $data["IdConta"];
 
                 if($data["IsTransferencia"] == true){
                     
-                    echo "É Transferência <br>";
+                    echo "<br>É Transferência";
 
                     contas_saldo_transferirValores($data);
 
@@ -44,24 +48,13 @@
 
                     $this->transacoes_model->Incluir($data);
 
-                    // $data["IdCategoria"]    = 27;
-                    // $data["IdSubCategoria"] = 134;
-                    // $data["IdConta"]        = $destino;
-                    // $data["Valor"]          = $data["Valor"]*(-1);
-
-                    // if($data["IdTipoTransacao"] == 1){
-                    //     $data["AnoFim"] = 2050;
-                    //     $data["MesFim"] = 12;
-                    // }
-
-                    // $this->transacoes_model->Incluir($data);
-
                 }
                 else{
                     if($data["Valor"] > 0){$tipo = 1;}
                     else{$tipo = 2;}
-                    
-                    echo "IdTipoTransacao: ". $data["IdTipoTransacao"]."<br>";    
+                    echo "<br> Tipo: ". $tipo;    
+
+                    echo "<br> IdTipoTransacao: ". $data["IdTipoTransacao"];    
 
                     // -- TYPE 1 = Transação Recorrente -- 
                     if($data["IdTipoTransacao"] == 1){
@@ -189,8 +182,12 @@
             //util_print($data,"POST");
             //util_print($transacaoAtual,"TRANSACAO - BD");
 
+            $idContaRetorno     = 1;
+
             if(ValidaEntidadeTransacao($data))
             {
+
+                $idContaRetorno = $data["IdConta"];
 
                 $this->db->trans_begin();
 
@@ -535,7 +532,7 @@
             }
 
             if($config["retorno"] == true){
-                redirect("content/month_content/".$ano."/".$mes);
+                redirect("content/month_content/".$ano."/".$mes."/".$idContaRetorno);
             }
             
 		}
