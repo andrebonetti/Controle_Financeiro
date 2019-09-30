@@ -4,10 +4,12 @@
 		    
        public function month_content($pAno,$pMes,$pConta = null){
 
-        // -- CONFIG    
-		$config = config_base(array("showTemplate" => true,"rollback" => true));//array("rollback" => true,"retorno" => false)); 
+        $this->output->enable_profiler(FALSE);
 
-        // -- USUARIO --
+        // -- CONFIG    
+		$config = config_base(array("showTemplate" => true,"rollback" => false));//array("rollback" => true,"retorno" => false)); 
+
+        // -------------------------- USUARIO LOGADO ----------------------------------------
         $paramBusca["Usuario"]                      = valida_acessoUsuario();
 
         // -- SALDO --
@@ -16,27 +18,31 @@
 
         $this->db->trans_begin();
 
-        // -- COMPETENCIAS --
-        //$lCompetencias                              = $this->geral_model->Listar();  
+        #COMPETENCIAS --
+        $paramListaU["Usuario"]["Id"]               = $paramBusca["Usuario"]["Id"];
+        $lCompetencias                              = $this->geral_model->Listar($paramListaU); 
+        
+        //util_print($lCompetencias[count($lCompetencias)-1],"lCompetencias Ultima");
+        
         #BUSCA/CRIA      
         $competenciaAtual   	                    = geral_competenciaAtualTemplate($paramBusca);//TEMP
 
-        //util_printR($competenciaAtual,"competencia_Atual");
+        //util_print($competenciaAtual,"competencia_Atual");
 
         #CARTOES - FATURA
         $paramCartoesFatura["Cartoes"]["IdUsuario"] = $paramBusca["Usuario"]["Id"];
         $paramCartoesFatura["Ano"]                  = $competenciaAtual["Ano"];
         $paramCartoesFatura["Mes"]                  = $competenciaAtual["Mes"];
 
-        //util_printR($paramCartoesFatura,"paramCartoesFatura");
+        //util_print($paramCartoesFatura,"paramCartoesFatura");
 
-        $lCartoes_Fatura                            = $this->cartoes_fatura_model->Listar($paramCartoesFatura);   
+        $lCartoes_Fatura                            = cartao_buscarFaturasMes($paramCartoesFatura);   
 
-        //util_printR($lCartoes_Fatura,"lCartoes_Fatura");
+        //util_print($lCartoes_Fatura,"lCartoes_Fatura");
 
         $lcontaUsuario   	                        = contas_BuscarContasCompleto($paramBusca,$competenciaAtual);
 
-        //util_printR($lcontaUsuario,"lcontaUsuario");
+        //util_print($lcontaUsuario,"lcontaUsuario");
 
 		// -- DATA --
 		$qtdeDiasMes 	                            =  days_in_month($pMes);
@@ -62,13 +68,35 @@
             $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["Despesas"]       =  0;
             $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["Receita"]        =  0;
         }
+     
+        if(count($lcontaUsuario["Contas_Banco"]) == 0){
+            $lcontaUsuario["Contas_Banco"][1]["Id"] = 1;
+            $lcontaUsuario["Contas_Banco"][1]["IdUsuario"] = 1;
+            $lcontaUsuario["Contas_Banco"][1]["IdBanco"] = 1;
+            $lcontaUsuario["Contas_Banco"][1]["Agencia"]= 6404;
+            $lcontaUsuario["Contas_Banco"][1]["Conta"] = 25462-2;
+            $lcontaUsuario["Contas_Banco"][1]["IdTipo"] = 1;
+            $lcontaUsuario["Contas_Banco"][1]["Descricao"] = "Itau C/C";
+            $lcontaUsuario["Contas_Banco"][1]["Ordem"] = 1;
+            $lcontaUsuario["Contas_Banco"][1]["AnoInicio"] = 2018;
+            $lcontaUsuario["Contas_Banco"][1]["MesInicio"] = 2;
+            $lcontaUsuario["Contas_Banco"][1]["ValorInicio"] = -123;
+            $lcontaUsuario["Contas_Banco"][1]["CSS"] = "background-color: orange";
+            $lcontaUsuario["Contas_Banco"][1]["Saldo"]["SaldoAnterior"] = 0;
+            $lcontaUsuario["Contas_Banco"][1]["Saldo"]["SaldoMes"] = 0;
+            $lcontaUsuario["Contas_Banco"][1]["Saldo"]["SaldoFinal"] = 0;
+            $lcontaUsuario["Contas_Banco"][1]["SaldoTela"]["SaldoFinal"] = 0;
+            $lcontaUsuario["Contas_Banco"][1]["SaldoTela"]["Despesas"] = 0;
+            $lcontaUsuario["Contas_Banco"][1]["SaldoTela"]["Receita"] = 0;
+        }
 
-        //util_printR($lcontaUsuario,"lcontaUsuario => SALDO INICIAL");
+        //util_print($lcontaUsuario,"lcontaUsuario => SALDO INICIAL");
 
         // -- DIAS --    
         for ($dia = 1; $dia <= 31 ;$dia++){
             
             if($dia <= $qtdeDiasMes){
+
                 $diaT = $dia;
                 $dataMes[$diaT]["lTransacoes"]  = array();
                 $dataMes[$diaT]["lFaturas"]      = array();
@@ -95,6 +123,8 @@
             $diaSemana                              = date("w", mktime(0,0,0,$paramBusca["Mes"],$paramBusca["Dia"],$paramBusca["Ano"])); 
         
             $lTransacoes                            = $this->transacoes_model->ListarPorRegraTipo($paramBusca);
+
+            //util_print($lTransacoes,"lTransacoes => ".$dia);
 
             foreach($lTransacoes as $KeyTransacao => $itemTransacao){
 
@@ -137,12 +167,11 @@
 
             //CARTOES
             if(count($lCartoes_Fatura) > 0){
-                
+               
                 foreach($lCartoes_Fatura as $keyFatura => $itemFatura){
-
+                    
                     //echo $diaT." - ".$itemFatura["DiaVencimento"]."<br>";
                     if(!util_diferenca($diaT,$itemFatura["DiaVencimento"],true)){
-                        
                         $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["SaldoDia"]           += $itemFatura["Valor"];
                         $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["SaldoFinal"]         += $itemFatura["Valor"];
 
@@ -167,18 +196,19 @@
              
             }else{
                 //LEGADO / SEM CARTAO
-
                 if( (($diaT == 9)&&( ($diaSemana != 6)&&($diaSemana != 0) )) || ($diaT == 10 && $diaSemana == 1) || ($diaT == 11 && $diaSemana == 1) ){
                     
-                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][1]["SaldoDia"]           += $competenciaAtual["Cartao"]*-1;
-                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][1]["SaldoFinal"]         += $competenciaAtual["Cartao"]*-1;
-                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][1]["Despesas"]           += $competenciaAtual["Cartao"];
+                    if(isset($dataMes[$diaT]["ResumoDia"]["Contas_Banco"][1])){
+                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][1]["SaldoDia"]           += $competenciaAtual["Cartao"]*-1;
+                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][1]["SaldoFinal"]         += $competenciaAtual["Cartao"]*-1;
+                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][1]["Despesas"]           += $competenciaAtual["Cartao"];
 
-                    $itemFaturaCartao["Descricao"]  = "Fatura Cartao"; 
-                    $itemFaturaCartao["Valor"]      = $competenciaAtual["Cartao"]*-1;
-                    $itemFaturaCartao["IdConta"]    = 1;
+                        $itemFaturaCartao["Descricao"]  = "Fatura Cartao"; 
+                        $itemFaturaCartao["Valor"]      = $competenciaAtual["Cartao"]*-1;
+                        $itemFaturaCartao["IdConta"]    = 1;
 
-                    array_push($dataMes[$diaT]["lFaturas"],$itemFaturaCartao);              
+                        array_push($dataMes[$diaT]["lFaturas"],$itemFaturaCartao);   
+                    }           
                 }
             }
 
@@ -205,14 +235,14 @@
             $dataMes[$diaT]["ResumoDia"]["Geral"]["Receita"]    = $receitaGeralDia;
             $dataMes[$diaT]["ResumoDia"]["Geral"]["Despesas"]   = $despesasGeralDia;
 
-            //util_print($dataMes[$diaT]["ResumoDia"]["Geral"],$diaT);
+            //util_print($dataMes[$diaT]["ResumoDia"]["Geral"],"Saldo => ".$diaT);
         }
 
         // -- CARTOES --
         $lCartoes           = $this->cartoes_model->ListarCartoesAtivos(array("Ano"=>$pAno,"Mes"=>$pMes));
         $lCartoes           = util_transforamaIdEmChave($lCartoes,"Id");
 
-        //util_printR($lCartoes,"lCartoes");
+        //util_print($lCartoes,"lCartoes");
         unset($paramBusca["Dia"]);
         foreach($lCartoes as $itemCartao){
 
@@ -229,10 +259,15 @@
             }
         }
 
-        if($paramBusca["Mes"] >= 2 && $paramBusca["Ano"] >= 2018){
-            //util_printR($lcontaUsuario,"lcontaUsuario => ANTES CONSISTENCIA");
+        //util_print($paramBusca,"paramBusca");
+        if(
+            ($paramBusca["Mes"] >= 2 && $paramBusca["Ano"] == 2018)
+            ||
+            ($paramBusca["Ano"] > 2018)
+        ){
+            //util_print($lcontaUsuario,"lcontaUsuario => ANTES CONSISTENCIA");
             $lcontaUsuario  = contas_saldo_validarConsistencia($lcontaUsuario,$dataMes[$qtdeDiasMes]["ResumoDia"]);
-            //util_printR($lcontaUsuario,"lcontaUsuario => DEPOIS CONSISTENCIA");
+            //util_print($lcontaUsuario,"lcontaUsuario => DEPOIS CONSISTENCIA");
         }
 
         // -- CARTAO --
@@ -247,9 +282,10 @@
         }
             
         // -- CATEGORIAS --
-        $lCategorias         = $this->categoria_model->Listar();	
-        $lSubCategoriasTotal =  $this->subCategoria_model->Listar();	
-        //$lCategoriasFinal    = [];  
+        $paramCat["Usuario"]["Id"]  = $paramBusca["Usuario"]["Id"];
+        $lCategorias                = $this->categoria_model->Listar($paramCat);	
+        $lSubCategoriasTotal        = $this->subCategoria_model->Listar($paramCat);
+        $lCategoriasFinal           = array();	
         foreach($lCategorias as $itemCategoria)
         {
             $pDataSubCategoria["IdCategoria"] = $itemCategoria["IdCategoria"];
@@ -305,10 +341,12 @@
         "fatura_cartao"   		=> $data_cartao,
         "all_sub_categorias"  	=> $lSubCategoriasTotal,
         "sub_categorias"  		=> $lCategoriasFinal,      
-        //"lCompetencias"         => $lCompetencias,
+        "lCompetencias"         => $lCompetencias,
 		"dataMes"      		    => $dataMes,
         "lcontaUsuario"      	=> $lcontaUsuario,
         "contaPrincipal"        => $principal);
+
+        //util_print($content,"Conteudo Controller");
 		
         if($config["showTemplate"]){
             // -- VIEW --

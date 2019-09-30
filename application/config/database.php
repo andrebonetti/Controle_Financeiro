@@ -19,7 +19,7 @@ $db['default']['hostname'] = 'andretemp.mysql.dbaas.com.br';
 $db['default']['username'] = 'andretemp';
 $db['default']['password'] = 'flatronW1943C';
 $db['default']['database'] = 'andretemp';
-$db['default']['dbdriver'] = 'mysql';
+$db['default']['dbdriver'] = 'mysqli';
 
 /*$db['default']['hostname'] = '191.232.242.255';
 $db['default']['username'] = 'gerensys';

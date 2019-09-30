@@ -1,23 +1,15 @@
 <header class="content"> 
     <div class="myContainer">
-        <?php /*anchor("Login/sair","Sair",array("class"=>"sair")) */?>
         <ul class="conta-opcoes nav navbar-nav">
-            <li class="dropdown nome-usuario">
-               
+            <li class="dropdown nome-usuario">              
                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                        ANDRE BONETTI DE OLIVEIRA - DESENV<span class="caret">
+                        <?=$usuario["Nome"]?>
                     </span>
                 </a>
-
-                <ul class="dropdown-menu"> 
-                    <li>
-                        <a href="#" data-toggle="modal" data-target="#modal-trocar-senha"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>Alterar Senha</a>
-                    </li>    
-                </ul>   
             </li> 
             <li class="sair">
-                <a href="/index.php/Login/sair"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>Sair</a>	
+                <?=anchor("login/sair","<span class='glyphicon glyphicon-off' aria-hidden='true'></span>Sair")?>
             </li>
         </ul>
     </div>    

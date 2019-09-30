@@ -3,7 +3,9 @@
     function transacao_getPosts(){
         
 		$ci = get_instance();
-        
+
+        $usuario                    = valida_acessoUsuario();
+  
         if($ci->input->post("dia") != "")       {$data["Dia"] = $ci->input->post("dia");}
         if($ci->input->post("idCartao") != "")  {$data["IdCartao"] = $ci->input->post("idCartao");}
         $data["Descricao"] 	        = $ci->input->post("descricao");	
@@ -31,13 +33,15 @@
                 // -- NOVA CATEGORIA
                 if($ci->input->post("categoria") == "nova-categoria"){
                     
-                    $novaCategoria["DescricaoCategoria"]	= $ci->input->post("adiciona-categoria");
+                    $novaCategoria["IdUsuario"]                 = $usuario["Id"];
+                    $novaCategoria["DescricaoCategoria"]	    = $ci->input->post("adiciona-categoria");
                     $ci->categoria_model->Incluir($novaCategoria);
                     
                     $novaCategoria = $ci->categoria_model->Buscar($novaCategoria);
 
-                    $novaSubCategoria["DescricaoSubCategoria"] = $ci->input->post("adiciona-subcategoria");
-                    $novaSubCategoria["IdCategoria"] = $novaCategoria["IdCategoria"];
+                    $novaSubCategoria["DescricaoSubCategoria"]  = $ci->input->post("adiciona-subcategoria");
+                    $novaSubCategoria["IdCategoria"]            = $novaCategoria["IdCategoria"];
+                    $novaSubCategoria["IdUsuario"]              = $usuario["Id"];
                     $ci->subCategoria_model->Incluir($novaSubCategoria); 
 
                     $novaSubCategoria = $ci->subCategoria_model->Buscar($novaSubCategoria);
@@ -60,6 +64,7 @@
 
                             $novaSubCategoria["DescricaoSubCategoria"]  = $ci->input->post("adiciona-sub_categoria");
                             $novaSubCategoria["IdCategoria"]            = $ci->input->post("categoria");
+                            $novaSubCategoria["IdUsuario"]              = $usuario["Id"];
                             $ci->subCategoria_model->Incluir($novaSubCategoria); 
 
                             $novaSubCategoria = $ci->subCategoria_model->Buscar($novaSubCategoria);

@@ -1,4 +1,7 @@
 var base_url = $(".base_url").attr("href");
+var menuCompetencias = $(".menu-competencias");
+var slc_contasUsuario = $(".menu-contas_usuario");
+
 
 // --------------------- VIEW ------------------- 
 
@@ -6,8 +9,18 @@ ajustarTamanhoDiaSemana();
 
 validarTransacoesConta();
 
-$(".menu-contas_usuario").on("change",function(){
-    validarTransacoesConta();
+slc_contasUsuario.change( function(){
+    validarTransacoesConta();   
+});
+
+menuCompetencias.change( function(){
+
+    var item = $(this);
+    var actionForm = $(this).closest("form").attr("action");
+
+    item.closest("form").attr("action",actionForm+"/"+item.val());
+    item.closest("form").submit();
+    
 });
 
 function ajustarTamanhoDiaSemana(){
@@ -56,7 +69,7 @@ function validarTransacoesConta(){
 
     if(IdConta == "Geral"){
         $(".SaldoConta").css({"display":"table","width":"100%"});
-        DOM_trans_contentDay.css({"display":"table","width":"100%"});
+        //DOM_trans_contentDay.css({"display":"table","width":"100%"});
         $("tr.saldoDia_conta").css({"display":"table","width":"100%"});
         $("tr.saldoFinal_conta").css({"display":"table","width":"100%"});
         $("tr.saldoDia_geral").css({"display":"table","width":"100%"});
@@ -71,8 +84,6 @@ function validarTransacoesConta(){
 
     ajustarTamanhoDiaSemana();
 }
-
-
 
 // --------------------- PREENCHE E CALCULA CATEGORIAS E SUB-CATEGORIAS --------------------- 
 $(".categoria-resumo").each(function() {
@@ -153,6 +164,7 @@ $("tr.data-day").click(function(){
     $(".modal-adiciona").find(".dataCompra").hide();
     $(".modal-adiciona").find(".idCartao").attr("value","");
     $(".modal-adiciona").find(".dia-add").attr("value",diaMes);
+    $(".modal-adiciona").find(".conta-origem").val(slc_contasUsuario.val()).change();
 });
 
 $(".insert-cartao").click(function(){
@@ -359,6 +371,7 @@ $(".content-day").click(function(){
     }
     else{
         var_DomModalEdita.find(".conta").show();
+        var_DomModalEdita.find(".conta-origem").val(idconta).change();
 
         var_DomModalEdita.find(".categoria-atual").attr("disabled", false);
         var_DomModalEdita.find(".sub_categoria-atual").attr("disabled", false);

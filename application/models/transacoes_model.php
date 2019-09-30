@@ -3,7 +3,7 @@
 				
         // -- SELECT --		
         function Listar($pData = null,$pOrderBy = null){
-            
+
             if(isset($pData["Id"])){$this->db->where("transacoes.Id",$pData["id"]);}  
             if(isset($pData["IdUsuario"])){$this->db->where("transacoes.IdUsuario",$pData["IdUsuario"]);}
             if(isset($pData["IdCartao"])){$this->db->where("transacoes.IdCartao",$pData["IdCartao"]);}
@@ -71,12 +71,12 @@
 
             $this->db->order_by("DataCompra");
             
-            $this->db->from("transacoes");
             return $this->db->get()->result_array();
         }
 
         function ListarPorRegraTipo($pData = null,$pOrderBy = null){
             
+            //util_print($pData,"param transacoes");
             //if(isset($pData["Id"])){$this->db->where("transacoes.Id",$pData["id"]);}  
             //if(isset($pData["IdUsuario"])){$this->db->where("transacoes.IdUsuario",$pData["IdUsuario"]);}
             if(isset($pData["Usuario"]["Id"])){$this->db->where("transacoes.IdUsuario",$pData["Usuario"]["Id"]);}  

@@ -3,6 +3,7 @@
 
         function ListarCartoesAtivos($pData){ 
 
+            if(isset($pData["Cartoes"]["IdUsuario"])){$this->db->where("IdUsuario",$pData["Cartoes"]["IdUsuario"]);}
             $WhereData = "(
                 (
                     `AnoVencimento` =  ".$pData["Ano"]."

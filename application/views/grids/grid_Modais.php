@@ -309,94 +309,95 @@
 <!-- CARTAO -->
 <div class="modal fade modal-cartao" id="cartao_de_credito" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Fatura Cartão</h4>
-        </div>
-        <div class="modal-body">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Fatura Cartão</h4>
+            </div>
+            <div class="modal-body">
 
-            <!-- CATEGORIAS -->
-            <div class="cartoes">
+                <!-- CATEGORIAS -->
+                <div class="cartoes">
 
-                <?php foreach($lCartoes as $itemCartao){?>
+                    <?php foreach($lCartoes as $itemCartao){?>
 
-                    <div class="box">
+                        <div class="box">
 
-                        <div class="fatura-cartao">
-                        
-                            <div class="categoria-content">
+                            <div class="fatura-cartao">
+                            
+                                <div class="categoria-content">
 
-                                <h2><?=$itemCartao["Descricao"]?> ...<?=substr($itemCartao["Numero"],(strlen($itemCartao["Numero"])-4),strlen($itemCartao["Numero"]))?></h2>
+                                    <h2><?=$itemCartao["Descricao"]?> ...<?=substr($itemCartao["Numero"],(strlen($itemCartao["Numero"])-4),strlen($itemCartao["Numero"]))?></h2>
 
-                                <button class="btn btn-primary insert-cartao" data-id="<?=$itemCartao["Id"]?>" data-toggle="modal" data-target="#add-transacao">Adicionar Cartão</button>
+                                    <button class="btn btn-primary insert-cartao" data-id="<?=$itemCartao["Id"]?>" data-toggle="modal" data-target="#add-transacao">Adicionar Cartão</button>
 
-                                <table>
+                                    <table>
 
-                                    <tr>
-                                        <th>Data da Compra</th>
-                                        <th>Descrição</th>
-                                        <th>Valor</th>
-                                    </tr>
-
-                                    <?php foreach($itemCartao["lTransacao"] as $content){?>
-
-                                        <tr class="content-day transacao_idconta-1 IdSubCategoria-<?=$content["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao" data-idcartao="<?=$itemCartao["Id"]?>"> 
-
-                                        <td class="info-content no-view"
-                                                data-id="<?=$content["Id"]?>"
-                                                data-dia=""
-                                                data-datacompra="<?=dataMysqlParaPtBr($content["DataCompra"])?>"
-                                                data-valor="<?=$content["Valor"]?>"
-                                                data-type="<?=$content["IdTipoTransacao"]?>"
-                                                data-p-total-atual="<?=$content["TotalParcelas"]?>"
-                                                data-categoria-id="<?=$content["IdCategoria"]?>"
-                                                data-categoria-descricao="<?=trim($content["DescricaoCategoria"])?>"
-                                                data-subcategoria-id="<?=trim($content["IdSubCategoria"])?>"
-                                                data-subcategoria-descricao="<?=trim(valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"]))?>"
-                                                data-descricao="<?=trim($content["Descricao"])?>"
-                                                data-iscontabilizado="<?=$content["IsContabilizado"]?>"
-                                                >
-                                        </td>
-
-                                        <td class="compra dataCompra-atual"><?=dataMysqlParaPtBr($content["DataCompra"])?></td>
-                                        <td class="descricao" value="<?=$content["Descricao"]?>" data-toggle="tooltip" data-placement="top" title="<?=trim($content["DescricaoCategoria"])." - ".trim(valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"]))?>">
-                                            
-                                            <?php if($content["Descricao"] == NULL){
-                                                echo $content["DescricaoSubCategoria"];
-                                            } else{ 
-                                                echo $content["Descricao"];
-                                                if($content["IdTipoTransacao"] == "2"){
-                                                    echo   "-".$content["NumeroParcela"]."/".$content["TotalParcelas"]; 	
-                                                }
-                                            } 
-                                            ?>
-
-                                        </td>
-                                        <td class="valor" value="<?=numeroEmReais2($content["Valor"])?>"><?=numeroEmReais2($content["Valor"])?></td>
-
+                                        <tr>
+                                            <th>Data da Compra</th>
+                                            <th>Descrição</th>
+                                            <th>Valor</th>
                                         </tr>
 
-                                    <?php } ?>
+                                        <?php foreach($itemCartao["lTransacao"] as $content){?>
 
-                                </table> 
+                                            <tr class="content-day transacao_idconta-1 IdSubCategoria-<?=$content["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao" data-idcartao="<?=$itemCartao["Id"]?>"> 
 
-                                <div class="total_cartao">
+                                            <td class="info-content no-view"
+                                                    data-id="<?=$content["Id"]?>"
+                                                    data-dia=""
+                                                    data-datacompra="<?=dataMysqlParaPtBr($content["DataCompra"])?>"
+                                                    data-valor="<?=$content["Valor"]?>"
+                                                    data-type="<?=$content["IdTipoTransacao"]?>"
+                                                    data-p-total-atual="<?=$content["TotalParcelas"]?>"
+                                                    data-categoria-id="<?=$content["IdCategoria"]?>"
+                                                    data-categoria-descricao="<?=trim($content["DescricaoCategoria"])?>"
+                                                    data-subcategoria-id="<?=trim($content["IdSubCategoria"])?>"
+                                                    data-subcategoria-descricao="<?=trim(valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"]))?>"
+                                                    data-descricao="<?=trim($content["Descricao"])?>"
+                                                    data-iscontabilizado="<?=$content["IsContabilizado"]?>"
+                                                    data-idconta="<?=$content["IdConta"]?>"
+                                                    >
+                                            </td>
 
-                                    <span class="valor_span"><?=numeroEmReais2($itemCartao["Saldo"])?></span> 
-                             
+                                            <td class="compra dataCompra-atual"><?=dataMysqlParaPtBr($content["DataCompra"])?></td>
+                                            <td class="descricao" value="<?=$content["Descricao"]?>" data-toggle="tooltip" data-placement="top" title="<?=trim($content["DescricaoCategoria"])." - ".trim(valida_sub($content["DescricaoCategoria"],$content["DescricaoSubCategoria"]))?>">
+                                                
+                                                <?php if($content["Descricao"] == NULL){
+                                                    echo $content["DescricaoSubCategoria"];
+                                                } else{ 
+                                                    echo $content["Descricao"];
+                                                    if($content["IdTipoTransacao"] == "2"){
+                                                        echo   "-".$content["NumeroParcela"]."/".$content["TotalParcelas"]; 	
+                                                    }
+                                                } 
+                                                ?>
+
+                                            </td>
+                                            <td class="valor" value="<?=numeroEmReais2($content["Valor"])?>"><?=numeroEmReais2($content["Valor"])?></td>
+
+                                            </tr>
+
+                                        <?php } ?>
+
+                                    </table> 
+
+                                    <div class="total_cartao">
+
+                                        <span class="valor_span"><?=numeroEmReais2($itemCartao["Saldo"])?></span> 
+                                
+                                    </div>
+
                                 </div>
+                        
+                            </div>   
 
-                            </div>
-                    
-                        </div>   
+                        </div>
 
-                    </div>
+                    <?php } ?>
 
-                <?php } ?>
-
-            </div>
-
-    </div>
+                </div>
+            </div>           
+        </div>
     </div>
 </div>

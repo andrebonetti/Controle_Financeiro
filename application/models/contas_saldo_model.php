@@ -67,7 +67,10 @@
 
         // -- INSERT --
         function Incluir($pData){
+            unset($pData["Id"]);
 			$this->db->insert("contas_saldo", $pData);
+
+            return $this->db->insert_id();
 		}
        
         // -- UPDATE --

@@ -48,7 +48,6 @@
             $sContaSaldo["IdConta"]         = $dContaSaldo["IdConta"];
             $sContaSaldo["Ano"]             = $novaData["Ano"];
             $sContaSaldo["Mes"]             = $novaData["Mes"];
-            $sContaSaldo["SaldoAnterior"]   = $dContaSaldo["SaldoFinal"];
             $sContaSaldo["SaldoMes"]        = 0;
             $sContaSaldo["SaldoFinal"]      = 0;
 
@@ -60,13 +59,13 @@
             return null;
         }
 
-        
-    
     }
 
     function contas_saldo_validarConsistencia($plcontaUsuario,$pSaldUltimoDia){
 
         $ci = get_instance();
+
+        //util_printR($plcontaUsuario,"plcontaUsuario");
 
         //util_printR($plcontaUsuario["Contas_Banco"],"lcontaUsuario[Contas_Banco] => ANTES CONSISTENCIA");
 
@@ -93,11 +92,12 @@
             $saldoMesTela     = $receitaFinalTela - $despesasFinalTela;
             
             #PARAM BUSCA
-            $dData["Ano"]               = $itemConta["Saldo"]["Ano"];
-            $dData["Mes"]               = $itemConta["Saldo"]["Mes"];
-            $dData["IdConta"]           = $itemConta["Saldo"]["Id"];
-            $dData["IdTipoTransacao"]   = 3;
-            $dData["IsVerificacao"]     = true;
+            $dData["Ano"]                   = $itemConta["Saldo"]["Ano"];
+            $dData["Mes"]                   = $itemConta["Saldo"]["Mes"];
+            $dData["IdConta"]               = $itemConta["Saldo"]["Id"];
+            $dData["IdUsuario"]             = $itemConta["IdUsuario"];
+            $dData["IdTipoTransacao"]       = 3;
+            $dData["IsVerificacao"]         = true;
 
             $dataContaSaldoMes["Id"]        = $itemConta["Saldo"]["Id"];
             $dataContaSaldoMes["Despesas"]  = $despesasFinalTela;
@@ -112,6 +112,7 @@
             ||  (util_diferenca($saldoFinalTela,$receitaFinalBanco,true))
             ){
                 // -- BD UPDATE --
+                //util_print($dataContaSaldoMes,'dataContaSaldoMes');
                 $ci->contas_saldo_model->Atualizar($dataContaSaldoMes);                 
             }
             
@@ -134,6 +135,10 @@
         $saldoFinalGeralTela     = $pSaldUltimoDia["Geral"]["SaldoFinal"];
 
         if(util_diferenca($saldoFinalGeralBanco,$saldoFinalGeralTela,true)){
+
+            // echo "Diferença Saldo Final";
+            // echo "<br>saldoFinalGeralBanco  =>".$saldoFinalGeralBanco;
+            // echo "<br>saldoFinalGeralTela  =>".$saldoFinalGeralTela;
 
             $dData["Ano"]               = $plcontaUsuario["Geral"]["Ano"];
             $dData["Mes"]               = $plcontaUsuario["Geral"]["Mes"];

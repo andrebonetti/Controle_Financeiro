@@ -12,21 +12,23 @@
         if($pData["IdTipoTransacao"] == 2){
             //$pData["PeriodoAte"] = true;
         }
+
+        $pData["Usuario"]["Id"] = $pData["IdUsuario"];
         
         unset($pData["Id"]);
 
-        //util_print($pData,"param Listar");
         $lGeral = $ci->geral_model->Listar($pData);
 
-        //util_print($lGeral,"lGeral");
+        ////util_printR($lGeral,"lGeral");
 
         $cont = 1;
         foreach($lGeral as $itemGeral){		                    
 
-            $paramMes["Mes"]        = $itemGeral["Mes"]; 
-            $paramMes["Ano"]        = $itemGeral["Ano"];
-            $paramMes["Valor"]      = $pData["Valor"];
-            //$paramMes["IdConta"]    = $pData["IdConta"];
+            $paramMes                   = array();
+            $paramMes["Mes"]            = $itemGeral["Mes"]; 
+            $paramMes["Ano"]            = $itemGeral["Ano"];
+            $paramMes["Valor"]          = $pData["Valor"];
+            $paramMes["Usuario"]["Id"]  = $pData["IdUsuario"];
 
             if((($cont == 1)or($pData["IdTipoTransacao"] == 1))&&(!isset($pData["IsVerificacao"]))){
                 geral_UpdateSaldoMes($paramMes);
@@ -39,7 +41,7 @@
 
             $paramGeral["Mes"]           = $itemGeral["Mes"]; 
             $paramGeral["Ano"]           = $itemGeral["Ano"];
-            //$paramGeral["IdConta"]       = $pData["IdConta"];
+            $paramGeral["Usuario"]["Id"] = $pData["IdUsuario"];
             $paramGeral["PeriodoDe"]     = true;
 
             if(isset($pData["IsVerificacao"])){
@@ -60,15 +62,13 @@
         
         $lGeral = $ci->geral_model->Listar($pData);
         
-        //var_dump($lGeral);
-
         $saldoAnterior = 0;
         $cont = 0;
         foreach($lGeral as $itemGeral){		                    
 
             $dataGeral["Mes"]   = $itemGeral["Mes"]; 
             $dataGeral["Ano"]   = $itemGeral["Ano"];
-            $dataGeral["Id"]   = $itemGeral["Id"];
+            $dataGeral["Id"]    = $itemGeral["Id"];
             
             if($cont > 0){
                 
@@ -159,33 +159,28 @@
     function geral_CriarCompetencia($pDataContent){
         
         $ci = get_instance();      
-        $lGeral = $ci->geral_model->Listar();
+        $paramGeral["Usuario"]  = $pDataContent["Usuario"];
+        $lGeral                 = $ci->geral_model->Listar($paramGeral);
         
         $geral = $lGeral[count($lGeral) - 1];
         
         $ano = $geral["Ano"];
         $mes = $geral["Mes"];
-
+    
         while(intval($ano.$mes) < intval($pDataContent["Ano"].$pDataContent["Mes"]))
-        {
-            if($mes == 12){
-                $dataGeral["Ano"] = $ano + 1;
-                $dataGeral["Mes"] = 1;
-            }
-            else{
-                $dataGeral["Mes"] = $mes + 1;
-                $dataGeral["Ano"] = $ano;
-            }
-            
-            if($dataGeral["Mes"] < 10){
-                $dataGeral["Mes"] = "0".$dataGeral["Mes"];
-            }
-            $dataGeral = CalcularSaldo($dataGeral); 
-            
+        {     
+            //util_print(intval($ano.$mes),intval($pDataContent["Ano"].$pDataContent["Mes"]));
+      
+            $referencia["Ano"] = $ano;
+            $referencia["Mes"] = $mes;
+
+            $dataGeral = util_AlterarMes($referencia,1,true);
+            //$dataGeral = CalcularSaldo($dataGeral);        
+            $dataGeral["IdUsuario"] = $pDataContent["Usuario"]["Id"];    
             $ci->geral_model->Incluir($dataGeral);
             
             $ano = $dataGeral["Ano"];
-            $mes = $dataGeral["Mes"];
+            $mes = str_pad($dataGeral["Mes"],2,"0",STR_PAD_LEFT);
         }
  
     }
@@ -391,8 +386,11 @@
 
         $ci = get_instance();
 
-        $competenciaAtual   	         = $ci->geral_model       ->Buscar($pParamBusca);
+        $competenciaAtual   	         = $ci->geral_model->Buscar($pParamBusca);
         if(empty($competenciaAtual)){
+
+            //util_print("CRIAÇÃO COMPETÊNCIA");
+
             geral_CriarCompetencia($pParamBusca);
             $competenciaAtual = $ci->geral_model->Buscar($pParamBusca);
 
