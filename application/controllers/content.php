@@ -92,6 +92,40 @@
 
         //util_print($lcontaUsuario,"lcontaUsuario => SALDO INICIAL");
 
+        // -- CONSISTENCIA VALOR FATURA --
+        $lCartoes           = $this->cartoes_model->ListarCartoesAtivos(array("Ano"=>$pAno,"Mes"=>$pMes));
+        $lCartoes           = util_transforamaIdEmChave($lCartoes,"Id");
+
+        //util_print($lCartoes,"lCartoes");
+        $paramBuscaCartao = $paramBusca;
+        unset($paramBuscaCartao["Dia"]);
+        foreach($lCartoes as $itemCartao){
+            $paramBuscaCartao["IdCartao"] = $itemCartao["Id"];
+            $lTransacoesCartao          = $this->transacoes_model->ListarPorRegraTipo($paramBuscaCartao);
+            $valorFaturaConsistencia    = 0;
+            foreach($lTransacoesCartao as $transacao){
+                $valorFaturaConsistencia += $transacao["Valor"];
+            }
+
+            if(
+                ($paramBusca["Mes"] >= 9 && $paramBusca["Ano"] == 2019)
+                ||
+                ($paramBusca["Ano"] > 2019)
+            ){
+                foreach($lCartoes_Fatura as $keyFatura => $itemFatura){
+                    if($itemCartao["Id"] == $itemFatura["Id"]){
+                        
+                        if(util_diferenca($itemFatura["Valor"],$valorFaturaConsistencia,true)){
+                            cartao_UpdateValorMes($itemFatura,util_diferenca($valorFaturaConsistencia,$itemFatura["Valor"]));
+                            $lCartoes_Fatura[$keyFatura]["Valor"] = $valorFaturaConsistencia;
+                        }
+                    }
+                    
+                }
+            }
+            
+        }
+
         // -- DIAS --    
         for ($dia = 1; $dia <= 31 ;$dia++){
             
@@ -168,6 +202,7 @@
             //CARTOES
             if(count($lCartoes_Fatura) > 0){
                
+                //util_print($lCartoes_Fatura,"lCartoes_Fatura");
                 foreach($lCartoes_Fatura as $keyFatura => $itemFatura){
                     
                     //echo $diaT." - ".$itemFatura["DiaVencimento"]."<br>";
@@ -238,27 +273,6 @@
             //util_print($dataMes[$diaT]["ResumoDia"]["Geral"],"Saldo => ".$diaT);
         }
 
-        // -- CARTOES --
-        $lCartoes           = $this->cartoes_model->ListarCartoesAtivos(array("Ano"=>$pAno,"Mes"=>$pMes));
-        $lCartoes           = util_transforamaIdEmChave($lCartoes,"Id");
-
-        //util_print($lCartoes,"lCartoes");
-        unset($paramBusca["Dia"]);
-        foreach($lCartoes as $itemCartao){
-
-            $lCartoes[$itemCartao["Id"]]["lTransacao"] = array();
-            $lCartoes[$itemCartao["Id"]]["Saldo"]     = 0;
-
-            $paramBusca["IdCartao"] = $itemCartao["Id"];
-
-            $lTransacoesCartao      = $this->transacoes_model->ListarPorRegraTipo($paramBusca);
-
-            foreach($lTransacoesCartao as $transacao){
-                $lCartoes[$itemCartao["Id"]]["Saldo"] += $transacao["Valor"];
-                array_push($lCartoes[$itemCartao["Id"]]["lTransacao"],$transacao);
-            }
-        }
-
         //util_print($paramBusca,"paramBusca");
         if(
             ($paramBusca["Mes"] >= 2 && $paramBusca["Ano"] == 2018)
@@ -268,6 +282,26 @@
             //util_print($lcontaUsuario,"lcontaUsuario => ANTES CONSISTENCIA");
             $lcontaUsuario  = contas_saldo_validarConsistencia($lcontaUsuario,$dataMes[$qtdeDiasMes]["ResumoDia"]);
             //util_print($lcontaUsuario,"lcontaUsuario => DEPOIS CONSISTENCIA");
+        }
+
+        // -- CARTOES --
+        //util_print($lCartoes,"lCartoes");
+        $paramBuscaCartao = $paramBusca;
+        unset($paramBuscaCartao["Dia"]);
+        foreach($lCartoes as $itemCartao){
+
+            $lCartoes[$itemCartao["Id"]]["lTransacao"] = array();
+            $lCartoes[$itemCartao["Id"]]["Saldo"]     = 0;
+
+            $paramBuscaCartao["IdCartao"] = $itemCartao["Id"];
+
+            $lTransacoesCartao          = $this->transacoes_model->ListarPorRegraTipo($paramBuscaCartao);
+            $valorFaturaConsistencia    = 0;
+            foreach($lTransacoesCartao as $transacao){
+                $lCartoes[$itemCartao["Id"]]["Saldo"] += $transacao["Valor"];
+                array_push($lCartoes[$itemCartao["Id"]]["lTransacao"],$transacao);
+            }
+            
         }
 
         // -- CARTAO --
