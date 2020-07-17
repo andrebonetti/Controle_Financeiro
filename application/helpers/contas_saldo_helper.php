@@ -65,9 +65,9 @@
 
         $ci = get_instance();
 
-        //util_printR($plcontaUsuario,"plcontaUsuario");
+        // util_printR($plcontaUsuario,"plcontaUsuario");
 
-        //util_printR($plcontaUsuario["Contas_Banco"],"lcontaUsuario[Contas_Banco] => ANTES CONSISTENCIA");
+        // util_printR($plcontaUsuario["Contas_Banco"],"lcontaUsuario[Contas_Banco] => ANTES CONSISTENCIA");
 
         foreach($plcontaUsuario["Contas_Banco"] as $keyConta => $itemConta){
 
@@ -109,7 +109,7 @@
             if( (util_diferenca($despesasFinalBanco,$despesasFinalTela,true))
             ||  (util_diferenca($receitaFinalBanco,$receitaFinalTela,true))
             ||  (util_diferenca($saldoMesTela,$saldoMesBanco,true))
-            ||  (util_diferenca($saldoFinalTela,$receitaFinalBanco,true))
+            ||  (util_diferenca($saldoFinalTela,$saldoFinalBanco,true))
             ){
                 // -- BD UPDATE --
                 //util_print($dataContaSaldoMes,'dataContaSaldoMes');
