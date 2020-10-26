@@ -69,6 +69,8 @@
 
         // util_printR($plcontaUsuario["Contas_Banco"],"lcontaUsuario[Contas_Banco] => ANTES CONSISTENCIA");
 
+        // util_printR($plcontaUsuario,"plcontaUsuario");
+
         foreach($plcontaUsuario["Contas_Banco"] as $keyConta => $itemConta){
 
             // util_printR($itemConta,"itemConta => ANTES CONSISTENCIA");
@@ -81,15 +83,15 @@
 
             #DESPESAS
             $despesasFinalBanco = $itemConta["Saldo"]["Despesas"];
-            $despesasFinalTela  = $pSaldUltimoDia["Contas_Banco"][$keyConta]["Despesas"];
+            $despesasFinalTela  = $pSaldUltimoDia["Contas_Banco"][$keyConta]["DespesasFinal"];
 
             #RECEITA
             $receitaFinalBanco  = $itemConta["Saldo"]["Receita"];
-            $receitaFinalTela   = $pSaldUltimoDia["Contas_Banco"][$keyConta]["Receita"];
+            $receitaFinalTela   = $pSaldUltimoDia["Contas_Banco"][$keyConta]["ReceitaFinal"];
 
             #SALDO MES
             $saldoMesBanco    = $itemConta["Saldo"]["SaldoMes"];
-            $saldoMesTela     = $receitaFinalTela - $despesasFinalTela;
+            $saldoMesTela     = $pSaldUltimoDia["Contas_Banco"][$keyConta]["SaldoMes"];
             
             #PARAM BUSCA
             $dData["Ano"]                   = $itemConta["Saldo"]["Ano"];

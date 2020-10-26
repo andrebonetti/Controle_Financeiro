@@ -9,8 +9,11 @@ ajustarTamanhoDiaSemana();
 
 validarTransacoesConta();
 
+validarExibicaoMovimentacao();
+
 slc_contasUsuario.change( function(){
-    validarTransacoesConta();   
+    validarTransacoesConta();  
+    validarExibicaoMovimentacao(); 
 });
 
 menuCompetencias.change( function(){
@@ -22,6 +25,15 @@ menuCompetencias.change( function(){
     item.closest("form").submit();
     
 });
+
+function validarExibicaoMovimentacao(){
+
+    idConta = $(".menu-contas_usuario").val();
+    $(".info-movimentacao").hide();
+
+    $(".movimentaca-"+idConta).show();
+
+}
 
 function ajustarTamanhoDiaSemana(){
 
@@ -69,11 +81,9 @@ function validarTransacoesConta(){
 
     if(IdConta == "Geral"){
         $(".SaldoConta").css({"display":"table","width":"100%"});
-        //DOM_trans_contentDay.css({"display":"table","width":"100%"});
-        $("tr.saldoDia_conta").css({"display":"table","width":"100%"});
-        $("tr.saldoFinal_conta").css({"display":"table","width":"100%"});
         $("tr.saldoDia_geral").css({"display":"table","width":"100%"});
         $("tr.saldoFinal_geral").css({"display":"table","width":"100%"});
+        $(".transacoes").find("tr.content-day").show();
     }
     else{
         $(".SaldoContaId-"+IdConta).css({"display":"table","width":"100%"});

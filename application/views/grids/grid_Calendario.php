@@ -1,20 +1,76 @@
 <div class="calendario">
             
     <div class="header-calendario">
+
         <h1><?=nome_mes($dataAtual["Mes"])?> - <?=$dataAtual["Ano"]?></h1>
-        <div class="despesas">
-            <p> 
-                <span class="alteracao_manual" name="despesas" title="Alterar" value="0">Despesas:</span>
-                <span class="valor_span"><?=numeroEmReais2($lcontaUsuario["Contas_Banco"][$contaPrincipal]["SaldoTela"]["Despesas"])?></span>
-            </p>
-        </div> 
-        <div class="receita">
-            <p> 
-                <span class="alteracao_manual" name="receita" value="0">Receita:</span>
-                <span class="valor_span"><?=numeroEmReais2($lcontaUsuario["Contas_Banco"][$contaPrincipal]["SaldoTela"]["Receita"])?></span>
-            </p>
-        </div> 
-        
+
+    <?php 
+
+        foreach ($lcontaUsuario["Contas_Banco"] as $keyContaUsuario => $valueContaUsuario) {?>
+
+            <div class="info-movimentacao no-view movimentaca-<?=$keyContaUsuario?>">
+
+                <div class="movimentacao">
+                    <p>
+                        <b>Movimentação</b><br>
+                    </p>
+                    <p>
+                        <?=numeroEmReais2($valueContaUsuario["SaldoTela"]["Receita"] + ($valueContaUsuario["SaldoTela"]["Despesas"]))?>
+                    </p>
+                </div> 
+                
+                <div class="despesas">
+                    <p>
+                        <b>Despesas</b><br>
+                    </p>
+                    <p>
+                        <?=numeroEmReais2($valueContaUsuario["SaldoTela"]["Despesas"])?>
+                    </p>
+                </div> 
+                <div class="receita">
+                    <p>
+                        <b>Receita</b><br>
+                    </p>
+                    <p>
+                        <?=numeroEmReais2($valueContaUsuario["SaldoTela"]["Receita"])?>
+                    </p>
+                </div> 
+
+
+            </div>
+            
+    <?php } ?>
+
+        <div class="info-movimentacao no-view movimentaca-Geral">
+                    
+            <div class="movimentacao">
+                <p>
+                    <b>Movimentação</b><br>
+                </p>
+                <p>
+                    <?=numeroEmReais2($lcontaUsuario["Geral"]["Receita"] + ($lcontaUsuario["Geral"]["Despesas"]))?>
+                </p>
+            </div> 
+            <div class="despesas">
+                <p>
+                    <b>Despesas</b><br>
+                </p>
+                <p>
+                    <?=numeroEmReais2($lcontaUsuario["Geral"]["Despesas"])?>
+                </p>
+            </div> 
+            <div class="receita">
+                <p>
+                    <b>Receita</b><br>
+                </p>
+                <p>
+                    <?=numeroEmReais2($lcontaUsuario["Geral"]["Receita"])?>
+                </p>
+            </div> 
+
+
+        </div>
+    
     </div>
     
     

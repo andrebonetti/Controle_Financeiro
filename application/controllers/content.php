@@ -65,6 +65,7 @@
         /* -- CALCULO SALDO INICIAL-- */    
         foreach($lcontaUsuario["Contas_Banco"] as $keySaldo => $itemSaldo){
             $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["SaldoFinal"]     =  $itemSaldo["Saldo"]["SaldoAnterior"];
+            $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["SaldoMes"]       =  0;
             $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["Despesas"]       =  0;
             $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["Receita"]        =  0;
         }
@@ -138,8 +139,11 @@
                 //Zera Saldo Inicial Dia          
                 foreach($lcontaUsuario["Contas_Banco"] as $keySaldo => $itemSaldo){
                     $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["SaldoDia"]           = 0;
-                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["Despesas"]           = $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["Despesas"];
-                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["Receita"]            = $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["Receita"];
+                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["SaldoMes"]           = $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["SaldoMes"];
+                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["ReceitaDia"]         = 0;
+                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["DespesasDia"]        = 0;
+                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["DespesasFinal"]      = $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["Despesas"];
+                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["ReceitaFinal"]       = $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["Receita"];
                     $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["SaldoFinal"]         = $lcontaUsuario["Contas_Banco"][$keySaldo]["SaldoTela"]["SaldoFinal"];
                     $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$keySaldo]["CSS"]                = $lcontaUsuario["Contas_Banco"][$itemSaldo["Id"]]["CSS"];                              
                 }
@@ -158,41 +162,46 @@
         
             $lTransacoes                            = $this->transacoes_model->ListarPorRegraTipo($paramBusca);
 
-            //util_print($lTransacoes,"lTransacoes => ".$dia);
+            $despesasDia        = 0;
+            $receitaDia         = 0;
 
             foreach($lTransacoes as $KeyTransacao => $itemTransacao){
 
                 if($itemTransacao["IsContabilizado"] == 1){
 
+                    if(!isset($lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoTela"]["SaldoMes"])){
+                        $lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoTela"]["SaldoMes"] = 0;
+                    }
+
                     $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoDia"]              += $itemTransacao["Valor"]; 
+                    $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoMes"]   += $itemTransacao["Valor"];
                     $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoFinal"]            += $itemTransacao["Valor"];
 
+                    $lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoTela"]["SaldoMes"] += $itemTransacao["Valor"];
+
                     if($itemTransacao["IsTransferencia"] == 1){ 
-                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdContaOrigem"]]["SaldoDia"]    -= $itemTransacao["Valor"]; 
-                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdContaOrigem"]]["SaldoFinal"]  -= $itemTransacao["Valor"]; 
+                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdContaOrigem"]]["SaldoDia"]   -= $itemTransacao["Valor"]; 
+                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdContaOrigem"]]["SaldoFinal"] -= $itemTransacao["Valor"]; 
+                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdContaOrigem"]]["SaldoMes"]   -= $itemTransacao["Valor"]; 
+
+                        $lcontaUsuario["Contas_Banco"][$itemTransacao["IdContaOrigem"]]["SaldoTela"]["SaldoMes"] -= $itemTransacao["Valor"]; 
                     } 
-                     
-                    if($itemTransacao["IsTransferencia"] == false){// || ($itemTransacao["IsTransferencia"] == true && $itemTransacao["IdContaOrigem"] != $itemTransacao["IdConta"] )){ 
+
+                    if($itemTransacao["IsTransferencia"] == false){
                         if($itemTransacao["Valor"] >= 0){
-                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["Receita"]      += $itemTransacao["Valor"];
+                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["ReceitaDia"]   += $itemTransacao["Valor"];
+                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["ReceitaFinal"] += $itemTransacao["Valor"];
                             $lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoTela"]["Receita"]       += $itemTransacao["Valor"];
+                            $receitaDia   += $itemTransacao["Valor"];
                         }
                         else{
-                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["Despesas"]     += $itemTransacao["Valor"]*(-1);
-                            $lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoTela"]["Despesas"]      += $itemTransacao["Valor"]*(-1);
+                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["DespesasDia"] += $itemTransacao["Valor"]*(-1); 
+                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["DespesasFinal"] += $itemTransacao["Valor"]*(-1); 
+                            $lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoTela"]["Despesas"] += $itemTransacao["Valor"]*(-1); 
+                            $despesasDia  += $itemTransacao["Valor"]*(-1); 
                         }
                     }
 
-                    if($itemTransacao["IsTransferencia"] == true){
-
-                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdContaOrigem"]]["Despesas"]     += $itemTransacao["Valor"];
-                        $lcontaUsuario["Contas_Banco"][$itemTransacao["IdContaOrigem"]]["SaldoTela"]["Despesas"]      += $itemTransacao["Valor"];
-
-                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemTransacao["IdConta"]]["Receita"]            += $itemTransacao["Valor"];
-                        $lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["SaldoTela"]["Receita"]             += $itemTransacao["Valor"];
-
-                    }
-                  
                 }
 
                 array_push($dataMes[$diaT]["lTransacoes"],$itemTransacao);
@@ -209,14 +218,21 @@
                     if(!util_diferenca($diaT,$itemFatura["DiaVencimento"],true)){
                         $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["SaldoDia"]           += $itemFatura["Valor"];
                         $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["SaldoFinal"]         += $itemFatura["Valor"];
+                        
+                        $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["SaldoMes"]   += $itemFatura["Valor"];
+                        $lcontaUsuario["Contas_Banco"][$itemFatura["IdConta"]]["SaldoTela"]["SaldoMes"] += $itemFatura["Valor"];
 
                         if($itemFatura["Valor"] >= 0){
-                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["Receita"]        += $itemFatura["Valor"];
-                            $lcontaUsuario["Contas_Banco"][$itemFatura["IdConta"]]["SaldoTela"]["Receita"]         += $itemFatura["Valor"]; 
+                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["ReceitaDia"]   += $itemFatura["Valor"];
+                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["ReceitaFinal"] += $itemFatura["Valor"];
+                            $lcontaUsuario["Contas_Banco"][$itemFatura["IdConta"]]["SaldoTela"]["Receita"]       += $itemFatura["Valor"];
+                            $receitaDia   += $itemTransacao["Valor"];
                         }
                         else{
-                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["Despesas"]        += $itemFatura["Valor"]*(-1);
-                            $lcontaUsuario["Contas_Banco"][$itemFatura["IdConta"]]["SaldoTela"]["Despesas"]         += $itemFatura["Valor"]*(-1);   
+                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["DespesasDia"] += $itemFatura["Valor"]*(-1); 
+                            $dataMes[$diaT]["ResumoDia"]["Contas_Banco"][$itemFatura["IdConta"]]["DespesasFinal"] += $itemFatura["Valor"]*(-1); 
+                            $lcontaUsuario["Contas_Banco"][$itemFatura["IdConta"]]["SaldoTela"]["Despesas"] += $itemFatura["Valor"]*(-1); 
+                            $despesasDia  += $itemFatura["Valor"]*(-1); 
                         }
                         
                         $itemFaturaCartao["Descricao"]  = $itemFatura["Descricao"]; 
@@ -254,23 +270,26 @@
 
             foreach($dataMes[$diaT]["ResumoDia"]["Contas_Banco"] as $keyConta => $itemConta){
                 $lcontaUsuario["Contas_Banco"][$keyConta]["SaldoTela"]["SaldoFinal"] = $itemConta["SaldoFinal"];
-                $lcontaUsuario["Contas_Banco"][$keyConta]["SaldoTela"]["Despesas"]   = $itemConta["Despesas"];
-                $lcontaUsuario["Contas_Banco"][$keyConta]["SaldoTela"]["Receita"]    = $itemConta["Receita"];
-                
+
                 $saldoGeralDia      += $itemConta["SaldoDia"];
                 $saldoGeralFinal    += $itemConta["SaldoFinal"];
-                $despesasGeralDia   += $itemConta["Despesas"];
-                $receitaGeralDia    += $itemConta["Receita"];
+                $despesasGeralDia   += $itemConta["DespesasFinal"];
+                $receitaGeralDia    += $itemConta["ReceitaFinal"];
 
-                //$receitaGeralDia    -= $receitaTransferênciaGeral;
             }
 
-            $dataMes[$diaT]["ResumoDia"]["Geral"]["SaldoDia"]   = $saldoGeralDia;
-            $dataMes[$diaT]["ResumoDia"]["Geral"]["SaldoFinal"] = $saldoGeralFinal;
-            $dataMes[$diaT]["ResumoDia"]["Geral"]["Receita"]    = $receitaGeralDia;
-            $dataMes[$diaT]["ResumoDia"]["Geral"]["Despesas"]   = $despesasGeralDia;
+            $dataMes[$diaT]["ResumoDia"]["Geral"]["SaldoDia"]       = $saldoGeralDia;
+            $dataMes[$diaT]["ResumoDia"]["Geral"]["SaldoFinal"]     = $saldoGeralFinal;
+            $dataMes[$diaT]["ResumoDia"]["Geral"]["ReceitaDia"]     = $receitaDia;
+            $dataMes[$diaT]["ResumoDia"]["Geral"]["DespesasDia"]    = $despesasDia;
+            $dataMes[$diaT]["ResumoDia"]["Geral"]["Receita"]        = $receitaGeralDia;
+            $dataMes[$diaT]["ResumoDia"]["Geral"]["Despesas"]       = $despesasGeralDia;
+            
+            $lcontaUsuario["Geral"]["Receita"]  = $receitaGeralDia;
+            $lcontaUsuario["Geral"]["Despesas"]  = $despesasGeralDia;
 
-            //util_print($dataMes[$diaT]["ResumoDia"]["Geral"],"Saldo => ".$diaT);
+            //util_print($dataMes[$diaT]["ResumoDia"],$diaT);
+
         }
 
         //util_print($paramBusca,"paramBusca");
@@ -279,9 +298,9 @@
             ||
             ($paramBusca["Ano"] > 2018)
         ){
-            //util_print($lcontaUsuario,"lcontaUsuario => ANTES CONSISTENCIA");
+            // util_print($lcontaUsuario,"lcontaUsuario => ANTES CONSISTENCIA");
             $lcontaUsuario  = contas_saldo_validarConsistencia($lcontaUsuario,$dataMes[$qtdeDiasMes]["ResumoDia"]);
-            //util_print($lcontaUsuario,"lcontaUsuario => DEPOIS CONSISTENCIA");
+            // util_print($lcontaUsuario,"lcontaUsuario => DEPOIS CONSISTENCIA");
         }
 
         // -- CARTOES --
@@ -381,7 +400,7 @@
         "contaPrincipal"        => $principal);
 
         //util_print($content,"Conteudo Controller");
-		
+
         if($config["showTemplate"]){
             // -- VIEW --
             $this->load->template("template_content.php",$content);
