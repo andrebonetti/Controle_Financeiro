@@ -73,7 +73,21 @@
 
         foreach($plcontaUsuario["Contas_Banco"] as $keyConta => $itemConta){
 
-            // util_printR($itemConta,"itemConta => ANTES CONSISTENCIA");
+            if(util_isNull($itemConta["Saldo"],"Despesas")){
+                $itemConta["Saldo"]["Despesas"] = 0;
+            }
+
+            if(util_isNull($itemConta["Saldo"],"Receita")){
+                $itemConta["Saldo"]["Receita"] = 0;
+            }
+
+            if(util_isNull($itemConta["Saldo"],"Receita")){
+                $itemConta["Saldo"]["Receita"] = 0;
+            }
+
+            if(util_isNull($itemConta["Saldo"],"Id")){
+                $itemConta["Saldo"]["Id"] = null;
+            }
 
             $dataContaSaldoMes  = array();
             
@@ -115,7 +129,11 @@
             ){
                 // -- BD UPDATE --
                 //util_print($dataContaSaldoMes,'dataContaSaldoMes');
-                $ci->contas_saldo_model->Atualizar($dataContaSaldoMes);                 
+                if($dataContaSaldoMes["Id"] == null){
+                    $ci->contas_saldo_model->Incluir($dataContaSaldoMes); 
+                }else{
+                    $ci->contas_saldo_model->Atualizar($dataContaSaldoMes); 
+                }                         
             }
             
             // #DIFERENCA SALDO FINAL
