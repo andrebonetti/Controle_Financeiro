@@ -33,6 +33,7 @@
                 if(util_isNotNull($lcontaUsuarioAnterior,"Contas_Banco")){
 
                     foreach ($lcontaUsuarioAnterior["Contas_Banco"] as $keyConta => $iTemConta) {
+
                        $saldo   = $iTemConta["Saldo"];
                        $iSaldo  = $saldo;
 

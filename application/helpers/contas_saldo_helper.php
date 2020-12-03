@@ -45,7 +45,7 @@
 
             $novaData = util_AlterarMes($pParamBusca,+1);
 
-            $sContaSaldo["IdConta"]         = $dContaSaldo["IdConta"];
+            $sContaSaldo["IdConta"]         = $pConta["Id"];
             $sContaSaldo["Ano"]             = $novaData["Ano"];
             $sContaSaldo["Mes"]             = $novaData["Mes"];
             $sContaSaldo["SaldoMes"]        = 0;

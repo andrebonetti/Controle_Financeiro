@@ -21,12 +21,26 @@
                 $WhereData = 
                 "(
                     (
-                        `AnoInicio` =  ".$pParam["Ano"]."
-                        AND `MesInicio` <= ".$pParam["Mes"]."
+                        (
+                            `AnoInicio` =  ".$pParam["Ano"]."
+                            AND `MesInicio` <= ".$pParam["Mes"]."
 
+                        )
+                        OR 
+                        (`AnoInicio` < ".$pParam["Ano"].")
                     )
-                    OR 
-                    (`AnoInicio` < ".$pParam["Ano"].")
+                    AND
+                    (
+                        (
+                            `AnoFim` =  ".$pParam["Ano"]."
+                            AND `MesFim` >= ".$pParam["Mes"]."
+
+                        )
+                        OR 
+                        (`AnoFim` > ".$pParam["Ano"].")
+                        OR
+                        (`AnoFim` = 0 AND MesFim = 0)
+                    )
                 )";
                 
                 $this->db->where($WhereData); 
