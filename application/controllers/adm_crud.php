@@ -332,8 +332,7 @@
                             }
 
                         }
-                    }
-                    else{
+                    }else{
 
                         //2 OU 3
                         if((isset($data["IdCartao"])) && ($data["IdCartao"] > 0)){   
@@ -397,12 +396,11 @@
                         echo "hasAlteracaoValor <br>";
 
                         if( (!isset($data["espelhar-proximas"])||($data["espelhar-proximas"] == false)) ){
-                            echo "Sem Espelhar";
+                            echo "Sem Espelhar <br>";
                             $data["IdTipoTransacao"] = 3;
                         }
 
-                        if($hasAlteracaoValorTransferencia)
-                        {
+                        if($hasAlteracaoValorTransferencia){
                             echo "Alteração Transferencia <br>";
 
                             $data["origem"]  = $transacaoAtual["IdContaOrigem"];
@@ -416,13 +414,12 @@
                             //util_print($data);
 
                             contas_saldo_transferirValores($data);
-                        }
-                        else{
+                        }else{
 
                             echo "Alteração Transacao <br>";
 
                             unset($transacaoAtual["Id"]);
-                            $transacaoAtual["Valor"] = $valorDiferenca; 
+                            $transacaoAtual["Valor"] = $transacaoAtual["Valor"]; 
                             
                             if($transacaoAtual["Valor"] > 0){$tipo = 1;}
                             else{$tipo = 2;}
@@ -433,9 +430,10 @@
                             $dataValor["IdConta"] = $transacaoAtual["IdConta"];
                             $dataValor["IdTipoTransacao"] = $transacaoAtual["IdTipoTransacao"];
 
-                            //util_print($dataValor,"Transacao Atual");
+                            util_print($dataValor,"Transacao Atual");
                             
                             // -- SALDO GERAL --
+                            $dataValor["Valor"] = $valorDiferenca;
                             contas_saldo_UpdateSaldo($dataValor);
 
                             if($hasAlteracaoConta){
