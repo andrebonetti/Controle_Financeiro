@@ -1,45 +1,76 @@
 <div class="calendario">
             
     <div class="header-calendario">
-        <h1><?=nome_mes($mes)?> - <?=$ano?></h1>
-        <div class="despesas">
-            <p> 
-                <span class="alteracao_manual" name="despesas" title="Alterar" value="0">Despesas:</span>
-                <span class="valor_span"><?=numeroEmReais2($competenciaAtual["Despesas"])?></span>
-            </p>
 
-            
-            <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-despesas"))?>
-            
-                <input type="hidden" name="tipo_alteracao" value="Despesas">
-                <input type="hidden" name="ano" value="<?=$ano?>">
-                <input type="hidden" name="mes" value="<?=$mes?>">
-            
-                <input type="text" class="form-control input-despesas" name="valor" value="<?=numeroEmReais2($competenciaAtual["Despesas"])?>">
+        <h1><?=nome_mes($dataAtual["Mes"])?> - <?=$dataAtual["Ano"]?></h1>
+
+    <?php 
+
+        foreach ($lcontaUsuario["Contas_Banco"] as $keyContaUsuario => $valueContaUsuario) {?>
+
+            <div class="info-movimentacao no-view movimentaca-<?=$keyContaUsuario?>">
+
+                <div class="movimentacao">
+                    <p>
+                        <b>Movimentação</b><br>
+                    </p>
+                    <p>
+                        <?=numeroEmReais2($valueContaUsuario["SaldoTela"]["Receita"] + ($valueContaUsuario["SaldoTela"]["Despesas"]))?>
+                    </p>
+                </div> 
                 
-                    <input type="submit" class="btn btn-success" value="Ok"> 
+                <div class="despesas">
+                    <p>
+                        <b>Despesas</b><br>
+                    </p>
+                    <p>
+                        <?=numeroEmReais2($valueContaUsuario["SaldoTela"]["Despesas"])?>
+                    </p>
+                </div> 
+                <div class="receita">
+                    <p>
+                        <b>Receita</b><br>
+                    </p>
+                    <p>
+                        <?=numeroEmReais2($valueContaUsuario["SaldoTela"]["Receita"])?>
+                    </p>
+                </div> 
+
+
+            </div>
             
-            <?= form_close()?>
-            
-        </div> 
-        <div class="receita">
-            <p> 
-                <span class="alteracao_manual" name="receita" value="0">Receita:</span>
-                <span class="valor_span"><?=numeroEmReais2($competenciaAtual["Receita"])?></span>
-            </p>
-            <?= form_open("adm_crud/alteracao_manual",array("class"=>"alteracao_manual alteracao-receita"))?>
-            
-                <input type="hidden" name="tipo_alteracao" value="Receita">
-                <input type="hidden" name="ano" value="<?=$ano?>">
-                <input type="hidden" name="mes" value="<?=$mes?>">
-            
-                <input type="text" class="form-control input-receita" name="valor" value="<?=numeroEmReais2($competenciaAtual["Receita"])?>">
-                
-                    <input type="submit" class="btn btn-success" value="Ok"> 
-            
-            <?= form_close()?>
-        </div> 
-        
+    <?php } ?>
+
+        <div class="info-movimentacao no-view movimentaca-Geral">
+                    
+            <div class="movimentacao">
+                <p>
+                    <b>Movimentação</b><br>
+                </p>
+                <p>
+                    <?=numeroEmReais2($lcontaUsuario["Geral"]["Receita"] + ($lcontaUsuario["Geral"]["Despesas"]))?>
+                </p>
+            </div> 
+            <div class="despesas">
+                <p>
+                    <b>Despesas</b><br>
+                </p>
+                <p>
+                    <?=numeroEmReais2($lcontaUsuario["Geral"]["Despesas"])?>
+                </p>
+            </div> 
+            <div class="receita">
+                <p>
+                    <b>Receita</b><br>
+                </p>
+                <p>
+                    <?=numeroEmReais2($lcontaUsuario["Geral"]["Receita"])?>
+                </p>
+            </div> 
+
+
+        </div>
+    
     </div>
     
     
@@ -64,10 +95,9 @@
         // Inicial
          $numSemana = 1; 
          $diaSemana = 1;
-         $diaMes = 1;
 
         /*-- INSERE DIAS MES ANTERIOR --*/
-        for($pre=1;$pre <= $primeiroDiaMes;$pre++){ 
+        for($pre=1;$pre <= $dataAtual["PrimeiroDiaMes"];$pre++){ 
 
             echo "<div class='dia pre-nulo semana-mes-1'></div>";
             $diaSemana++; 
@@ -75,102 +105,138 @@
         } 
 
         /*-- FOREACH DIAS MES --*/
-        foreach($dataMes as $dataDia) {?>
+        foreach($dataMes as $keyDay => $dataDia) {?>
 
             <?php 
                 $classeDia = "";
                 if($diaSemana == 6 || $diaSemana ==7){
-                    $classeDia = "final-de-semana";
+                    $classeDia = $classeDia." final-de-semana";
+                }
+
+                if($keyDay == $dataAtual["Dia"]){
+                    $classeDia = $classeDia." diaAtual";
                 }
             ?>
         
             <div 
-                class="dia dia-calendario dia-<?=$diaMes?> semana-mes-<?=$numSemana?> <?=$classeDia?>" id="dia-<?=$diaMes?>"
-                data-dia-mes="<?=$diaMes?>"
+                class="dia dia-calendario dia-<?=$keyDay?> semana-mes-<?=$numSemana?> <?=$classeDia?>" id="dia-<?=$keyDay?>"
+                data-dia-mes="<?=$keyDay?>"
                 data-dia-semana="<?=$diaSemana?>"
                 data-semana="<?=$numSemana?>"
             >
             
-            <table>
+            <table class="transacoes">
                 
                 <!-- INFO DIA -->
                 <tr class="data-day" data-toggle="modal" data-target="#add-transacao">
-                    <th colspan="2" class="dia_mes"><?=$diaMes?></th>
+                    <th colspan="2" class="dia_mes"><?=$keyDay?></th>
                 </tr>
 
                 <!-- CONTEUDO DIA -->
-                <?php foreach($dataDia as $dataTransacao){
-                               
-                    if(!isset($dataTransacao["IsResumo"])){
+                <?php foreach($dataDia["lTransacoes"] as $KeyTransacao =>  $itemTransacao){?> 
 
-                ?> 
-                
-                    <tr class="content-day IdSubCategoria-<?=$dataTransacao["IdSubCategoria"]?>" data-toggle="modal" data-target="#edit-transacao">  
+                    <tr class="content-day  
+                    IdSubCategoria-<?=$itemTransacao["IdSubCategoria"]?> 
+                    IsContabilizado-<?=$itemTransacao["IsContabilizado"]?> 
+                    IsTransferencia-<?=$itemTransacao["IsTransferencia"]?>
+                    transacao_idconta-<?=$itemTransacao["IdConta"]?> transacao_idconta-<?=$itemTransacao["IdContaOrigem"]?>
+                    transacao_conta-<?=$lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["Ordem"]?>" 
+                    data-toggle="modal" data-target="#edit-transacao">  
                         
-                        <td class="info-content no-view"
-                                data-id="<?=$dataTransacao["Id"]?>"
-                                data-dia="<?=$dataTransacao["Dia"]?>"
-                                data-valor="<?=$dataTransacao["Valor"]?>"
-                                data-type="<?=$dataTransacao["IdTipoTransacao"]?>"
-                                data-p-atual="<?=$dataTransacao["NumeroParcela"]?>"
-                                data-p-total-atual="<?=$dataTransacao["TotalParcelas"]?>"
-                                data-categoria-id="<?=$dataTransacao["IdCategoria"]?>"
-                                data-categoria-descricao="<?=trim($dataTransacao["DescricaoCategoria"])?>"
-                                data-subcategoria-id="<?=trim($dataTransacao["IdSubCategoria"])?>"
-                                data-subcategoria-descricao="<?=trim(valida_sub($dataTransacao["DescricaoCategoria"],$dataTransacao["DescricaoSubCategoria"]))?>"
-                                data-descricao="<?=trim($dataTransacao["Descricao"])?>"
-                                data-codigo-transacao="<?=trim($dataTransacao["CodigoTransacao"])?>"
-                                >
+                        <td class="info-content css_transacao" style="<?=$lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["CSS"]?>"
+                                data-id="<?=$itemTransacao["Id"]?>"
+                                data-dia="<?=$itemTransacao["Dia"]?>"
+                                data-valor="<?=$itemTransacao["Valor"]?>"
+                                data-type="<?=$itemTransacao["IdTipoTransacao"]?>"
+                                data-p-atual="<?=$itemTransacao["NumeroParcela"]?>"
+                                data-p-total-atual="<?=$itemTransacao["TotalParcelas"]?>"
+                                data-categoria-id="<?=$itemTransacao["IdCategoria"]?>"
+                                data-categoria-descricao="<?=trim($itemTransacao["DescricaoCategoria"])?>"
+                                data-subcategoria-id="<?=trim($itemTransacao["IdSubCategoria"])?>"
+                                data-subcategoria-descricao="<?=trim(valida_sub($itemTransacao["DescricaoCategoria"],$itemTransacao["DescricaoSubCategoria"]))?>"
+                                data-descricao="<?=trim($itemTransacao["Descricao"])?>"
+                                data-codigo-transacao="<?=trim($itemTransacao["CodigoTransacao"])?>"
+                                data-iscontabilizado="<?=$itemTransacao["IsContabilizado"]?>"
+                                data-istransferencia="<?=$itemTransacao["IsTransferencia"]?>"
+                                data-contaorigem="<?=$itemTransacao["IdContaOrigem"]?>"
+                                data-idconta="<?=$itemTransacao["IdConta"]?>">        
                         </td>
-                        
-                        <td class="descricao" data-toggle="tooltip" data-placement="top" title="<?=trim($dataTransacao["DescricaoCategoria"])." - ".trim(valida_sub($dataTransacao["DescricaoCategoria"],$dataTransacao["DescricaoSubCategoria"]))?>">
 
-                            <?php if($dataTransacao["Descricao"] == NULL){?>
-                                <?=trim($dataTransacao["DescricaoSubCategoria"])?>
+                        <td class="descricao" data-toggle="tooltip" data-placement="top" title="<?=trim($itemTransacao["DescricaoCategoria"])." - ".trim(valida_sub($itemTransacao["DescricaoCategoria"],$itemTransacao["DescricaoSubCategoria"]))?>">
+
+                            <?php if($itemTransacao["Descricao"] == NULL){?>
+                                <?=trim($itemTransacao["DescricaoSubCategoria"])?>
                             <?php } else{ ?>
-                                <?=trim($dataTransacao["Descricao"])?>
-                                <?php if($dataTransacao["IdTipoTransacao"] == "2"){?>
-                                    - <?=$dataTransacao["NumeroParcela"]?>/<?= $dataTransacao["TotalParcelas"] ?>	
+                                <?=trim($itemTransacao["Descricao"])?>
+                                <?php if($itemTransacao["IdTipoTransacao"] == "2"){?>
+                                    - <?=$itemTransacao["NumeroParcela"]?>/<?= $itemTransacao["TotalParcelas"] ?>	
                             <?php }} ?>
 
                         </td>
                         
-                        <td class="valor <?=sinal_valor($dataTransacao["Valor"])?>"><?=numeroEmReais2($dataTransacao["Valor"])?></td>
+                        <td class="valor <?=sinal_valor($itemTransacao["Valor"])?>"><?=numeroEmReais2($itemTransacao["Valor"])?></td>
                         
                     </tr>
                 
-                <?php }} ?>
-                
-                <!-- RESUMO DIA -->
-                
-                <?php if(isset($dataDia["ResumoDia"]["HasSaldo"]) && $dataDia["ResumoDia"]["HasSaldo"] == true){ ?>
-                
-                    <tr class="data-total_saldoDia">
-                        <td class="titulo">Saldo Dia</td>
-                        <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["SaldoDia"])?></td>
-                    </tr>
-                        <tr class="data-total_saldoFinal">
-                        <td class="titulo">Saldo Final</td>
-                        <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["SaldoFinal"])?></td>
+                <?php } ?>
+
+                <?php foreach($dataDia["lFaturas"] as $KeyTransacao =>  $itemTransacao){?> 
+
+                    <tr class="
+                    content-day 
+                    transacao_conta-<?=$itemTransacao["IdConta"]?>
+                    transacao_idconta-<?=$itemTransacao["IdConta"]?>" 
+                    data-toggle="modal" data-target="#cartao_de_credito">
+                    
+                        <td class="info-content css_cartao" style="<?=$lcontaUsuario["Contas_Banco"][$itemTransacao["IdConta"]]["CSS"]?>"></td>
+
+                        <td class="descricao" data-toggle="tooltip" data-placement="top">
+                            <?=trim($itemTransacao["Descricao"])?>
+                        </td>
+
+                        <td class="valor <?=sinal_valor($itemTransacao["Valor"])?>"><?=numeroEmReais2($itemTransacao["Valor"])?></td>
+
                     </tr>
 
                 <?php } ?>
-                
-                <?php if( (($diaMes == 9)&&($primeiroDiaMes < 6)) || ($diaMes == 10 && $primeiroDiaMes == 1) || ($diaMes == 11 && $primeiroDiaMes == 1) ) {?>
-                    <tr class="cartao">
-                        <td class='cartao'>Cartão</td>
-                        <td class='valor-fatura valor' value="<?=-$competenciaAtual["Cartao"]?>"><?=numeroEmReais2(-$competenciaAtual["Cartao"])?></td>
+
+            </table>  
+
+            <table class="ResumoDia">
+
+                <!-- RESUMO DIA -->
+                <?php if( ( (count($dataDia["lTransacoes"]) > 0) || (count($dataDia["lFaturas"]) > 0) )&& (isset($dataDia["ResumoDia"]["Contas_Banco"])) ){ foreach($dataDia["ResumoDia"]["Contas_Banco"] as $KeyResumo =>  $itemResumo){?> 
+
+                    <tr class="saldoDia_conta saldoDia_conta-<?=$KeyResumo?> $itemResumo["SaldoDia"]">
+                        <td class="css_resumo" style="<?=$itemResumo["CSS"]?>"></td>
+                        <td class="titulo">Saldo Dia</td>
+                        <td class="valorSaldo"><?=numeroEmReais2($itemResumo["SaldoDia"])?></td>
                     </tr>
-                <?php } ?>
+                    <tr class="saldoFinal_conta saldoFinal_conta-<?=$KeyResumo?>">
+                        <td class="css_resumo" style="<?=$itemResumo["CSS"]?>"></td>
+                        <td class="titulo">Saldo Final</td>
+                        <td class="valorSaldo"><?=numeroEmReais2($itemResumo["SaldoFinal"])?></td>
+                    </tr>
+
+                <?php }} ?>
+
+                <tr class="saldoDia_geral">
+                    <td class="css_resumoGeral"></td>
+                    <td class="titulo">Saldo Dia</td>
+                    <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["Geral"]["SaldoDia"])?></td>
+                </tr>
+                <tr class="saldoFinal_geral">
+                    <td class="css_resumoGeral"></td>
+                    <td class="titulo">Saldo Final</td>
+                    <td class="valorSaldo"><?=numeroEmReais2($dataDia["ResumoDia"]["Geral"]["SaldoFinal"])?></td>
+                </tr>
                 
             </table>
-            
-            <div class="valor-total"></div>
 
         </div> 
         
     <?php
-        $diaMes++;  
+ 
         $diaSemana ++;
         if($diaSemana > 7){
             $diaSemana = 1;

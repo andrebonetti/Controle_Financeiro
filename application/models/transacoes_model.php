@@ -3,9 +3,10 @@
 				
         // -- SELECT --		
         function Listar($pData = null,$pOrderBy = null){
-            
+
             if(isset($pData["Id"])){$this->db->where("transacoes.Id",$pData["id"]);}  
             if(isset($pData["IdUsuario"])){$this->db->where("transacoes.IdUsuario",$pData["IdUsuario"]);}
+            if(isset($pData["IdCartao"])){$this->db->where("transacoes.IdCartao",$pData["IdCartao"]);}
             if(isset($pData["IdCategoria"])){$this->db->where("transacoes.IdCategoria",$pData["IdCategoria"]);}
             if(isset($pData["IdSubCategoria"])){$this->db->where("transacoes.IdSubCategoria",$pData["IdSubCategoria"]);}
             if(isset($pData["Descricao"])){$this->db->where("transacoes.Descricao",$pData["Descricao"]);}
@@ -67,8 +68,113 @@
                     $this->db->join("sub_categoria", "sub_categoria.IdSubCategoria = transacoes.IdSubCategoria");
                 }
             }
+
+            $this->db->order_by("DataCompra");
             
+            return $this->db->get()->result_array();
+        }
+
+        function ListarPorRegraTipo($pData = null,$pOrderBy = null){
+            
+            //util_print($pData,"param transacoes");
+            //if(isset($pData["Id"])){$this->db->where("transacoes.Id",$pData["id"]);}  
+            //if(isset($pData["IdUsuario"])){$this->db->where("transacoes.IdUsuario",$pData["IdUsuario"]);}
+            if(isset($pData["Usuario"]["Id"])){$this->db->where("transacoes.IdUsuario",$pData["Usuario"]["Id"]);}  
+
             $this->db->from("transacoes");
+
+            if(isset($pData["Ano"]) and isset($pData["Mes"])){
+
+                $WhereDia = "";
+                if(isset($pData["Dia"])){
+                    $WhereDia = "AND Dia = {$pData["Dia"]}";
+                }
+                $WhereIdCartao = "";
+                if(isset($pData["IdCartao"])){
+                    $WhereIdCartao = "AND IdCartao = {$pData["IdCartao"]}";
+                }
+
+                $wherePorTipo =  "(
+                            Valor <> 0
+                            {$WhereDia}
+                            {$WhereIdCartao}
+                            AND
+                            (
+                                (
+                                    IdTipoTransacao = 1
+                                    AND
+                                    (
+                                        (
+                                            `Ano` =  {$pData["Ano"]}
+                                            AND `Mes` <= {$pData["Mes"]}
+
+                                        )
+                                        OR 
+                                        (`Ano` < {$pData["Ano"]})
+                                    )
+                                    AND
+                                    (
+                                        AnoFim >= {$pData["Ano"]}
+                                        AND MesFim >= {$pData["Mes"]}
+                                    )
+                                )
+                                OR
+                                (
+                                    IdTipoTransacao != 1
+                                    AND
+                                    (
+                                        Ano = {$pData["Ano"]}
+                                        AND Mes = {$pData["Mes"]}
+                                    )
+                                )
+                            )
+                        )";
+                // "
+                //                     (
+                //                         IdTipoTransacao = 1
+                //                         AND
+                //                         (
+                //                             (
+                //                                 Ano =  {$pData["Ano"]}
+                //                                 AND Mes <= {$pData["Mes"]}
+
+                //                             )
+                //                             OR 
+                //                             (Ano < {$pData["Ano"]})
+                //                             )
+                //                         )
+                //                         AND
+                //                         (
+                //                             AnoFim >={$pData["Ano"]}
+                //                             AND MesFim >={$pData["Mes"]}
+                //                         )
+                //                     )
+                                   
+                //              ";
+
+                            //   OR
+                            //         (
+                            //             IdTipoTransacao != 1
+                            //             AND
+                            //             (
+                            //                 Ano = {$pData["Ano"]}
+                            //                 AND Mes = {$pData["Mes"]}
+                            //                 AND Dia = {$pData["Mes"]}
+                            //             )
+                            //         )
+
+
+                $this->db->where($wherePorTipo);
+
+            }
+
+            if(isset($pData["PreencherEntidadesFilhas"])){
+                if($pData["PreencherEntidadesFilhas"] == true){
+                    $this->db->join("categoria", "categoria.IdCategoria = transacoes.IdCategoria");
+                    $this->db->join("sub_categoria", "sub_categoria.IdSubCategoria = transacoes.IdSubCategoria");
+                }
+            }
+
             return $this->db->get()->result_array();
         }
         
@@ -105,12 +211,18 @@
               
         // -- INSERT --
         function Incluir($pData){
+
+            unset($pData["espelhar-proximas"]);
+            $pData["DataInclusao"] = date('Y-m-d H:i:s');
             $pData["Id"] = null;
 			$this->db->insert("transacoes", $pData);
 		}
         
         // -- UPDATE --
         function Atualizar($pData){
+ 
+            $pData["DataAlteracao"] = date('Y-m-d H:i:s');
+
 			$this->db->where 	('Id', $pData["Id"]);
 			$this->db->update	("transacoes", $pData);
 		}

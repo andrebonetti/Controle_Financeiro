@@ -15,11 +15,11 @@ $db['default']['password'] = '';
 $db['default']['database'] = 'controle-financeiro';
 $db['default']['dbdriver'] = 'mysql';*/
 
-$db['default']['hostname'] = 'andretemp.mysql.dbaas.com.br';
-$db['default']['username'] = 'andretemp';
+$db['default']['hostname'] = 'andretemp2.mysql.dbaas.com.br';
+$db['default']['username'] = 'andretemp2';
 $db['default']['password'] = 'flatronW1943C';
-$db['default']['database'] = 'andretemp';
-$db['default']['dbdriver'] = 'mysql';
+$db['default']['database'] = 'andretemp2';
+$db['default']['dbdriver'] = 'mysqli';
 
 /*$db['default']['hostname'] = '191.232.242.255';
 $db['default']['username'] = 'gerensys';

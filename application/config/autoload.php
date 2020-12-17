@@ -37,6 +37,11 @@ $autoload['helper'] = array(
     ,"transacoes_helper"
     ,"geral_helper"
     ,"usuario_helper"
+    ,"config_helper"
+    ,"contas_helper"
+    ,"contas_saldo_helper"
+    ,"util_helper.php"
+    ,"cartao_helper.php"
 );
 
 /*
@@ -64,8 +69,13 @@ $autoload['language'] = array();
 $autoload['model'] = array(
     'transacoes_model'
     ,'usuarios_model'
-    ,'cartao_model'
+    ,'cartao_de_credito_model'
+    ,'cartoes_model'
     ,"geral_model"
     ,"categoria_model"
     ,"subCategoria_model"
+    ,"contas_model"
+    ,"contas_saldo_model"
+    ,"bancos_model"
+    ,"cartoes_fatura_model"
 );

@@ -1,931 +1,1203 @@
-        @import 'base';
+@import 'base';
 
-        /* ----- BASE ----- */
-        body{
-            background-color: @white-9;
-            font-family: 'Source Sans Pro', sans-serif;
+/* ----- BASE ----- */
+body{
+    background-color: @white-9;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* -- SIGNIN -- */
+section.signin{
+
+    form{
+        width: 300px;
+        margin:0 auto;
+        margin-top:100px;
+        text-align: center;
+
+
+        .btn{ 
+            margin-top: 3%;
+            width: 100%;
+            padding:5px 5px;
+        }    
+    }
+}
+
+/* -- CONTENT -- */
+
+header.content:extend(.full-container){
+    background-color: @white-10;
+
+    .myContainer:extend(.full-container){
+        .lateral-margin(98%);
+
+        .conta-opcoes,.nav,.navbar-nav{
+            float:right;
         }
+    }
+    //.test-3;
+}
 
-        /* -- SIGNIN -- */
-        section.signin{
+section.content{
+    padding:1%;
+    
+    form.alteracao_manual{
+        display: none;
 
-            form{
-                width: 300px;
-                margin:0 auto;
-                margin-top:100px;
-                text-align: center;
+        input{
+            text-align: left
+        }
+    }
 
+    .myContainer{
 
-                .btn{ 
-                    margin-top: 3%;
-                    width: 100%;
-                    padding:5px 5px;
-                }    
+        .filtros:extend(.full-container){
+
+            .menu-contas_usuario{
+                .float-config(left,20%);
+                margin-right: 1%;
             }
+
+            .menu-competencias{
+                .float-config(left,20%);
+                margin-right: 1%;
+            }
+
         }
 
-        /* -- CONTENT -- */
+        .saldos,.poupanca_content{
+            .float-config(right,100%);
+            display: table;
+            margin-bottom:1%;
 
-        section.content{
-            padding:1%;
-            
-            form.alteracao_manual{
+            .SaldoConta{
+                width: 100%;
                 display: none;
+                margin: 3px 0 3px 0;
 
-                input{
-                    text-align: left
+                div{
+                    padding: 1%;
+                    display:table;
+                    font-size: 1.25em;
+                    border-radius: 4px;
+                    background-color:yellow;
+
+                    span{
+                        text-align:right;
+                        .float-config(right,auto);
+                    }
                 }
-            }
 
-            .myContainer{
+                .saldo-anterior,.poup-anterior{
+                    .float-config(left,20%);
+                    margin-right: 1%;
+                    color:@black-2;
+                    background-color: @white-7;
+                }
 
-                .saldos,.poupanca_content{
-                    .float-config(right,100%);
-                    display: table;
-                    margin-bottom:1%;
+                .saldo-mes,.poup-mes{
+                    .float-config(left,20%);
+                    color:@black-2;
+                    background-color: @white-7;
+                    position: relative;
+                    
+                    span{
+                        display: block;
+                        float: left;
+                    }
 
-                    div{
-                        padding: 1%;
-                        display:table;
-                        font-size: 1.25em;
-                        border-radius: 4px;
-                        background-color:yellow;
+                    span.alteracao_manual{
+                        cursor: pointer;
+                    }
 
-                        span{
-                          text-align:right;
-                          .float-config(right,auto);
+                    span.valor_span{
+                        width: 100px;
+                        float: right;
+                    }
+                
+                    form.alteracao_manual{
+
+                        input.input-SaldoMes{
+                            width: 120px;
+                            position: absolute;
+                            right: 3px;
+                            top: 10px;
+                            padding: 2px;
                         }
-                    }
-
-                    .saldo-anterior,.poup-anterior{
-                        .float-config(left,20%);
-                        margin-right: 1%;
-                        color:@black-2;
-                        background-color: @white-7;
-                    }
-
-                    .saldo-mes,.poup-mes{
-                        .float-config(left,20%);
-                        color:@black-2;
-                        background-color: @white-7;
-                        position: relative;
                         
-                        span{
-                            display: block;
-                            float: left;
+                        .btn-success{
+                            padding: 2px 3px;
+                            position: absolute;
+                            top: 14px;
+                            right: 8px;
                         }
-
-                        span.alteracao_manual{
-                            cursor: pointer;
-                        }
-
-                        span.valor_span{
-                            width: 100px;
-                            float: right;
-                        }
-                    
-                        form.alteracao_manual{
-
-                            input.input-SaldoMes{
-                                width: 120px;
-                                position: absolute;
-                                right: 3px;
-                                top: 10px;
-                                padding: 2px;
-                            }
-                            
-                            .btn-success{
-                                padding: 2px 3px;
-                                position: absolute;
-                                top: 14px;
-                                right: 8px;
-                            }
-                            
-                        }
-                    }
-                    
-                    .saldo-mes:hover,.saldo-futuro:hover{
-                        background-color: @white-2;
-                            
-                        span{
-                            color: #f2f200;
-                        }
-                    }
-
-                    .saldo-dia{
-                        .float-config(left,20%);
-                        position: fixed;
-                        margin-left: 555px;
-                        padding:8px 5px 3px 5px;
-                        color:@black-2;
-                        background-color: @white-10;
-
-                        p{
-                            float: left;
-                            padding-top: 3px;
-                        }
-
-                        input{
-                            width: 40px;
-                            float: left;
-                            margin: 0 1% 0 2%;
-                            text-align: center;
-                        }
-
-                        span{
-                            float: left;
-                            margin-left: 12px;
-                            margin-top: 3px;
-
-                        }
-
-                        span.positivo{
-                            color: #14a614;
-                        }
-
-                        span.negativo{
-                            color: #cb0000;
-                        }
-                    }
-
-                    .saldo-futuro,.poup-futuro{
-                        .float-config(right,20%);
-                        background-color:yellow;
-                        position: relative;
                         
-                        span{
-                            display: block;
-                            float: left;
-                        }
-
-                        span.alteracao_manual{
-                            cursor: pointer;
-                        }
-
-                        span.valor_span{
-                            width: 100px;
-                            float: right;
-                        }
-                    
-                        form.alteracao_manual{
-
-                            input.input-SaldoFinal{
-                                width: 120px;
-                                position: absolute;
-                                right: 3px;
-                                top: 10px;
-                                padding: 2px;
-                            }
-                            
-                            .btn-success{
-                                padding: 2px 3px;
-                                position: absolute;
-                                top: 14px;
-                                right: 8px;
-                            }
-                            
-                        }
                     }
-
-                    .poup-futuro{
-                        .float-config(right,20%);
-                        background-color:#8694ff;
+                }
+                
+                .saldo-mes:hover,.saldo-futuro:hover{
+                    background-color: @white-2;
+                        
+                    span{
+                        color: lightyellow;
                     }
-
-                    .menu-competencias{
-                        .float-config(right,10%);
-                    }
-
-                    .negativo{color: #9f0000; }
-                    .positivo{color: #00cb27; }
                 }
 
-                .ativa-categoria{
-                    width: 100%;
-                    display: table;
-                    cursor: pointer;
-                    text-align: center;
-
-                    h5{
-                        margin:1% 0 1% 0;
-                        font-size: 1.2em;
-                        font-weight: 700;
-                    }
-                    img{width: 32px;}
-
-                    img:hover{opacity: 0.75;}
-                }
-
-                .calendario:extend(.full-container){  
-                    .border(5px,#4c4cbf);
+                .saldo-dia{
+                    .float-config(left,20%);
+                    position: fixed;
+                    margin-left: 555px;
+                    padding:8px 5px 3px 5px;
+                    color:@black-2;
                     background-color: @white-10;
 
-                    .header-calendario:extend(.full-container){  
+                    p{
+                        float: left;
+                        padding-top: 3px;
+                    }
 
-                        padding:0.5%;
+                    input{
+                        width: 40px;
+                        float: left;
+                        margin: 0 1% 0 2%;
                         text-align: center;
-                        color:@white-10;
-                        background-color: rgba(76, 76, 191, 0.83);
+                    }
 
-                        h1{
-                            margin: 0;
-                            .float-config(left,auto);
-                            font-size:2em;
-                        }
-                        
-                        div{
-                            .float-config(right,15%);
-                            position: relative;
+                    span{
+                        float: left;
+                        margin-left: 12px;
+                        margin-top: 3px;
+
+                    }
+
+                    span.positivo{
+                        color: #14a614;
+                    }
+
+                    span.negativo{
+                        color: #cb0000;
+                    }
+                }
+
+                .saldo-futuro,.poup-futuro{
+                    .float-config(right,20%);
+                    background-color: lightyellow;
+                    position: relative;
+                    
+                    span{
+                        display: block;
+                        float: left;
+                    }
+
+                    span.alteracao_manual{
+                        cursor: pointer;
+                    }
+
+                    span.valor_span{
+                        width: 100px;
+                        float: right;
+                    }
+                
+                    form.alteracao_manual{
+
+                        input.input-SaldoFinal{
+                            width: 120px;
+                            position: absolute;
+                            right: 3px;
+                            top: 10px;
                             padding: 2px;
-                            border-radius: 4px;
-                            
-                            
-                            a{
-                                .float-config(left,18px);
-                                
-                                img{
-                                    width: 100%
-                                }
-                            }
-                            
-                            p{
-                                font-size: 1.35em;
-                                margin-left: 1%;
-                                margin-bottom: 0;
-                                
-                                span{
-                                    display: block;
-                                    float: left;
-                                }
-                                
-                                span.alteracao_manual{
-                                    cursor: pointer;
-                                }
-                                
-                                span.valor_span{
-                                    width: 100px;
-                                    float: right;
-                                }
-                            }
                         }
                         
-                        div:hover{
-                            background-color: rgba(9, 9, 129, 0.88);
-                            
-                            p{
-                                
-                                span{
-                                    color: yellow;
-                                }
-                                
-                            }
+                        .btn-success{
+                            padding: 2px 3px;
+                            position: absolute;
+                            top: 14px;
+                            right: 8px;
                         }
                         
+                    }
+                }
+
+                .poup-futuro{
+                    .float-config(right,20%);
+                    background-color:#8694ff;
+                }
+
+                .menu-competencias{
+                    .float-config(right,10%);
+                }
+
+                .negativo{color: #9f0000; }
+                .positivo{color: #00cb27; }
+
+            }
+
+            .SaldoOrdem-1{
+                display: table;
+                width: 100%;                       
+            }
+        }
+
+        .ativa-categoria{
+            width: 100%;
+            display: table;
+            cursor: pointer;
+            text-align: center;
+
+            h5{
+                margin:1% 0 1% 0;
+                font-size: 1.2em;
+                font-weight: 700;
+            }
+            img{width: 32px;}
+
+            img:hover{opacity: 0.75;}
+        }
+
+        .calendario:extend(.full-container){  
+            .border(5px,#4c4cbf);
+            background-color: @white-10;
+
+            .header-calendario:extend(.full-container){  
+
+                padding:0.5%;
+                text-align: center;
+                color:@white-10;
+                background-color: rgba(76, 76, 191, 0.83);
+
+                h1{
+                    margin: 0;
+                    .float-config(left,auto);
+                    font-size:2em;
+                }
+                
+                div{
+                    .float-config(right,auto);
+                    position: relative;
+                    padding: 0 10px;
+                    border-radius: 4px;
+                    
+                    
+                    a{
+                        .float-config(left,18px);
+                        
+                        img{
+                            width: 100%
+                        }
+                    }
+                    
+                    p{
+                        font-size: 1.35em;
+                        margin-left: 1%;
+                        margin-bottom: 0;
+                        
+                        span{
+                            display: block;
+                            float: left;
+                        }
+                        
+                        span.alteracao_manual{
+                            cursor: pointer;
+                        }
+                        
+                        span.valor_span{
+                            width: 100px;
+                            float: right;
+                        }
+                    }
+                }
+                
+                div:hover{
+                    background-color: rgba(9, 9, 129, 0.88);
+                    
+                    p{
+                        
+                        span{
+                            color: yellow;
+                        }
+                        
+                    }
+                }
+                
+                form.alteracao_manual{
+
+                    input.input-receita,input.input-despesas{
+                        width: 90px;
+                        position: absolute;
+                        right: 3px;
+                        top: 0;
+                        padding: 2px;
+                    }
+                    
+                    .btn-success{
+                        padding: 2px 3px;
+                        position: absolute;
+                        top: 4px;
+                        right: 8px;
+                    }
+                    
+                }
+
+            }
+
+            table.semanas{
+                .lateral-margin(98%);
+                color:@black-5;
+
+                th{
+                    .inline-content(7);
+                    text-align: center;
+                    padding:0.5%;
+                }
+            }
+
+            .dias:extend(.full-container){  
+                .lateral-margin(98%);
+                padding-bottom: 2%;
+
+                .dia,.pre-nulo{
+                    .inline-content(7);
+                    min-height:120px;
+                    //.border(0,@white-4);
+                    .border(0,@white-9);
+                    background-color: @white-10;
+                    position: relative;
+                    //height: 175px;
+                    //overflow: hidden;
+
+                    table.transacoes{
+                        width: 100%;
+                        
+                        tr.data-day{
+
+                            th{
+                                font-size:1.1em;
+                                padding:2%;
+                                cursor: pointer;
+                            }
+                            th:hover{
+                                color:#4c4cbf;
+                            }
+                        }
+
+                        /*tr.data-total_saldoDia,tr.data-total_saldoFinal{
+                            display: none;
+                            width: 100%;
+                            //position: absolute;
+                            bottom: 0;
+                        
+                            td.titulo{
+                                font-size: 0.8em;
+                                color: @white-2;
+                                text-align: left;
+                                width: 70%;
+                                float: left;
+                                padding-left: 5px;
+                            }
+                            
+                            td.valorSaldo{
+                                font-size: 0.85em;
+                                color: @white-1;
+                                text-align: right;
+                                float: right;
+                                padding-right: 5px;
+                            }
+                            
+                        }
+                        
+                        tr.data-total_saldoDia{
+                            display: none;
+                            /*position: absolute;
+                            bottom: 18px;
+                            
+                            td.valorSaldo{
+                                font-weight: 600;
+                            }
+                        }*/
+                        
+                        tr.content-day,tr.cartao,tr.poupanca,tr.dizimo,{
+                            font-size:0.9em; 
+                            cursor: pointer;
+
+                            td.css_transacao{
+                                width: 2px;
+                                border:solid 1px white;
+                                border-width: 1px 0 1px 0;
+                                padding: 0;
+                            }
+
+                            td{
+                                padding:1% 2% 1% 2%;
+                            }
+
+                            td.valor{
+                                width: 60px;
+                                text-align: right;
+                            }
+
+                            .negativo{color: #cb0000; }
+                            .positivo{color: #00ad21; }
+                        }
+
+                        tr.IsContabilizado-0{
+                            opacity: 0.5;
+                            background-color: lightgray;
+                        }
+
+                        tr.content-day:hover,tr.poupanca:hover{
+                            background-color: #bebeff;
+                            color: @white-10;
+
+                            td.valor{
+                                border: none;
+                            }
+
+                            .negativo{background-color:transparent; }
+                            .positivo{background-color:transparent; }
+                        }
+
+                        tr.dizimo{td.dizimo-valor{color: #d1d100;}}
+                        tr.cartao{td.valor-fatura{color: #e88f00;}}    
+                        tr.poupanca{td.poupanca-valor{color: #0054a7;}}
+
+                        .IsTransferencia-1{
+                            background-color: lightyellow;
+
+                            td.valor{
+                                color:@black-8;
+                            }
+                        }
+
+                        tr.content-day{
+                            display: table;
+                            width: 100%;
+                        }
+                        // tr.transacao_conta-1{
+                        //     display: table;
+                        //     width: 100%;
+                        // }
+                    }
+
+                    table.ResumoDia{
+                        position: absolute;
+                        bottom: 0;
+
+                        tbody{
+                            width: 100%;
+
+                            tr.saldoDia_conta
+                            ,tr.saldoFinal_conta
+                            ,tr.saldoDia_geral
+                            ,tr.saldoFinal_geral{
+                                display: none;
+                                width: 100%;
+                                color: @black-8;
+                                opacity: 0.75;
+                                font-size: 0.85em;
+
+                                td.valorSaldo{
+                                    text-align: right;
+                                    padding-right: 3px;
+                                }
+                            }
+
+                            tr.saldoDia_conta-1,tr.saldoFinal_conta-1{
+                                display: table;
+                                width: 100%;
+                            }
+
+                            td.css_resumo,td.css_resumoGeral{
+                                width: 2px;
+                                border:solid 1px white;
+                                border-width: 1px 0 1px 0;
+                                opacity: 0.4;
+                            }
+
+                            td.css_resumoGeral{
+                                background-color: @black-9;
+                            }
+
+                        }
+
+                    }
+
+                    .valor-total{
+                        .test-3;
+                        margin-bottom:0;
+                    }
+                }
+
+                .pre-nulo{.border(0,@white-9);background-color: @white-10;}
+
+                .final-de-semana{
+                    background-color: #f0f0f0;
+                    .border(0,#eaeaea);
+                    border-width:0.5%;
+                }
+
+                .diaAtual{
+                    background-color: lightblue;
+                }
+
+            }
+            span{display: none;} 
+        }
+
+        
+
+        .categorias:extend(.full-container){
+            margin-top: 2%;
+            padding: 1%;
+            background-color: @white-8;
+            
+            .box{
+                .float-config(left,33.33%);
+                padding:2%;
+                position: relative;
+                
+                .categoria-resumo,.fatura-cartao{
+                    height: 350px;
+                    overflow: scroll;
+
+                    .total_cartao{
+                        width: 87%;
+                        position: absolute;
+                        bottom: 0;
+                        text-align: right;
+                        font-size: 1.2em;
+                        font-weight: 600;
+                        color: orange;
+                        
+                        span{
+                            //display: block;
+                        }
+
+                        span.alteracao_manual{
+                            cursor: pointer;
+                            color: @white-2;
+                        }
+
+                        span.valor_span{
+                            width: 100px;
+                            float: right;
+                        }
+
                         form.alteracao_manual{
 
-                            input.input-receita,input.input-despesas{
-                                width: 90px;
+                            input.input-Cartao{
+                                width: 95px;
                                 position: absolute;
-                                right: 3px;
+                                right: 0;
                                 top: 0;
                                 padding: 2px;
                             }
-                            
+
                             .btn-success{
                                 padding: 2px 3px;
                                 position: absolute;
                                 top: 4px;
-                                right: 8px;
+                                right: 2px;
                             }
-                            
+
                         }
-
+                        
                     }
+                
+                    tr.content-fatura:hover{
+                        background-color: #bebeff;
+                        color: @white-10;
+                        cursor:pointer;
 
-                    table.semanas{
-                        .lateral-margin(98%);
-                        color:@black-5;
+                        td.valor{
+                            border: none;
+                        }
+                    }  
 
-                        th{
-                            .inline-content(7);
+                    .categoria-content{
+                        
+                        .border(5px,@white-5);
+                        background-color: @white-10;
+                        padding: 1%;
+
+                        h2{
+                            margin-top:0;
+                            font-size: 1.4em;
+                            padding: 1%;
+                            color:@white-10;
+                            background-color: #7474ff;
+                            position: sticky;
+                            top: 0;
+                            border-radius: 0;
+                            width: 102%;
+                            margin-left: -1%;
+                            margin-top: -2%;
+                        }
+                        
+                        .nome_sub_categoria{
                             text-align: center;
-                            padding:0.5%;
                         }
-                    }
-
-                    .dias:extend(.full-container){  
-                        .lateral-margin(98%);
-                        padding-bottom: 2%;
-
-                        .dia,.pre-nulo{
-                            .inline-content(7);
-                            min-height:120px;
-                            //.border(0,@white-4);
-                            .border(0,@white-9);
-                            background-color: @white-10;
-                            position: relative;
-                            //height: 175px;
-                            //overflow: hidden;
-
-                            table{
-                                width: 100%;
-                                
-                                tr.data-day{
-
-                                    th{
-                                        font-size:1.1em;
-                                        padding:2%;
-                                        cursor: pointer;
-                                    }
-                                    th:hover{
-                                        color:#4c4cbf;
-                                    }
-                                }
-                                
-                                tr.data-total_saldoDia,tr.data-total_saldoFinal{
-                                    display: none;
-                                    width: 100%;
-                                    //position: absolute;
-                                    bottom: 0;
-                                
-                                    td.titulo{
-                                        font-size: 0.8em;
-                                        color: @white-2;
-                                        text-align: left;
-                                        width: 70%;
-                                        float: left;
-                                        padding-left: 5px;
-                                    }
-                                    
-                                    td.valorSaldo{
-                                        font-size: 0.85em;
-                                        color: @white-1;
-                                        text-align: right;
-                                        float: right;
-                                        padding-right: 5px;
-                                    }
-                                    
-                                }
-                                
-                                tr.data-total_saldoDia{
-                                    display: none;
-                                    /*position: absolute;
-                                    bottom: 18px;*/
-                                    
-                                    td.valorSaldo{
-                                        font-weight: 600;
-                                    }
-                                }
-                                
-                                tr.content-day,tr.cartao,tr.poupanca,tr.dizimo,{
-                                    font-size:0.9em; 
-                                    cursor: pointer;
-
-                                    td{
-                                        padding:1% 2% 1% 2%;
-                                    }
-
-                                    td.valor{
-                                        width: 60px;
-                                        text-align: right;
-                                    }
-
-                                    .negativo{color: #cb0000; }
-                                    .positivo{color: #00ad21; }
-                                }
-                                tr.content-day:hover,tr.poupanca:hover{
-                                    background-color: #bebeff;
-                                    color: @white-10;
-
-                                    td.valor{
-                                        border: none;
-                                    }
-
-                                    .negativo{background-color:transparent; }
-                                    .positivo{background-color:transparent; }
-                                }
-
-                                tr.dizimo{td.dizimo-valor{color: #d1d100;}}
-                                tr.cartao{td.valor-fatura{color: #e88f00;}}    
-                                tr.poupanca{td.poupanca-valor{color: #0054a7;}}
-                            }
-
-                            .valor-total{
-                                .test-3;
-                                margin-bottom:0;
-                            }
-                        }
-
-                        .pre-nulo{.border(0,@white-9);background-color: @white-10;}
-
-                        .final-de-semana{
-                            background-color: #f0f0f0;
-                            .border(0,#eaeaea);
-                            border-width:0.5%;
-                        }
-
-                    }
-                    span{display: none;} 
-                }
-
-                
-
-                .categorias:extend(.full-container){
-                    margin-top: 2%;
-                    padding: 1%;
-                    background-color: @white-8;
-                    
-                    .box{
-                        .float-config(left,33.33%);
-                        padding:2%;
-                        position: relative;
                         
-                        .categoria-resumo,.fatura-cartao{
-                            height: 350px;
-                            overflow: scroll;
+                        table:extend(.full-container){
 
-                            .total_cartao{
-                                width: 87%;
-                                position: absolute;
-                                bottom: 0;
+                            td,th{
+                                padding:1%;
+                                .border(0,@white-4);
+                                border-width:0 0 1px 0;
+                            }
+
+                            td.dia{
                                 text-align: right;
-                                font-size: 1.2em;
-                                font-weight: 600;
+                                border-width: 1px 1px 1px 0;
+
+                                border-right-color: @white-8;
+                                padding-right: 5px;
+                            }
+
+                            td.cartao{
                                 color: orange;
-                                
-                                span{
-                                    //display: block;
-                                }
-
-                                span.alteracao_manual{
-                                    cursor: pointer;
-                                    color: @white-2;
-                                }
-
-                                span.valor_span{
-                                    width: 100px;
-                                    float: right;
-                                }
-
-                                form.alteracao_manual{
-
-                                    input.input-Cartao{
-                                        width: 95px;
-                                        position: absolute;
-                                        right: 0;
-                                        top: 0;
-                                        padding: 2px;
-                                    }
-
-                                    .btn-success{
-                                        padding: 2px 3px;
-                                        position: absolute;
-                                        top: 4px;
-                                        right: 2px;
-                                    }
-
-                                }
-                                
                             }
-                        
-                            tr.content-fatura:hover{
-                                background-color: #bebeff;
-                                color: @white-10;
-                                cursor:pointer;
 
-                                td.valor{
-                                    border: none;
-                                }
-                            }  
+                            td.descricao{
 
-                            .categoria-content{
-                                
-                                .border(5px,@white-5);
-                                background-color: @white-10;
-                                padding: 1%;
+                                border-width: 1px 1px 1px 0;
+                                border-right-color: @white-8;
+                                padding-right: 5px;   
 
-                                h2{
-                                    margin-top:0;
-                                    font-size: 1.4em;
-                                    padding: 1%;
-                                    color:@white-10;
-                                    background-color: #7474ff;
-                                    position: sticky;
-                                    top: 0;
-                                    border-radius: 0;
-                                    width: 102%;
-                                    margin-left: -1%;
-                                    margin-top: -2%;
-                                }
-                                
-                                .nome_sub_categoria{
-                                    text-align: center;
-                                }
-                                
-                                table:extend(.full-container){
-
-                                    td,th{
-                                        padding:1% 0.5%;
-                                        .border(0,@white-4);
-                                        border-width:0 0 1px 0;
-                                    }
-                                    
-                                    .valor-total-sub_categoria{
-                                        font-weight: 600;
-                                        font-size: 1.0em;
-                                        text-align: right;
-                                        padding:5px 2px 5px 0
-                                    }
-                                    
-                                    .valor-total,.valor-total-categoria{
-                                            position: absolute;
-                                            bottom: 0;
-                                            right: 0;
-                                            margin-right: 35px;
-                                            border: none;
-                                            border-color: transparent;
-                                            padding: 0;
-                                            font-size: 1.2em;
-                                            font-weight: 600;
-                                    }
-                                    
-                                    .negativo{color: #cb0000; }
-                                    .positivo{color: #00ad21; }
-                                    
-                                }
                             }
-                               
-                        }
-
-                        .fatura-cartao{
-                            .categoria-content{
-                                h2{         
-                                    background-color: #f7a816;
-                                    color: #f2f2f2;
-                                    position: sticky;
-                                    top: 0;
-                                    border-radius: 0;
-                                    width: 102%;
-                                    margin-left: -1%;
-                                    margin-top: -2%;
-                                }
+                            
+                            .valor-total-sub_categoria{
+                                font-weight: 600;
+                                font-size: 1.0em;
+                                text-align: right;
+                                padding:5px 2px 5px 0
                             }
-                        }
-                        
-                    }
-                }
-
-                .calendario-geral:extend(.full-container){
-
-                    .anterior,.proximo{
-                        a{
-                            .inline-content(3%);
-                            padding: 4%;
-
-                            img{
-                                width: 100%;
-                                padding: 5%;
-                            }
-                            h3{
-                                font-size: 1.3em;
-                                text-align: center;
-                                margin-top: 1%;
-                                color:@white-1;
-                            }
-                        }
-                    }
-
-                    .geral{
-
-                        a{
-                            .lateral-margin(75%;);
-                            display: table;
-                            padding: 3%;
-
-                            img{
-                                width: 100%;
-                                padding: 5%;
-                            }
-                            h3{
-                                font-size: 1.3em;                     
-                                text-align: center;
-                                margin-top: 1%;
-                                color:@black-8;
-                            }
-                        }    
-                    }
-
-                    a:hover{
-                        text-decoration: none;
-
-                        img{opacity: 0.75;}
-                    }
-
-                    .anterior{.float-config(left,40%);}
-                    .geral{.float-config(left,20%);}
-                    .proximo{.float-config(right,40%);}
-                }
-            }
-        }
-
-        .modal-adiciona,.modal-edita{
-            
-            .modal-dialog{
-
-                width: 725px;
-              
-                .modal-content:extend(.full-container){
-
-                .modal-header{
-                    padding:5px 10px;
-                }
-
-                .modal-body:extend(.full-container){
-                    position: relative;
-                    padding: 5px 10px;
-
-                   form:extend(.full-container){
-
-                       div{
-                           padding:5px 5px;
-
-                          label{
-                            width: 100%;
-                          }
-
-                          input,select{
-                            width: 100%;
-                            padding: 5px;
-                            height: 30px;
-                          }
-                       }
-
-                      .dia,.mes,.ano{
-                          .float-config(left,30%);
-                          display: table;
-
-                          input{
-                              .float-config(left,50px); 
-                              margin-right: 5px;
-                          }
-
-                          span.mes{
-                              .float-config(left,22px); 
-                              margin: 4px 5px;
-                          }
-
-                          span.ano{
-                              .float-config(left,40px); 
-                              margin: 4px 0;
-                          }
-                      }
-                       
-                      .dataCompra{
-                         .float-config(left,30%);
-                      }
-                        
-                      .dia-edit{
-                          .float-config(left,10%);
-                      }
- 
-                      .mes{
-                          .float-config(left,10%);
-                      }
-                       
-                      .ano{
-                          .float-config(left,10%);
-                          
-                          input{
-                            width: 60px;
-                          }
-                      }
-                       
-                      .categoria{
-                         .float-config(left,30%);
-                      }
-
-                      .sub-categoria{
-                         .float-config(left,40%);
-                      }
-
-                       .descricao{
-                           .float-config(left,52%);
-                       }
-
-                       .valor{
-                           .float-config(left,18%);
-
-                           text-align: left;
-                       }
-
-                       .transacao-parcelada{
-                           .float-config(right,30%);
-                       }
-
-                       .opcoes-transacao-repeticao{
-                           float: left;
-                        
-                           p{
-                                padding: 12px;
-                                padding-left: 30px;
-                                position: relative;
-
-                                .EspelharProximasFaturas{
-                                    width: 20px;
-                                    height: 20px;
+                            
+                            .valor-total,.valor-total-categoria{
                                     position: absolute;
-                                    top: 5px;
-                                    left: 5px;
-                                }
-                           }
-                       }
-
-                       .transacao-recorrente{
-                           .float-config(left,70%);
-                           position: relative;
-
-                           label{
-                            width: 138px;
-                           }
-
-                           input{
-                                width: 20px;
-                               margin: 0 8px;
-                           }
-
-                           input.RecorrenteSim{
-                               position: absolute;
-                               top:0;
-                           }
-
-                           span.RecorrenteSim{
-                               position: absolute;
-                               margin-left: 32px
-                           }
-
-                           input.RecorrenteNao{
-                               position: absolute;
-                               margin-left: 65px;
-                               top:0;
-                           }
-
-                           span.RecorrenteNao{
-                               position: absolute;
-                               margin-left: 90px;
-                           }
-                       }
-
-                      .adiciona-categoria,.adiciona-sub_categoria:extend(.full-container){
-                          clear: both;
-                          margin:1% 0 1% 0;
-                          padding: 1%;
-                          background-color: @white-7;
-                          border-radius: 4px;
-                          
-                          width: 100%;
-                          display: none;
-                          
-                          label{width: 100%;}
-                          
-                          input.input_adiciona-categoria{
-                            .float-config(left,40%);
-                          }
-                          
-                          input.input_adiciona-subcategoria{
-                            .float-config(left,39%);
-                            margin-right: 1%;
-                          }
-                          
-                          .btn{
-                            .float-config(right,18%);
-                              height: 30px;
-                              padding-top: 4px;
-                          }
-                      }
-
-                      input.btn{
-                        float: right;
-                        margin-right: 1%;
-                      }
-                      .btn-default{
-                        float: right;
-                      }
-                       
-                       .buttons{
-                            float: right;
-                            position: absolute;
-                            bottom: 0;
-                            right: 0;
-                       }
-
-                       
-                   }
+                                    bottom: 0;
+                                    right: 0;
+                                    margin-right: 35px;
+                                    border: none;
+                                    border-color: transparent;
+                                    padding: 0;
+                                    font-size: 1.2em;
+                                    font-weight: 600;
+                            }
+                            
+                            .negativo{color: #cb0000; }
+                            .positivo{color: #00ad21; }
+                            
+                        }
+                    }
+                        
                 }
-              }
+
+                .fatura-cartao{
+                    .categoria-content{
+                        h2{         
+                            background-color: #f7a816;
+                            color: #f2f2f2;
+                            position: sticky;
+                            top: 0;
+                            border-radius: 0;
+                            width: 102%;
+                            margin-left: -1%;
+                            margin-top: -2%;
+                        }
+                    }
+                }
+                
             }
         }
 
-        .modal-edita{
-            
-            .modal-dialog{
+        .calendario-geral:extend(.full-container){
+
+            .anterior,.proximo{
+                a{
+                    .inline-content(3%);
+                    padding: 4%;
+
+                    img{
+                        width: 100%;
+                        padding: 5%;
+                    }
+                    h3{
+                        font-size: 1.3em;
+                        text-align: center;
+                        margin-top: 1%;
+                        color:@white-1;
+                    }
+                }
+            }
+
+            .geral{
+
+                a{
+                    .lateral-margin(75%;);
+                    display: table;
+                    padding: 3%;
+
+                    img{
+                        width: 100%;
+                        padding: 5%;
+                    }
+                    h3{
+                        font-size: 1.3em;                     
+                        text-align: center;
+                        margin-top: 1%;
+                        color:@black-8;
+                    }
+                }    
+            }
+
+            a:hover{
+                text-decoration: none;
+
+                img{opacity: 0.75;}
+            }
+
+            .anterior{.float-config(left,40%);}
+            .geral{.float-config(left,20%);}
+            .proximo{.float-config(right,40%);}
+        }
+    }
+}
+
+.modal-adiciona,.modal-edita{
+    
+    .modal-dialog{
+
+        width: 725px;
+        
+        .modal-content:extend(.full-container){
+
+        .modal-header{
+            padding:5px 10px;
+        }
+
+        .modal-body:extend(.full-container){
+            position: relative;
+            padding: 5px 10px;
+
+            form:extend(.full-container){
+
+                div{
+                    padding:5px 5px;
+
+                    label{
+                    width: 100%;
+                    }
+
+                    input,select{
+                    width: 100%;
+                    padding: 5px;
+                    height: 30px;
+                    }
+                }
+
+                .dia,.mes,.ano{
+                    .float-config(left,30%);
+                    display: table;
+
+                    input{
+                        .float-config(left,50px); 
+                        margin-right: 5px;
+                    }
+
+                    span.mes{
+                        .float-config(left,22px); 
+                        margin: 4px 5px;
+                    }
+
+                    span.ano{
+                        .float-config(left,40px); 
+                        margin: 4px 0;
+                    }
+                }
                 
-                .modal-content:extend(.full-container){
+                .dataCompra{
+                    .float-config(left,30%);
+                }
+                
+                .dia-edit{
+                    .float-config(left,10%);
+                }
 
-                    .modal-body:extend(.full-container){
+                .mes{
+                    .float-config(left,10%);
+                }
+                
+                .ano{
+                    .float-config(left,10%);
+                    
+                    input{
+                    width: 60px;
+                    }
+                }
+                
+                .categoria{
+                    .float-config(left,30%);
+                }
 
-                        form:extend(.full-container){
-                            
-                            .buttons{
-                                
-                                width: 230px;
-                                
-                                .btn{
-                                    width: 100%;
-                                    height: 32px;
-                                    float: left;
-                                    width: auto;
-                                    margin: 0 2px;
-                                }
-                                
-                            }
-                            
-                            .sub-categoria{
-                                .float-config(left,39%);
-                            }
+                .sub-categoria{
+                    .float-config(left,40%);
+                }
+
+                .transferencia-contas:extend(.full-container){
+                    display: none;
+            
+                .transf-origem{
+                    .float-config(left,49%); 
+                }
+
+                .transf-destino{
+                    .float-config(right,49%); 
+                }
+
+                }
+
+                .descricao{
+                    .float-config(left,52%);
+                }
+
+                .valor{
+                    .float-config(left,18%);
+
+                    text-align: left;
+                }
+
+                .transacao-parcelada{
+                    .float-config(right,30%);
+                }
+
+                .conta{
+                    .float-config(left,40%);
+                }
+
+                .campoCheckboxModalTransacao{
+                    float: left;
+                
+                    p{
+                        padding: 12px;
+                        padding-left: 30px;
+                        position: relative;
+
+                        .chkCheckboxModalTransacao{
+                            width: 20px;
+                            height: 20px;
+                            position: absolute;
+                            top: 5px;
+                            left: 5px;
                         }
+                        
+                    }
+                }
+
+                .transacao-recorrente{
+                    .float-config(left,40%);
+                    position: relative;
+                    margin-top: 30px;
+
+                    label{
+                    width: 138px;
+                    }
+
+                    input{
+                        width: 20px;
+                        margin: 0 8px;
+                    }
+
+                    input.RecorrenteSim{
+                        position: absolute;
+                        top:0;
+                    }
+
+                    span.RecorrenteSim{
+                        position: absolute;
+                        margin-left: 32px
+                    }
+
+                    input.RecorrenteNao{
+                        position: absolute;
+                        margin-left: 65px;
+                        top:0;
+                    }
+
+                    span.RecorrenteNao{
+                        position: absolute;
+                        margin-left: 90px;
+                    }
+                }
+
+                .adiciona-categoria,.adiciona-sub_categoria:extend(.full-container){
+                    clear: both;
+                    margin:1% 0 1% 0;
+                    padding: 1%;
+                    background-color: @white-7;
+                    border-radius: 4px;
+                    
+                    width: 100%;
+                    display: none;
+                    
+                    label{width: 100%;}
+                    
+                    input.input_adiciona-categoria{
+                    .float-config(left,40%);
+                    }
+                    
+                    input.input_adiciona-subcategoria{
+                    .float-config(left,39%);
+                    margin-right: 1%;
+                    }
+                    
+                    .btn{
+                    .float-config(right,18%);
+                        height: 30px;
+                        padding-top: 4px;
+                    }
+                }
+
+                input.btn{
+                float: right;
+                margin-right: 1%;
+                }
+                .btn-default{
+                float: right;
+                }
+                
+                .buttons{
+                    float: right;
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                }
+
+                
+            }
+        }
+        }
+    }
+}
+
+.modal-edita{
+    
+    .modal-dialog{
+        
+        .modal-content:extend(.full-container){
+
+            .modal-body:extend(.full-container){
+
+                form:extend(.full-container){
+                    
+                    .buttons{
+                        
+                        width: 230px;
+                        
+                        .btn{
+                            width: 100%;
+                            height: 32px;
+                            float: left;
+                            width: auto;
+                            margin: 0 2px;
+                        }
+                        
+                    }
+                    
+                    .sub-categoria{
+                        .float-config(left,39%);
                     }
                 }
             }
         }
+    }
+}
+
+.modal-cartao{
+
+    .fatura-cartao{
+
+        .total_cartao{
+            width: 100%;
+            bottom: 0;
+            text-align: right;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: orange;
+            position: relative;
+            
+            span{
+                //display: block;
+            }
+
+            span.alteracao_manual{
+                cursor: pointer;
+                color: @white-2;
+            }
+
+            span.valor_span{
+                width: 100px;
+                float: right;
+            }
+
+            form.alteracao_manual{
+
+                input.input-Cartao{
+                    width: 95px;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    padding: 2px;
+                }
+
+                .btn-success{
+                    padding: 2px 3px;
+                    position: absolute;
+                    top: 4px;
+                    right: 2px;
+                }
+
+            }
+            
+        }
+                
+        tr.content-day:hover{
+            background-color: #bebeff;
+            color: @white-10;
+            cursor:pointer;
+
+            td.valor{
+                border: none;
+            }
+
+        }  
+
+        .categoria-content{
+            
+            h2{         
+                background-color: #f7a816;
+                color: @white-10;
+                top: 0;
+                border-radius: 4px 4px 0 0;
+                width: 102.4%;
+                margin-left: -1.1%;
+                margin-top: -2%;
+                font-size: 1.2em;
+                padding: 5px;
+            }
+
+            .border(5px,@white-5);
+            background-color: @white-10;
+            padding: 1%;
         
-        .modal-cartao-edit{
+            .nome_sub_categoria{
+                text-align: center;
+            }
+            
+            table:extend(.full-container){
 
-            .modal-content:extend(.full-container){
-
-              .modal-body:extend(.full-container){
-
-                  .categoria{.float-config(left,49%);}
-                  .sub_categoria{.float-config(right,49%);}
-
-                  input.descricao{
-                    .float-config(left,59%);
-                    margin-top: 1%;
-                  }
-                  input.valor{
-                    .float-config(right,40%);
-                    margin-top: 1%;
-                    text-align: left;
-                  }
-
-                             .buttons{
-                        width: 100%;
-                        display: table;
-                       padding:1% 0 1% 0; 
-
-                   }
-
-                  input.btn-primary{
-                    float: right
-                  }
-                  input.btn-danger{
-                    float: left;
-                  }        
-                  .btn-default{
-                    float: right;
-                    margin-right: 1%;
-                  }
-
-              }
+                td,th{
+                    padding:1% 0.5%;
+                    .border(0,@white-4);
+                    border-width:0 0 1px 0;
+                }
+                
+                .valor-total-sub_categoria{
+                    font-weight: 600;
+                    font-size: 1.0em;
+                    text-align: right;
+                    padding:5px 2px 5px 0
+                }
+                
+                .valor-total,.valor-total-categoria{
+                        bottom: 0;
+                        right: 0;
+                        margin-right: 35px;
+                        border: none;
+                        border-color: transparent;
+                        padding: 0;
+                        font-size: 1.2em;
+                        font-weight: 600;
+                }
+                
+                .negativo{color: #cb0000; }
+                .positivo{color: #00ad21; }
+                
             }
         }
+                        
+    }
 
-        section.geral{
+}
 
-          table{
-            .lateral-margin(98%);
-            margin-top:1%;
-            margin-buttom:1%;
-            padding:1%;
-            background-color:@white-10;
+.modal-cartao-edit{
 
-            .negativo{color: #cb0000; }
-            .positivo{color: #00ad21; }
-            .none{color: transparent; }
-          }
+    .modal-content:extend(.full-container){
+
+        .modal-body:extend(.full-container){
+
+            .categoria{.float-config(left,49%);}
+            .sub_categoria{.float-config(right,49%);}
+
+            input.descricao{
+            .float-config(left,59%);
+            margin-top: 1%;
+            }
+            input.valor{
+            .float-config(right,40%);
+            margin-top: 1%;
+            text-align: left;
+            }
+
+                        .buttons{
+                width: 100%;
+                display: table;
+                padding:1% 0 1% 0; 
+
+            }
+
+            input.btn-primary{
+            float: right
+            }
+            input.btn-danger{
+            float: left;
+            }        
+            .btn-default{
+            float: right;
+            margin-right: 1%;
+            }
 
         }
+    }
+}
 
-        .valor,.valor,.valor-total,.valor-total-categoria,.valor-total-sub_categoria{text-align: right;}
-        .new-line{clear: both;}
-        .dia{.valor-total{display: none;}}
+section.geral{
 
-        ::-webkit-scrollbar-track {
-        background-color: @white-7;
-        }
-        ::-webkit-scrollbar {
-            width: 6px;
-            background: @white-7;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: @black-10;
-        }
+    table{
+    .lateral-margin(98%);
+    margin-top:1%;
+    margin-buttom:1%;
+    padding:1%;
+    background-color:@white-10;
+
+    .negativo{color: #cb0000; }
+    .positivo{color: #00ad21; }
+    .none{color: transparent; }
+    }
+
+}
+
+.valor,.valor,.valor-total,.valor-total-categoria,.valor-total-sub_categoria{text-align: right;}
+.new-line{clear: both;}
+.dia{.valor-total{display: none;}}
+
+::-webkit-scrollbar-track {
+background-color: @white-7;
+}
+::-webkit-scrollbar {
+    width: 6px;
+    background: @white-7;
+}
+::-webkit-scrollbar-thumb {
+    background: @black-10;
+}

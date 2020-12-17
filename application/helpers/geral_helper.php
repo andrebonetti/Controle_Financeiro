@@ -1,29 +1,54 @@
 <?php
 
-    function geral_UpdateSaldo($pData,$pTipo){
+    function geral_UpdateSaldo($pData,$pTipo = 0){
         
+        //echo "-------------------------geral_UpdateSaldo----------------------------------<br>";
+
         $ci = get_instance();
+
+        if($pData["IdTipoTransacao"] == 1){
+            $pData["PeriodoDe"] = true;
+        }
+        if($pData["IdTipoTransacao"] == 2){
+            //$pData["PeriodoAte"] = true;
+        }
+
+        $pData["Usuario"]["Id"] = $pData["IdUsuario"];
         
-        $pData["PeriodoDe"] = true;
-        $pData["Id"] = null;
+        unset($pData["Id"]);
+
         $lGeral = $ci->geral_model->Listar($pData);
-   
+
+        ////util_printR($lGeral,"lGeral");
+
         $cont = 1;
         foreach($lGeral as $itemGeral){		                    
 
-            $dataGeral["Mes"]   = $itemGeral["Mes"]; 
-            $dataGeral["Ano"]   = $itemGeral["Ano"];
-            $dataGeral["Valor"] = $pData["Valor"];
+            $paramMes                   = array();
+            $paramMes["Mes"]            = $itemGeral["Mes"]; 
+            $paramMes["Ano"]            = $itemGeral["Ano"];
+            $paramMes["Valor"]          = $pData["Valor"];
+            $paramMes["Usuario"]["Id"]  = $pData["IdUsuario"];
 
-            if(($cont == 1)or($pData["IdTipoTransacao"] == 1)){
-                geral_UpdateSaldoMes($dataGeral);
+            if((($cont == 1)or($pData["IdTipoTransacao"] == 1))&&(!isset($pData["IsVerificacao"]))){
+                geral_UpdateSaldoMes($paramMes);
             }
             
+            $paramGeral["Valor"]         = $pData["Valor"];
             if($pData["IdTipoTransacao"] == 1){
-                $dataGeral["Valor"] = $pData["Valor"] * $cont;
+                $paramGeral["Valor"] = $pData["Valor"] * $cont;
             }
-                        
-            geral_UpdateSaldoFinal($dataGeral,$pTipo);
+
+            $paramGeral["Mes"]           = $itemGeral["Mes"]; 
+            $paramGeral["Ano"]           = $itemGeral["Ano"];
+            $paramGeral["Usuario"]["Id"] = $pData["IdUsuario"];
+            $paramGeral["PeriodoDe"]     = true;
+
+            if(isset($pData["IsVerificacao"])){
+                $paramGeral["IsVerificacao"] = $pData["IsVerificacao"];
+            }
+
+            geral_UpdateSaldoFinal($paramGeral,$pTipo);
             $cont++;
         }
     }
@@ -37,15 +62,13 @@
         
         $lGeral = $ci->geral_model->Listar($pData);
         
-        //var_dump($lGeral);
-
         $saldoAnterior = 0;
         $cont = 0;
         foreach($lGeral as $itemGeral){		                    
 
             $dataGeral["Mes"]   = $itemGeral["Mes"]; 
             $dataGeral["Ano"]   = $itemGeral["Ano"];
-            $dataGeral["Id"]   = $itemGeral["Id"];
+            $dataGeral["Id"]    = $itemGeral["Id"];
             
             if($cont > 0){
                 
@@ -65,13 +88,13 @@
 		$ci = get_instance();
         
 		// ------ MES ------	
-        $dataGeralMes              = $ci->geral_model->Buscar($pData);	
+        $dataGeralMes              = $ci->geral_model->Buscar($pData);
 
-        $dataGeralMes["SaldoMes"] += $pData["Valor"];
+        // ------ SOMA -------
+        $dataGeralMes["SaldoMes"]  += $pData["Valor"];
 		
         // -- BD UPDATE --
 		$ci->geral_model->Atualizar($dataGeralMes);
-         
 	}
 
     function geral_UpdateSaldoMesCartao($pData,$pTipo){
@@ -79,8 +102,9 @@
         $ci = get_instance();
         
 		// ------ MES ------	
-        $dataGeralMes              = $ci->geral_model->Buscar($pData);	
         
+        $dataGeralMes              = $ci->geral_model->Buscar($pData);	
+
         if(!empty($dataGeralMes )){
         
             $dataGeralMes["Cartao"] += $pData["Valor"]*(-1);
@@ -90,28 +114,30 @@
         }
     }
 
-    function geral_UpdateSaldoFinal($pData,$pTipo){
+    function geral_UpdateSaldoFinal($pParamGeral,$pTipo){
         
 		$ci = get_instance();
-              
+            
         // ---- TOTAL GERAL ----		
-        $lGeral = $ci->geral_model->Listar($pData);
-		foreach($lGeral as $itemGeral){	
+        $lGeral = $ci->geral_model->Listar($pParamGeral);
+		foreach($lGeral as $keyGeral => $itemGeral){	
             
             $dataGeralFinal                = $itemGeral;
-			$dataGeralFinal["SaldoFinal"] += $pData["Valor"];
-            
-            //echo "var_dump = geral_UpdateSaldoMes Antes";
+			$dataGeralFinal["SaldoFinal"] += $pParamGeral["Valor"];
 
-            if($pTipo == 1){$dataGeralFinal["Receita"] += $pData["Valor"];}        
-            if($pTipo == 2){$dataGeralFinal["Despesas"] += $pData["Valor"]*(-1);}
+            if(isset($pParamGeral["IsVerificacao"])){
+                if(isset($lGeral[$keyGeral-1]["SaldoFinal"])){
+                    $dataGeralFinal["SaldoMes"] += $dataGeralFinal["SaldoFinal"] - $lGeral[$keyGeral-1]["SaldoFinal"];
+                }
+            }
             
-            //echo "var_dump = geral_UpdateSaldoMes";
+            if($pTipo == 1){$dataGeralFinal["Receita"] += $pParamGeral["Valor"];}        
+            if($pTipo == 2){$dataGeralFinal["Despesas"] += $pParamGeral["Valor"]*(-1);}
 
             // -- BD UPDATE --
             $ci->geral_model->Atualizar($dataGeralFinal);	
 		}
-         
+    
 	}
 
     function geral_UpdateCartaoMes($pData){
@@ -133,33 +159,28 @@
     function geral_CriarCompetencia($pDataContent){
         
         $ci = get_instance();      
-        $lGeral = $ci->geral_model->Listar();
+        $paramGeral["Usuario"]  = $pDataContent["Usuario"];
+        $lGeral                 = $ci->geral_model->Listar($paramGeral);
         
         $geral = $lGeral[count($lGeral) - 1];
         
         $ano = $geral["Ano"];
         $mes = $geral["Mes"];
-
+    
         while(intval($ano.$mes) < intval($pDataContent["Ano"].$pDataContent["Mes"]))
-        {
-            if($mes == 12){
-                $dataGeral["Ano"] = $ano + 1;
-                $dataGeral["Mes"] = 1;
-            }
-            else{
-                $dataGeral["Mes"] = $mes + 1;
-                $dataGeral["Ano"] = $ano;
-            }
-            
-            if($dataGeral["Mes"] < 10){
-                $dataGeral["Mes"] = "0".$dataGeral["Mes"];
-            }
-            $dataGeral = CalcularSaldo($dataGeral); 
-            
+        {     
+            //util_print(intval($ano.$mes),intval($pDataContent["Ano"].$pDataContent["Mes"]));
+      
+            $referencia["Ano"] = $ano;
+            $referencia["Mes"] = $mes;
+
+            $dataGeral = util_AlterarMes($referencia,1,true);
+            //$dataGeral = CalcularSaldo($dataGeral);        
+            $dataGeral["IdUsuario"] = $pDataContent["Usuario"]["Id"];    
             $ci->geral_model->Incluir($dataGeral);
             
             $ano = $dataGeral["Ano"];
-            $mes = $dataGeral["Mes"];
+            $mes = str_pad($dataGeral["Mes"],2,"0",STR_PAD_LEFT);
         }
  
     }
@@ -256,7 +277,7 @@
         }
         
         /*-- CARTAO --*/
-        $cartao_Recorrente       = $ci->cartao_model->ListarFaturaRecorrente($dataContent);
+        $cartao_Recorrente       = $ci->cartao_de_credito_model->ListarFaturaRecorrente($dataContent);
 
         foreach($cartao_Recorrente as $itemContent){
             
@@ -295,17 +316,17 @@
         return $pDataGeral;
     }
 
-    function geral_BuscarCompetenciaAnterior($pAno,$pMes){
+    function geral_BuscarCompetenciaAnterior($pParam){
 
         $ci = get_instance();
 
-        if($pMes == 1){
+        if($pParam["Mes"] == 1){
             $competenciaAnterior["Mes"] = 12;
-            $competenciaAnterior["Ano"] = $pAno-1;
+            $competenciaAnterior["Ano"] = $pParam["Ano"]-1;
         }
         else{
-            $competenciaAnterior["Mes"] = $pMes-1;;
-            $competenciaAnterior["Ano"] = $pAno;
+            $competenciaAnterior["Mes"] = $pParam["Mes"]-1;;
+            $competenciaAnterior["Ano"] = $pParam["Ano"];
         }	
 
         return $ci->geral_model->Buscar($competenciaAnterior);
@@ -359,4 +380,28 @@
         }
 
         return $newDataCompetenciaAtual;
+    }
+
+    function geral_competenciaAtualTemplate($pParamBusca){//TEMP
+
+        $ci = get_instance();
+
+        $competenciaAtual   	         = $ci->geral_model->Buscar($pParamBusca);
+        if(empty($competenciaAtual)){
+
+            //util_print("CRIAÇÃO COMPETÊNCIA");
+
+            geral_CriarCompetencia($pParamBusca);
+            $competenciaAtual = $ci->geral_model->Buscar($pParamBusca);
+
+            $pParamBusca            = util_AlterarMes($pParamBusca);
+            $competenciaAnterior    = $ci->geral_model->Buscar($pParamBusca);
+
+            if(count($competenciaAnterior)){
+                $competenciaAtual["SaldoAnterior"] = $competenciaAnterior["SaldoFinal"];
+            }
+        }
+
+        return $competenciaAtual;
+
     }

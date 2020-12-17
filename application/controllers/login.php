@@ -6,6 +6,12 @@
 		  	//VIEW
 			$this->load->template("template_signin.php",$content = array());           
 	    }
+
+		public function sair(){				
+		  	$this->session->sess_destroy();
+
+			redirect("");       
+	    }
         
         public function validacao(){	
             

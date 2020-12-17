@@ -1,39 +1,99 @@
 var base_url = $(".base_url").attr("href");
+var menuCompetencias = $(".menu-competencias");
+var slc_contasUsuario = $(".menu-contas_usuario");
+
 
 // --------------------- VIEW ------------------- 
-var ultimaSemana = $(".dia-calendario").last().data("semana");
-var semanaAltura=1;
-   
-while(semanaAltura<=ultimaSemana){
 
-    var altura = 0;
-    var altura_nova = 0;
+ajustarTamanhoDiaSemana();
 
-    $(".semana-mes-"+semanaAltura).each(function() {
+validarTransacoesConta();
 
-        altura_nova = $(this).height();
+validarExibicaoMovimentacao();
 
-        if(altura_nova > altura){
-            altura = altura_nova;
-        }      
+slc_contasUsuario.change( function(){
+    validarTransacoesConta();  
+    validarExibicaoMovimentacao(); 
+});
 
-    });
+menuCompetencias.change( function(){
 
-    $(".semana-mes-"+semanaAltura).css("height",(altura + 60)+"px");  
+    var item = $(this);
+    var actionForm = $(this).closest("form").attr("action");
 
-    semanaAltura++;  
+    item.closest("form").attr("action",actionForm+"/"+item.val());
+    item.closest("form").submit();
+    
+});
+
+function validarExibicaoMovimentacao(){
+
+    idConta = $(".menu-contas_usuario").val();
+    $(".info-movimentacao").hide();
+
+    $(".movimentaca-"+idConta).show();
+
 }
 
-setTimeout(function(){
+function ajustarTamanhoDiaSemana(){
 
-    $(".data-total_saldoDia").css("position","absolute");
-    $(".data-total_saldoDia").css("bottom","18px");
-    $(".data-total_saldoDia").show();
-    $(".data-total_saldoFinal").css("position","absolute");
-    $(".data-total_saldoFinal").css("bottom","0");
-    $(".data-total_saldoFinal").show();
+    var ultimaSemana = $(".dia-calendario").last().data("semana");
+    var semanaAltura = 1;
+    var alturaResumo = $(".ResumoDia").last().height();
 
-},300);
+    // -- SALDOS --
+    while(semanaAltura<=ultimaSemana){
+
+        var altura      = 0;
+        var altura_nova = 0;
+
+        $(".semana-mes-"+semanaAltura).each(function() {
+
+            var altura_transacoes   = $(this).find(".transacoes").height();
+            var altura_resumo       = $(this).find(".ResumoDia").height();
+
+            var altura_nova         = altura_transacoes + altura_resumo + 20
+
+            if(altura_nova > altura){
+                altura = altura_nova;
+            }      
+
+        });
+
+        $(".semana-mes-"+semanaAltura).css("height",(altura)+"px");  
+
+        semanaAltura++;  
+    }
+
+}
+
+function validarTransacoesConta(){
+
+    IdConta = $(".menu-contas_usuario").val();
+
+    $(".SaldoConta").hide();
+
+    $(".transacoes").find("tr.content-day").hide();
+    $("tr.saldoDia_conta").hide();
+    $("tr.saldoFinal_conta").hide();
+    $("tr.saldoDia_geral").hide();
+    $("tr.saldoFinal_geral").hide();
+
+    if(IdConta == "Geral"){
+        $(".SaldoConta").css({"display":"table","width":"100%"});
+        $("tr.saldoDia_geral").css({"display":"table","width":"100%"});
+        $("tr.saldoFinal_geral").css({"display":"table","width":"100%"});
+        $(".transacoes").find("tr.content-day").show();
+    }
+    else{
+        $(".SaldoContaId-"+IdConta).css({"display":"table","width":"100%"});
+        $(".transacoes").find("tr.transacao_idconta-"+IdConta).css({"display":"table","width":"100%"});
+        $("tr.saldoDia_conta-"+IdConta).css({"display":"table","width":"100%"});
+        $("tr.saldoFinal_conta-"+IdConta).css({"display":"table","width":"100%"});
+    }
+
+    ajustarTamanhoDiaSemana();
+}
 
 // --------------------- PREENCHE E CALCULA CATEGORIAS E SUB-CATEGORIAS --------------------- 
 $(".categoria-resumo").each(function() {
@@ -58,10 +118,21 @@ $(".categoria-resumo").each(function() {
             var dia          = info_content.data("dia");
             var valor        = info_content.data("valor");
             var descricao    = info_content.data("descricao");
+            var dataCompra   = info_content.data("datacompra");
+            var classe       = "";
+
+            if(dataCompra){
+                dia = "Cartao";
+                classe = "cartao";
+            }
+            else{
+                dia = ("00" + dia).slice(-2);
+                classe = "dia";
+            }
         
             conteudo         = conteudo +    
                 "<tr>"
-                +   "<td class='dia'>" + ("00" + dia).slice(-2)  + " - </td>"
+                +   "<td class='dia " + classe + "'>" + dia + "</td>"
                 +   "<td class='descricao'>" + descricao + "</td>"
                 +   "<td class='valor' value="+valor+" >" + formatarReal(valor) + "</td>"
                 +"</tr>";
@@ -99,13 +170,26 @@ $(".categoria-resumo").each(function() {
 $("tr.data-day").click(function(){
     var diaMes = $(this).closest(".dia").data("dia-mes");
 
+    $(".modal-adiciona").find(".dia").show();
+    $(".modal-adiciona").find(".dataCompra").hide();
+    $(".modal-adiciona").find(".idCartao").attr("value","");
     $(".modal-adiciona").find(".dia-add").attr("value",diaMes);
+    $(".modal-adiciona").find(".conta-origem").val(slc_contasUsuario.val()).change();
+});
+
+$(".insert-cartao").click(function(){
+    $(".modal-adiciona").find(".dia").hide();
+    $(".modal-adiciona").find(".dataCompra").show();
+
+    var Id = $(this).data("id");
+    $(".modal-adiciona").find(".idCartao").attr("value",Id);
 });
 
 $(".categoria_modal").change(function(){
 
     var dom_categoria_selecionada = $(this);
     var categoria_selecionada = dom_categoria_selecionada.val();
+    $(".transferencia-contas").hide();
     
     if(categoria_selecionada == "nova-categoria"){
 
@@ -121,8 +205,14 @@ $(".categoria_modal").change(function(){
         }
 
     }
+    else if(categoria_selecionada == "transferencia_conta"){
+        $(".sub-categoria").hide();
+        $(".transferencia-contas").show();
+    }
     else
     {
+        $(".sub-categoria").show();
+        $(".transferencia-contas").hide();
         $(".option_SubCategoria").each(function() {
     
             var id_categoria = $(this).attr("name");
@@ -166,7 +256,38 @@ $(".cancelar_nova_subcategoria").click(function(){
         $(".adiciona-sub_categoria").slideUp();
         $("input_adiciona-subcategoria").val("");
         
-    });
+});
+
+$(document).on("change",".conta-origem",function(){
+
+    var var_DomContaOrigem = $(this);
+    var var_DomContaDestino = $(".conta-destino");
+
+    var id_conta = var_DomContaOrigem.val();
+
+    if(id_conta != ""){
+
+        var_DomContaDestino.prop("disabled",false);
+
+        var_DomContaDestino.find("option").show();
+
+        var_DomContaDestino.find("option").each(function() {
+        
+            var_DomOption = $(this);
+
+            if( (var_DomOption.val() == id_conta) && (var_DomOption.val() != "") ){
+                var_DomOption.hide();
+            }
+
+        });
+
+    }
+    else{
+        var_DomContaDestino.prop("disabled",true);
+        var_DomContaDestino.find("option").show();
+    }
+
+});
 
 // -------------------------------- PREENCHE MODAL - EDICAO TRANSACAO -----------------------------
 $(".content-day").click(function(){
@@ -183,12 +304,35 @@ $(".content-day").click(function(){
     var sub_categoria_id        = info_content.data("subcategoria-id");
     var descricao               = info_content.data("descricao");
     var valor                   = info_content.data("valor");
-    var parcelaAtual           = info_content.data("p-atual");
+    var parcelaAtual            = info_content.data("p-atual");
     var totalParcelas           = info_content.data("p-total-atual");
     var codigoTransacao         = info_content.data("codigo-transacao");
+    var iscontabilizado         = info_content.data("iscontabilizado");   
+    var idconta                 = info_content.data("idconta");
+    var istransferencia         = info_content.data("istransferencia");
+    var conta_origem            = info_content.data("contaorigem");
 
     //Preenche Inputs
     var_DomModalEdita = $(".modal-edita");
+
+    var Id = $(this).data("idcartao");
+    if(Id){
+        var_DomModalEdita.find(".idCartao").attr("value",Id);
+
+        var_DomModalEdita.find(".dataCompra").show();
+        var_DomModalEdita.find(".dia").hide();
+        var_DomModalEdita.find(".mes").hide();
+        var_DomModalEdita.find(".ano").hide();
+
+        var datacompra = info_content.data("datacompra");
+        var_DomModalEdita.find(".data-compra").attr("value",datacompra);
+    }
+    else{
+        var_DomModalEdita.find(".dataCompra").hide();
+        var_DomModalEdita.find(".dia").show();
+        var_DomModalEdita.find(".mes").show();
+        var_DomModalEdita.find(".ano").show();
+    }
 
     var ano = var_DomModalEdita.find(".ano-edit").attr("value");
     var mes = var_DomModalEdita.find(".mes-edit").attr("value");
@@ -205,9 +349,44 @@ $(".content-day").click(function(){
     var_DomModalEdita.find(".p-total-atual").attr("value",parcelaAtual +"/"+ totalParcelas);
     var_DomModalEdita.find(".link-update").attr("action",base_url+"adm_crud/transacao_update/"+ano+"/"+mes+"/"+id);
     var_DomModalEdita.find(".id-tipo-transacao").attr("value",type);
+    var_DomModalEdita.find(".conta").val(idconta).change();
+    var_DomModalEdita.find(".isTransferencia").attr("value",istransferencia);
     
 	$('.p-total-atual').attr("disabled", true);
     $('.p-total-atual').css("background-color", "#cccccc"); 
+
+    if(iscontabilizado == 1){
+        var_DomModalEdita.find(".isContabilizado").prop("checked",true);
+        var_DomModalEdita.find(".isContabilizado").closest("p").addClass("alert-success");
+        var_DomModalEdita.find(".isContabilizado").closest("p").removeClass("alert-danger");
+    }
+    else{
+        var_DomModalEdita.find(".isContabilizado").prop("checked",false);
+        var_DomModalEdita.find(".isContabilizado").closest("p").removeClass("alert-success");
+        var_DomModalEdita.find(".isContabilizado").closest("p").addClass("alert-danger");    
+    }
+
+    var msg_istransf = "";
+    if(istransferencia == "1"){
+        msg_istransf = " (Transferência)";
+        var_DomModalEdita.find(".conta").hide();
+
+        var_DomModalEdita.find(".categoria-atual").attr("disabled", true);
+        var_DomModalEdita.find(".sub_categoria-atual").attr("disabled", true);
+
+        $(".transferencia-contas").show();
+
+        var_DomModalEdita.find(".conta-origem").val(conta_origem).change();
+        var_DomModalEdita.find(".conta-destino").val(idconta).change();
+    }
+    else{
+        var_DomModalEdita.find(".conta").show();
+        var_DomModalEdita.find(".conta-origem").val(idconta).change();
+
+        var_DomModalEdita.find(".categoria-atual").attr("disabled", false);
+        var_DomModalEdita.find(".sub_categoria-atual").attr("disabled", false);
+        $(".transferencia-contas").hide();
+    }
     
     if(type == "1")
     {
@@ -215,7 +394,7 @@ $(".content-day").click(function(){
         var_DomModalEdita.find(".ano-edit").attr("disabled", true);
         $(".opcoes-transacao-repeticao").removeClass("no-view");
 
-        $(".tipo-transacao").text("Transação Recorrente");
+        $(".tipo-transacao").text("Transação Recorrente"+msg_istransf);
     }
     else{
         var_DomModalEdita.find(".mes-edit").attr("disabled", false);
@@ -223,50 +402,15 @@ $(".content-day").click(function(){
     }
 
     if(type == "2"){
-        $(".tipo-transacao").text("Transação Parcelada");
+        $(".tipo-transacao").text("Transação Parcelada" + msg_istransf);
         $(".opcoes-transacao-repeticao").removeClass("no-view");
     }
     if(type == "3"){
-        $(".tipo-transacao").text("Transação Comum");
+        $(".tipo-transacao").text("Transação Comum" + msg_istransf);
         $(".opcoes-transacao-repeticao").addClass("no-view");
     }
 
 });
-
-// -------------------------------- PREENCHE MODAL - EDICAO CARTAO -----------------------------
-var edita_fatura = function(){
-    var id              = $(this).find(".id").text();
-    var type            = $(this).find(".type").text();
-    var categoria       = $(this).find(".categoria").text();
-    var categoria_id    = $(this).find(".categoria").attr("value");
-    var sub_categoria   = $(this).find(".sub_categoria").text();
-    var sub_categoria_id= $(this).find(".sub_categoria").attr("value");
-    var descricao       = $(this).find(".descricao").attr("value");
-    var valor           = $(this).find(".valor").attr("value");
-    var totalParcelas   = $(this).find(".p_total-atual").text();
-    var dataCompra      = $(this).find(".dataCompra-atual").text();
-    var IdTipoTransacao = $(this).find(".IdTipoTransacaoCartao-atual").text();
-    
-    var ano = $(".modal-cartao-edit").find(".ano").attr("value");
-    var mes = $(".modal-cartao-edit").find(".mes").attr("value");
-    
-    $(".modal-cartao-edit").find(".id-edit").attr("value",id);
-    $(".modal-cartao-edit").find(".categoria-atual").val(categoria_id).change();
-    $(".modal-cartao-edit").find(".sub_categoria-atual").val(sub_categoria_id).change();
-    $(".modal-cartao-edit").find(".descricao-atual").attr("value",descricao);
-    $(".modal-cartao-edit").find(".valor-atual").attr("value",formatarReal(valor));
-    $(".modal-cartao-edit").find(".p-total-atual").attr("value",totalParcelas);
-    $(".modal-cartao-edit").find(".p-total-atual-hidden").attr("value",totalParcelas);
-    $(".modal-cartao-edit").find(".link-update").attr("action",base_url+"adm_crud/cartao_update/"+ano+"/"+mes+"/"+id);
-    $(".modal-cartao-edit").find(".dataCompra-edit").attr("value",dataCompra);
-  
-    if(IdTipoTransacao == 1){
-        $(".modal-cartao-edit").find(".isRecorrente-edit").attr("value","1");
-    }
-    
-    $(".modal-cartao-edit").find('.p-total-atual').attr("disabled", true);
-    $(".modal-cartao-edit").find('.p-total-atual').css("background-color", "#cccccc"); 
-};
 
 $(".link-delete").on("click",function(){
     
@@ -294,10 +438,22 @@ var alteracao_manual = function(){
 }
 
 // -------------- EVENTOS ----------------------
-$(".content-fatura").on("click",edita_fatura);
-
 // -- ALTERACAO MANUAL -- 
 $(".alteracao_manual").on("click",alteracao_manual);
+
+
+$(".chkCheckboxModalTransacao").on("click",function(){
+
+    if($(this).prop("checked")){
+        $(this).closest("p").addClass("alert-success");
+        $(this).closest("p").removeClass("alert-danger");
+    }
+    else{
+        $(this).closest("p").removeClass("alert-success");
+        $(this).closest("p").addClass("alert-danger"); 
+    }
+
+});
 
 // -------------- FORMATACAO REAL ----------------------
 function formatarReal(mixed) {
